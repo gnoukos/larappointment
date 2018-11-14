@@ -11,6 +11,9 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'PagesController@index')->name('index');
+Route::get('/datepicker', 'PagesController@datePicker');
+
+Auth::routes();
+
+Route::get('/dashboard', 'UserDashboardController@index');
