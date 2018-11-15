@@ -8,22 +8,41 @@
                 </button>
             </div>
             <div class="modal-body text-center">
-                <form class="form-signin">
+                @if (count($errors)>0)
+                    <script>$('#loginModal').modal('show');</script>
+                @endif
+                <form class="form-signin" action="{{ route('login') }}" method="POST">
+                    @csrf
                     <i class="fas fa-lock mb-3" style="font-size: 4rem;"></i>
-                    <label for="inputEmail" class="sr-only">Email address</label>
-                    <input type="email" class="form-control" placeholder="Email address" oninput="this.setCustomValidity('')" oninvalid="this.setCustomValidity('Enter your email')" required autofocus>
-                    <label for="inputPassword" class="sr-only">Password</label>
-                    <input type="password" class="form-control mt-1" placeholder="Password" oninput="this.setCustomValidity('')" oninvalid="this.setCustomValidity('Enter your password')" required>
-                    <div class="checkbox mb-3">
+                    <label for="inputEmail" class="sr-only">{{ __('E-Mail Address') }}</label>
+                    <input type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}" name="email" placeholder="Email address" oninput="this.setCustomValidity('')" oninvalid="this.setCustomValidity('Enter your email')" required autofocus>
+                    @if ($errors->has('email'))
+                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('email') }}</strong>
+                                    </span>
+                    @endif
+                    <label for="inputPassword" class="sr-only">{{ __('Password') }}</label>
+                    <input type="password" class="form-control mt-1 {{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="Password" name="password" oninput="this.setCustomValidity('')" oninvalid="this.setCustomValidity('Enter your password')" required>
+                    @if ($errors->has('password'))
+                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('password') }}</strong>
+                                    </span>
+                    @endif
+                    <div class="checkbox mt-1">
                         <label>
-                            <input type="checkbox" value="remember-me"> Remember me
+                            <input type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+                            <label class="form-check-label" for="remember">
+                                {{ __('Remember Me') }}
+                            </label>
                         </label>
                     </div>
-                    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+                    <div class="forgot-password mb-2">
+                        <a class="btn btn-link" href="{{ route('password.request') }}">
+                            {{ __('Forgot Your Password?') }}
+                        </a>
+                    </div>
+                    <button class="btn btn-lg btn-primary btn-block" type="submit">{{ __('Login') }}</button>
                 </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

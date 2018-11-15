@@ -1,12 +1,12 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand ml-md-5" href="#">LarAppointment</a>
+    <a class="navbar-brand ml-md-5" href="/">LarAppointment</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ml-auto mr-md-5">
             <li class="nav-item">
-                <a class="nav-link text-dark mr-md-1" href="index.html">Home</a>
+                <a class="nav-link text-dark mr-md-1" href="/">Home</a>
             </li>
             @auth
                 @if(auth()->user()->role=='admin')
@@ -19,7 +19,7 @@
 
                 @if(auth()->user()->role=='user')
                     <li class="nav-item">
-                        <a class="nav-link text-dark mr-md-1" href="user.html">User</a>
+                        <a class="nav-link text-dark mr-md-1" href="/dashboard">{{auth()->user()->name}}</a>
                     </li>
                 @endif
 

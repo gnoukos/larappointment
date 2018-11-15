@@ -8,22 +8,38 @@
                 </button>
             </div>
             <div class="modal-body text-center">
+                @if (count($errors)>0)
+                    <script>$('#signupModal').modal('show');</script>
+                @endif
                 <form method="POST" action="{{ route('register') }}" class="form-signin">
                     @csrf
                     <i class="fas fa-user-plus mb-3" style="font-size: 4rem;"></i>
-                    <label for="inputEmail" class="sr-only">Email address</label>
-                    <input name="email" type="email" class="form-control" placeholder="Email address" oninput="this.setCustomValidity('')" oninvalid="this.setCustomValidity('Enter your email')" required autofocus>
-                    <label for="inputPassword" class="sr-only">Password</label>
-                    <input name="password" type="password" class="form-control mt-1" placeholder="Password" oninput="this.setCustomValidity('')" oninvalid="this.setCustomValidity('Enter your password')" required>
-                    <label for="inputPasswordRe-enter" class="sr-only">Re-enter Password</label>
+                    <label for="inputEmail" class="sr-only">{{ __('E-Mail Address') }}</label>
+                    <input name="email" type="email" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}" placeholder="Email address" oninput="this.setCustomValidity('')" oninvalid="this.setCustomValidity('Enter your email')" required autofocus>
+                    @if ($errors->has('email'))
+                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('email') }}</strong>
+                                    </span>
+                    @endif
+                    <label for="inputPassword" class="sr-only">{{ __('Password') }}</label>
+                    <input name="password" type="password" class="form-control mt-1 {{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="Password" oninput="this.setCustomValidity('')" oninvalid="this.setCustomValidity('Enter your password')" required>
+                    @if ($errors->has('password'))
+                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('password') }}</strong>
+                                    </span>
+                    @endif
+                    <label for="inputPasswordRe-enter" class="sr-only">{{ __('Confirm Password') }}</label>
                     <input name="password_confirmation" type="password" class="form-control mt-1" placeholder="Re-enter Password" oninput="this.setCustomValidity('')" oninvalid="this.setCustomValidity('Re-enter your password')" required>
-                    <label for="inputName" class="sr-only">Name</label>
-                    <input name="name" type="text" class="form-control mt-1" placeholder="Name" oninput="this.setCustomValidity('')" oninvalid="this.setCustomValidity('Enter your name')" required autofocus>
-                    <label for="inputSurname" class="sr-only">Surname</label>
-                    <input type="text" class="form-control mt-1" placeholder="Surname" oninput="this.setCustomValidity('')" oninvalid="this.setCustomValidity('Enter your surname')" required autofocus>
+                    <label for="inputName" class="sr-only">{{ __('Full Name') }}</label>
+                    <input name="name" type="text" class="form-control mt-1 {{ $errors->has('name') ? ' is-invalid' : '' }}" value="{{ old('name') }}" placeholder="Name" oninput="this.setCustomValidity('')" oninvalid="this.setCustomValidity('Enter your name')" required autofocus>
+                    @if ($errors->has('name'))
+                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('name') }}</strong>
+                                    </span>
+                    @endif
                     <label for="inputPhone" class="sr-only">Phone</label>
                     <input name="mobile" type="number" class="form-control mt-1" placeholder="Phone Number" oninput="this.setCustomValidity('')" oninvalid="this.setCustomValidity('Enter your phone number')" required autofocus>
-                    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>
+                    <button class="btn btn-lg btn-primary btn-block" type="submit">{{ __('Register') }}</button>
                 </form>
             </div>
             <div class="modal-footer">

@@ -17,3 +17,6 @@ Route::get('/datepicker', 'PagesController@datePicker');
 Auth::routes();
 
 Route::get('/dashboard', 'UserDashboardController@index');
+
+Route::patch('/dashboard',  ['uses' => 'UpdateUserController@update']);
+

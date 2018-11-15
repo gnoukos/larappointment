@@ -71,17 +71,38 @@
                         </div>
                         <div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab">
                             <div class="inner-tab-content">
-                                <form class="form-signin">
-                                    <label for="inputEmail" class="mt-3">Email address</label>
-                                    <input type="email" class="form-control" value="mail@example.com" oninput="this.setCustomValidity('')" oninvalid="this.setCustomValidity('Enter your email')" required autofocus>
-                                    <label for="inputPassword" class="mt-3">Password</label>
+                                <script>
+                                    $(document).ready(function(){
+                                        if(window.location.hash != "") {
+                                            $('a[href="' + window.location.hash + '"]').click()
+                                        }
+                                    });
+                                </script>
+                                {{--<form class="form-signin">
+                                    <label for="inputEmail" class="mt-3">{{ __('E-Mail Address') }}</label>
+                                    <input type="email" class="form-control" value="{{ $user->email }}" oninput="this.setCustomValidity('')" oninvalid="this.setCustomValidity('Enter your email')" required autofocus>
+                                    <label for="inputPassword" class="mt-3">{{ __('Password') }}</label>
                                     <input type="password" class="form-control mt-1" placeholder="Password">
-                                    <label for="inputPasswordRe-enter" class="mt-3">Re-enter Password</label>
+                                    <label for="inputPasswordRe-enter" class="mt-3">{{ __('Confirm Password') }}</label>
                                     <input type="password" class="form-control mt-1" placeholder="Re-enter Password">
-                                    <label for="inputPhone" class="mt-3">Phone</label>
-                                    <input type="number" class="form-control mt-1" value="094525831" oninput="this.setCustomValidity('')" oninvalid="this.setCustomValidity('Enter your phone number')" required autofocus>
+                                    <label for="inputPhone" class="mt-3" >Phone</label>
+                                    <input type="number" class="form-control mt-1" name="mobile" value="{{ $user->mobile_num }}" oninput="this.setCustomValidity('')" oninvalid="this.setCustomValidity('Enter your phone number')" required autofocus>
                                     <button class="btn btn-lg btn-primary btn-block mt-3" type="submit">Update</button>
-                                </form>
+                                </form>--}}
+                                {!! Form::open(['action' => ['UpdateUserController@update'], 'method' => 'POST']) !!}
+                                    {{Form::label('name', 'Name')}}
+                                    {{Form::text('name', $user->name, ['class' => 'form-control', 'readonly'])}}
+                                    {{Form::label('email', 'Email-Address')}}
+                                    {{Form::text('email', $user->email, ['class' => 'form-control'])}}
+                                    {{Form::label('mobile', 'Phone')}}
+                                    {{Form::text('mobile', $user->mobile_num, ['class' => 'form-control'])}}
+                                    {{Form::label('password', 'Password')}}
+                                    {{Form::password('password', ['class' => 'form-control'])}}
+                                    {{Form::label('password', 'Password Repeat')}}
+                                    {{Form::password('password_repeat', ['class' => 'form-control'])}}
+                                {{Form::hidden('_method', 'PATCH')}}
+                                {{Form::submit('Submit', ['class' => 'btn btn-primary mt-2'])}}
+                                {!! Form::close() !!}
                             </div>
                         </div>
                     </div>
