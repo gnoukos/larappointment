@@ -78,17 +78,15 @@
                                         }
                                     });
                                 </script>
-                                {{--<form class="form-signin">
-                                    <label for="inputEmail" class="mt-3">{{ __('E-Mail Address') }}</label>
-                                    <input type="email" class="form-control" value="{{ $user->email }}" oninput="this.setCustomValidity('')" oninvalid="this.setCustomValidity('Enter your email')" required autofocus>
-                                    <label for="inputPassword" class="mt-3">{{ __('Password') }}</label>
-                                    <input type="password" class="form-control mt-1" placeholder="Password">
-                                    <label for="inputPasswordRe-enter" class="mt-3">{{ __('Confirm Password') }}</label>
-                                    <input type="password" class="form-control mt-1" placeholder="Re-enter Password">
-                                    <label for="inputPhone" class="mt-3" >Phone</label>
-                                    <input type="number" class="form-control mt-1" name="mobile" value="{{ $user->mobile_num }}" oninput="this.setCustomValidity('')" oninvalid="this.setCustomValidity('Enter your phone number')" required autofocus>
-                                    <button class="btn btn-lg btn-primary btn-block mt-3" type="submit">Update</button>
-                                </form>--}}
+                                @if ($errors->any())
+                                    <div class="alert alert-danger">
+                                        <ul>
+                                            @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                @endif
                                 {!! Form::open(['action' => ['UpdateUserController@update'], 'method' => 'POST']) !!}
                                     {{Form::label('name', 'Name')}}
                                     {{Form::text('name', $user->name, ['class' => 'form-control', 'readonly'])}}

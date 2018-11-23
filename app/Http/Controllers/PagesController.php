@@ -13,4 +13,12 @@ class PagesController extends Controller
     public function datePicker(){
         return view('pages.datepicker');
     }
+
+    public function adminDashboard(){
+        return view('pages.admin.adminDashboard');
+    }
+
+    public function hierarchy(){
+        return view('pages.admin.hierarchy');
+    }
 }

@@ -29,6 +29,6 @@ class UpdateUserController extends Controller
         //$user->body = $request->input('body');
         $user->save();
 
-        return redirect('/dashboard#settings')->with('success', 'Post Updated');
+        return redirect('/dashboard#settings');
     }
 }

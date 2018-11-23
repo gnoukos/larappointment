@@ -8,7 +8,7 @@
                 </button>
             </div>
             <div class="modal-body text-center">
-                @if (count($errors)>0)
+                @if ($errors->any())
                     <script>$('#signupModal').modal('show');</script>
                 @endif
                 <form method="POST" action="{{ route('register') }}" class="form-signin">
