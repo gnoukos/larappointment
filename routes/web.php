@@ -23,3 +23,5 @@ Route::patch('/dashboard',  ['uses' => 'UpdateUserController@update']);
 Route::get('/admin', 'PagesController@adminDashboard')->name('adminDashboard');
 
 Route::get('/hierarchy', 'PagesController@hierarchy')->name('hierarchy');
+
+Route::resource('options', 'OptionsController');
