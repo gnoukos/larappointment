@@ -15,7 +15,7 @@ class OptionsController extends Controller
      */
     public function index()
     {
-        $options = Option::all();
+        $options = Option::where('parent', null)->get();
         return response()->json($options);
     }
 
@@ -32,7 +32,7 @@ class OptionsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -43,20 +43,34 @@ class OptionsController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors'=>$validator->messages()]);
+            return response()->json(['errors' => $validator->messages()]);
         }
 
         $option = new Option();
         $option->title = $request->title;
         $option->save();
 
-        return response()->json(['success'=>'Option added successfully!', 'optionId'=>$option->id, 'optionTitle'=>$option->title]);
+        return response()->json(['success' => 'Option added successfully!', 'optionId' => $option->id, 'optionTitle' => $option->title]);
+    }
+
+    public function updateHierarchy(Request $request)
+    {
+        $output = json_decode($request['output']);
+        foreach ($output as $item) {
+            $option = Option::find($item->id);
+            if ($item->parent_id != "") {
+                $option->parent = $item->parent_id;
+            } else {
+                $option->parent = null;
+            }
+            $option->save();
+        }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -67,7 +81,7 @@ class OptionsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -78,8 +92,8 @@ class OptionsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -90,11 +104,15 @@ class OptionsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        //
+//        if(Auth::check() && Auth::user()->role == 'ADMIN'){
+//
+//        }
+        Option::destroy($id);
     }
+
 }
