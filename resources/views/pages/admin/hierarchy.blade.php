@@ -45,7 +45,7 @@
                 $('.dd').nestable({scroll: true, maxDepth: 30,
                     beforeDragStop: function(l,e, p){
                         console.log($( "li.dd-item" ).parent());
-                        $( "li.dd-item" ).parent().css( "background-color", "red" );
+                        //$( "li.dd-item" ).parent().css( "background-color", "red" );
                     }
                 });
             });
@@ -125,6 +125,9 @@
                 method: 'post',
                 data: {
                     output: output
+                },
+                success: function() {
+                    $("#saveSuccess").show();
                 }
             });
         });
@@ -142,6 +145,12 @@
             </li>
             <li class="breadcrumb-item active">Hierarchy</li>
         </ol>
+        <div id="saveSuccess" class="alert alert-success alert-dismissible fade show" role="alert" style="display: none;">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h5 class="alert-heading">Hierarchy Saved!</h5>
+        </div>
     </div>
     <!-- /.container-fluid -->
     <div class="row">
@@ -152,7 +161,6 @@
                 </ol>
             </div>
             <button id="saveHierarchy" class="btn btn-primary mb-2 mt-5">Save Hierarchy</button>
-            <button onclick="deleteItem(20)">mana</button>
         </div>
         <div class="ml-5 mt-5 mr-5 col-lg-3">
             <div class="alert alert-danger" role="alert" id="invalidInput" style="display: none;"></div>
