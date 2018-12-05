@@ -3,11 +3,19 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Option;
 
 class PagesController extends Controller
 {
     public function index(){
-        return view('pages.index');
+
+        $options = Option::setEagerLoads([])->where('parent',null)->get();
+        //$options = Option::setEagerLoads(array('children'))->where('parent', 1)->get();
+//       $options = Option::where('id', 1)->with(array('children:id,title' =>function($query){
+//          $query->setEagerLoads([]);
+//       }))->get();
+       // return response()->json($options);
+        return view('pages.index')->with('options',$options);
     }
 
     public function datePicker(){

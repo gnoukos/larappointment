@@ -27,3 +27,5 @@ Route::get('/hierarchy', 'PagesController@hierarchy')->name('hierarchy');
 Route::resource('options', 'OptionsController');
 
 Route::post('options/update', 'OptionsController@updateHierarchy');
+
+Route::get('options/{option}/children', 'OptionsController@children');

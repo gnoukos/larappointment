@@ -115,4 +115,10 @@ class OptionsController extends Controller
         Option::destroy($id);
     }
 
+    public function children($id)
+    {
+        $options = Option::setEagerLoads([])->where('parent',$id)->get();
+        return response()->json($options);
+    }
+
 }
