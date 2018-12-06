@@ -11,8 +11,9 @@
 |
 */
 
-Route::get('/', 'PagesController@index')->name('index');
-Route::get('/datepicker', 'PagesController@datePicker');
+Route::get('/', 'PageController@index')->name('index');
+
+Route::get('/datepicker', 'PageController@datePicker');
 
 Auth::routes();
 
@@ -20,12 +21,16 @@ Route::get('/dashboard', 'UserDashboardController@index');
 
 Route::patch('/dashboard',  ['uses' => 'UpdateUserController@update']);
 
-Route::get('/admin', 'PagesController@adminDashboard')->name('adminDashboard');
+Route::get('/admin', 'PageController@adminDashboard')->name('adminDashboard');
 
-Route::get('/hierarchy', 'PagesController@hierarchy')->name('hierarchy');
+Route::get('/hierarchy', 'PageController@hierarchy')->name('hierarchy');
 
-Route::resource('options', 'OptionsController');
+Route::get('/createAppointment', 'PageController@createAppointment')->name('createAppointment');
 
-Route::post('options/update', 'OptionsController@updateHierarchy');
+Route::resource('options', 'OptionController');
 
-Route::get('options/{option}/children', 'OptionsController@children');
+Route::post('options/update', 'OptionController@updateHierarchy');
+
+Route::get('options/{option}/children', 'OptionController@children');
+
+Route::resource('appointment', 'AppointmentController');

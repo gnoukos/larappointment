@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Option;
 
-class PagesController extends Controller
+class PageController extends Controller
 {
     public function index(){
 
@@ -28,5 +28,10 @@ class PagesController extends Controller
 
     public function hierarchy(){
         return view('pages.admin.hierarchy');
+    }
+
+    public function createAppointment(){
+        $options = Option::doesntHave('children')->get();
+        return view('pages.admin.createAppointment')->with('options', $options);
     }
 }

@@ -6,7 +6,7 @@ use App\Option;
 use Illuminate\Http\Request;
 use Validator;
 
-class OptionsController extends Controller
+class OptionController extends Controller
 {
     /**
      * Display a listing of the resource.

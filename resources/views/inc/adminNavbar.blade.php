@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand navbar-dark bg-dark static-top">
 
-    <a class="navbar-brand mr-1" href="index.html">LarAppointment</a>
+    <a class="navbar-brand mr-1" href="/admin">LarAppointment</a>
 
     <button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">
         <i class="fas fa-bars"></i>
@@ -34,6 +34,11 @@
             <a class="nav-link" href="/hierarchy">
                 <i class="fas fa-fw fa-table"></i>
                 <span>Hierarchy</span></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/createAppointment">
+                <i class="fas fa-plus"></i>
+                <span>New Appointment</span></a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="/" target="_blank">

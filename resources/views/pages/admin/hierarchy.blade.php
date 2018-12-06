@@ -44,8 +44,18 @@
                 $('#dd-outer-list').append(output);
                 $('.dd').nestable({scroll: true, maxDepth: 30,
                     beforeDragStop: function(l,e, p){
-                        console.log($( "li.dd-item" ).parent());
+                        //console.log($( "li.dd-item" ).parent());
                         //$( "li.dd-item" ).parent().css( "background-color", "red" );
+                        console.log(e.attr('data-id'));
+                        var dataId = e.attr('data-id');
+                        var numOfChildren = $(e).find("li").length;
+                        console.log(numOfChildren);
+
+                        /*if(numOfChildren==0){
+                            $(e).$( ".dd-handle" ).append( "<button class='float-right' onmousedown='deleteItem(0)'>X</button>" );;
+                        }else{
+                            $(p).closest('div[class="dd-item"]').remove("button");
+                        }*/
                     }
                 });
             });
@@ -128,6 +138,9 @@
                 },
                 success: function() {
                     $("#saveSuccess").show();
+                },
+                fail: function(xhr, textStatus, errorThrown){
+                    $("#saveError").show();
                 }
             });
         });
@@ -149,7 +162,13 @@
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <h5 class="alert-heading">Hierarchy Saved!</h5>
+            <h6 class="alert-heading">Hierarchy Saved!</h6>
+        </div>
+        <div id="saveError" class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h6 class="alert-heading">An error occurred! Refresh the page and try again.</h6>
         </div>
     </div>
     <!-- /.container-fluid -->
