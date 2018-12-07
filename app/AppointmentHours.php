@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class AppointmentHours extends Model
 {
-    public function appointment_id(){
+    public function appointment(){
         return $this->belongsTo('App\Appointment', 'appointment_id');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Appointment;
 use Illuminate\Http\Request;
 use App\Option;
 
@@ -33,5 +34,10 @@ class PageController extends Controller
     public function createAppointment(){
         $options = Option::doesntHave('children')->get();
         return view('pages.admin.createAppointment')->with('options', $options);
+    }
+
+    public function manageAppointments(){
+        $appointments = Appointment::all();
+        return view('pages.admin.manageAppointments')->with('appointments', $appointments);
     }
 }

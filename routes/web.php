@@ -27,6 +27,8 @@ Route::get('/hierarchy', 'PageController@hierarchy')->name('hierarchy');
 
 Route::get('/createAppointment', 'PageController@createAppointment')->name('createAppointment');
 
+Route::get('/manageAppointments', 'PageController@manageAppointments')->name('manageAppointments');
+
 Route::resource('options', 'OptionController');
 
 Route::post('options/update', 'OptionController@updateHierarchy');

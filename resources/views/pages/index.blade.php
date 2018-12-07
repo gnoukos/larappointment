@@ -5,7 +5,7 @@
     <div class="col-md-6 offset-md-3 text-center mt-5">
         <h1 class="display-4">Make an Appointment</h1>
         <div class="info-form mt-5 mb-5">
-            <form action="date.html" class="justify-content-center">
+            <form action="/datepicker" id="optionsMenuForm" class="justify-content-center">
                 <div id="optionsMenu" class="form-group">
                     <label for="level1" class="h5 mt-2">Level 1</label>
                     <select class="form-control" id="level_1_selection" onchange="getNextLevel(value,1)">
@@ -15,7 +15,13 @@
                         @endforeach
                     </select>
                 </div>
-                <button type="submit" class="btn btn-dark ">Choose Date</button>
+                <button type="submit" class="btn btn-dark">Choose Date</button>
+                <div id="invalidInput" class="alert alert-danger alert-dismissible fade show mt-5" role="alert" style="display: none;">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h6 class="alert-heading">Please select an option for every field!</h6>
+                </div>
             </form>
         </div>
     </div>
@@ -23,10 +29,25 @@
 
     <script>
 
-        function getNextLevel(id,level) {
-            var labelChildren = $("#optionsMenu > label").length+1;
+        $("#optionsMenuForm").submit(function(e){
             var selectChildren = $("#optionsMenu > select").length+1;
-            //console.log(labelChildren+" "+selectChildren);
+            var ok = true;
+            for(var i=1; i<selectChildren; i++){
+                if($("#level_"+i+"_selection").val()==-1){
+                    ok = false;
+                    break;
+                }
+            }
+            if(ok==false) {
+                e.preventDefault();
+                $("#invalidInput").show();
+            }
+        });
+
+        function getNextLevel(id,level) {
+            $("#invalidInput").hide();
+            //var labelChildren = $("#optionsMenu > label").length+1;
+            var selectChildren = $("#optionsMenu > select").length+1;
 
             for(var i=level+1; i<selectChildren; i++){
                 //console.log("level "+i);

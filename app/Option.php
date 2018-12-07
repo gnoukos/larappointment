@@ -11,11 +11,11 @@ class Option extends Model
 
     public function parent()
     {
-        return $this->belongsTo('App\Option', 'parent');
+        return $this->belongsTo('\App\Option', 'parent');
     }
 
     public function children()
     {
-        return $this->hasMany('App\Option', 'parent');
+        return $this->hasMany('\App\Option', 'parent');
     }
 }
