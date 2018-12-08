@@ -6,6 +6,7 @@ use App\Appointment;
 use App\Option;
 use App\AppointmentHours;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
 use Validator;
 
 class AppointmentController extends Controller
@@ -40,13 +41,7 @@ class AppointmentController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'belongToOption' => 'required',
-            'monday' => 'required_without_all: tuesday, wednesday, thursday, friday, saturday, sunday',
-            'tuesday' => 'required_without_all: monday, wednesday, thursday, friday, saturday, sunday',
-            'wednesday' => 'required_without_all: tuesday, monday, thursday, friday, saturday, sunday',
-            'thursday' => 'required_without_all: tuesday, wednesday, monday, friday, saturday, sunday',
-            'friday' => 'required_without_all: tuesday, wednesday, thursday, monday, saturday, sunday',
-            'saturday' => 'required_without_all: tuesday, wednesday, thursday, friday, monday, sunday',
-            'sunday' => 'required_without_all: tuesday, wednesday, thursday, friday, saturday, monday',
+            'days' => 'required|min:1',
             'hourBoxFrom1' => 'required',
             'hourBoxTo1' => 'required',
             'weeks' => 'required',
@@ -54,13 +49,17 @@ class AppointmentController extends Controller
             'typeOfAppointment' => 'required|in:regular,ticket'
         ]);
 
+        if ($validator->fails()) {
+            return redirect('/createAppointment')->withErrors($validator)->withInput();
+        }
+
         $appointment = new Appointment();
         $appointment->type = $request->typeOfAppointment;
         $appointment->weeks = $request->weeks;
         $appointment->duration = $request->duration;
         $appointment->belong_to_option = $request->belongToOption;
 
-        $daysArray = array();
+        /*$daysArray = array();
         if($request->has('monday')){
             array_push($daysArray, 'monday');
         }
@@ -81,9 +80,9 @@ class AppointmentController extends Controller
         }
         if($request->has('sunday')){
             array_push($daysArray, 'sunday');
-        }
+        }*/
 
-        $appointment->repeat = json_encode($daysArray);
+        $appointment->repeat = json_encode($request->days);
 
         $appointment->save();
 
@@ -142,13 +141,7 @@ class AppointmentController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'belongToOption' => 'required',
-            'monday' => 'required_without_all: tuesday, wednesday, thursday, friday, saturday, sunday',
-            'tuesday' => 'required_without_all: monday, wednesday, thursday, friday, saturday, sunday',
-            'wednesday' => 'required_without_all: tuesday, monday, thursday, friday, saturday, sunday',
-            'thursday' => 'required_without_all: tuesday, wednesday, monday, friday, saturday, sunday',
-            'friday' => 'required_without_all: tuesday, wednesday, thursday, monday, saturday, sunday',
-            'saturday' => 'required_without_all: tuesday, wednesday, thursday, friday, monday, sunday',
-            'sunday' => 'required_without_all: tuesday, wednesday, thursday, friday, saturday, monday',
+            'days' => 'required|min:1',
             'hourBoxFrom1' => 'required',
             'hourBoxTo1' => 'required',
             'weeks' => 'required',
@@ -156,12 +149,16 @@ class AppointmentController extends Controller
             'typeOfAppointment' => 'required|in:regular,ticket'
         ]);
 
+        if ($validator->fails()) {
+            return redirect('/appointment/'.$appointment->id.'/edit')->withErrors($validator)->withInput();
+        }
+
         $appointment->type = $request->typeOfAppointment;
         $appointment->weeks = $request->weeks;
         $appointment->duration = $request->duration;
         $appointment->belong_to_option = $request->belongToOption;
 
-        $daysArray = array();
+        /*$daysArray = array();
         if($request->has('monday')){
             array_push($daysArray, 'monday');
         }
@@ -182,22 +179,16 @@ class AppointmentController extends Controller
         }
         if($request->has('sunday')){
             array_push($daysArray, 'sunday');
-        }
+        }*/
 
-        $appointment->repeat = json_encode($daysArray);
+        $appointment->repeat = json_encode($request->days);
 
         $appointment->save();
-
-        info("mana");
-
-
 
          AppointmentHours::where('appointment_id',$appointment->id)->delete();
 
 
         for($hid=1;$hid<=30;$hid++){
-
-
             if($request->has('hourBoxFrom'.$hid) && $request->has('hourBoxTo'.$hid)) {
 
                 $appointment_hours = new AppointmentHours();
@@ -208,8 +199,6 @@ class AppointmentController extends Controller
 
                 $appointment_hours->save();
             }
-
-            else break;
         }
 
 
