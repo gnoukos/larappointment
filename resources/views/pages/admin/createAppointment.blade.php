@@ -1,10 +1,17 @@
 @extends('layouts.admin')
 @section('footer_include')
     <script>
-         $('#extraHourSet').click( function(){
-            var numOfChildren = $('#hourBoxesContainer').find("label").length/2;
-            $('#hourBoxesContainer').append('<label class="mr-1" for="from">From: </label><input class="form-control mr-3" name="hourBoxFrom'+(numOfChildren+1)+'" type="time">' +
-                                            '<label class="mr-1" for="to">To: </label><input class="form-control mr-3" name="hourBoxTo'+(numOfChildren+1)+'" type="time">');
+        $('#extraHourSet').click( function(){
+            var numOfChildren = $('#hoursBoxes').find(".row").length;
+            $('#hoursBoxes').append('<div class="row mt-2">\n' +
+                '                <div class="col-md-2" id="hourBoxesContainer">\n' +
+                '                    <label class="mr-1" for="from"><h6>From: </h6></label><input class="form-control mr-3" name="hourBoxFrom'+(numOfChildren+1)+'" type="time">\n' +
+                '                </div>\n' +
+                '                <div class="col-md-2" id="hourBoxesContainer">\n' +
+                '                    <label class="mr-1" for="to"><h6>To: </h6></label><input class="form-control mr-3" name="hourBoxTo'+(numOfChildren+1)+'" type="time">\n' +
+                '                </div>\n' +
+                '                <span class="align-middle"><i class="fas fa-times" id="deleteHourBox'+(numOfChildren+1)+'"></i></span>\n' +
+                '            </div>');
         });
     </script>
 @endsection
@@ -46,13 +53,18 @@
         <hr>
         <h4>Hours of Appointment</h4>
         <hr>
-        <div class="form-inline">
-            <div class="form-group" id="hourBoxesContainer">
-                <label class="mr-1" for="from"><h6>From: </h6></label><input class="form-control mr-3" name="hourBoxFrom1" type="time">
-                <label class="mr-1" for="to"><h6>To: </h6></label><input class="form-control mr-3" name="hourBoxTo1" type="time">
+        <div id="hoursBoxes">
+            <div class="row">
+                <div class="col-md-2" id="hourBoxesContainer">
+                    <label class="mr-1" for="from"><h6>From: </h6></label><input class="form-control mr-3" name="hourBoxFrom1" type="time">
+                </div>
+                <div class="col-md-2" id="hourBoxesContainer">
+                    <label class="mr-1" for="to"><h6>To: </h6></label><input class="form-control mr-3" name="hourBoxTo1" type="time">
+                </div>
+                <span class="align-middle"><i class="fas fa-times" id="deleteHourBox1"></i></span>
             </div>
-            <div id="extraHourSet" style="cursor: pointer;"><i class="far fa-plus-square fa-2x"></i></div>
-        </div>
+
+        </div><div class="mt-3" id="extraHourSet" style="cursor: pointer;"><i class="far fa-plus-square fa-2x"></i></div>
         <hr>
         <h4>Settings</h4>
         <hr>

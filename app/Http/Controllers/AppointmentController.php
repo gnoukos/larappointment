@@ -87,13 +87,22 @@ class AppointmentController extends Controller
 
         $appointment->save();
 
-        $appointment_hours = new AppointmentHours();
+        for($hid=1;$hid<=30;$hid++){
 
-        $appointment_hours->appointment_id = $appointment->id;
-        $appointment_hours->start = $request->hourBoxFrom1;
-        $appointment_hours->end = $request->hourBoxTo1;
 
-        $appointment_hours->save();
+            if($request->has('hourBoxFrom'.$hid) && $request->has('hourBoxTo'.$hid)) {
+
+
+                $appointment_hours = new AppointmentHours();
+
+                $appointment_hours->appointment_id = $appointment->id;
+                $appointment_hours->start = $request->{'hourBoxFrom'.$hid};
+                $appointment_hours->end = $request->{'hourBoxTo'.$hid};
+
+                $appointment_hours->save();
+            }
+        }
+
 
         return redirect('/manageAppointments')->with('success', 'Appointment saved!');
     }
@@ -179,13 +188,30 @@ class AppointmentController extends Controller
 
         $appointment->save();
 
-        $appointment_hours = new AppointmentHours();
+        info("mana");
 
-        $appointment_hours->appointment_id = $appointment->id;
-        $appointment_hours->start = $request->hourBoxFrom1;
-        $appointment_hours->end = $request->hourBoxTo1;
 
-        $appointment_hours->save();
+
+         AppointmentHours::where('appointment_id',$appointment->id)->delete();
+
+
+        for($hid=1;$hid<=30;$hid++){
+
+
+            if($request->has('hourBoxFrom'.$hid) && $request->has('hourBoxTo'.$hid)) {
+
+                $appointment_hours = new AppointmentHours();
+
+                $appointment_hours->appointment_id = $appointment->id;
+                $appointment_hours->start = $request->{'hourBoxFrom'.$hid};
+                $appointment_hours->end = $request->{'hourBoxTo'.$hid};
+
+                $appointment_hours->save();
+            }
+
+            else break;
+        }
+
 
         return redirect('/manageAppointments')->with('success', 'Appointment saved!');
     }
