@@ -16,10 +16,10 @@ class CreateTimeslotsTable extends Migration
         Schema::create('timeslots', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
-            $table->integer('user_id');
+            $table->integer('user_id')->nullable();
             $table->integer('daily_appointments_id');
             $table->integer('ticket_num')->nullable();
-            $table->timestamp('slot')->nullable()->default(null);
+            $table->timestamp('slot');
             $table->text('comment')->nullable();
         });
     }

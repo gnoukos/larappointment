@@ -71,7 +71,7 @@
             '2018-10-31'
         ];
 
-        var maxAvailDate = '2018-11-22';
+        var maxAvailDate = '2019-05-22';
 
         $("#hoursCard").fadeIn(1000); // fade in the hour selection box
 

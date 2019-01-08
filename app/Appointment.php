@@ -13,4 +13,8 @@ class Appointment extends Model
     public function appointment_hours(){
         return $this->hasMany('\App\AppointmentHours');
     }
+
+    public function daily_appointments(){
+        return $this->hasMany('\App\DailyAppointment');
+    }
 }

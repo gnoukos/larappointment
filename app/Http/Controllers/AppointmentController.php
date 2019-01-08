@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Appointment;
+use App\DailyAppointment;
 use App\Option;
 use App\AppointmentHours;
+use App\Timeslot;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Log;
 use Validator;
 
 class AppointmentController extends Controller
@@ -101,7 +104,52 @@ class AppointmentController extends Controller
                 $appointment_hours->save();
             }
         }
+        //CREATING DAILY APPOINTMENTS
+        $repeat = json_decode($appointment->repeat);
+        $start = time()+86400;
+        $end = $start + 604800*$appointment->weeks;
+        $current = $start;
+        while($current < $end){
+            $weekday = strtolower(date('l', $current));
+            if(in_array($weekday, $repeat)){
+                $daily_appointment = new DailyAppointment();
 
+                $daily_appointment->date = gmdate("Y-m-d H:i:s", $current);
+                $daily_appointment->appointment_id = $appointment->id;
+                $daily_appointment->free_slots = 0;
+
+                $daily_appointment->save();
+            }
+            $current = $current + 86400;
+        }
+        /////////////////////
+        ///
+        /// CREATING TIMESLOTS
+        $appointment_hours = AppointmentHours::where('appointment_id',$appointment->id)->get();
+        $daily_appointments = DailyAppointment::where('appointment_id',$appointment->id)->get();
+
+        foreach ($daily_appointments as $daily_appointment){
+            Log::info("mana1");
+            foreach ($appointment_hours as $appointment_hour){
+                Log::info("mana2");
+                $tmpDate = new \Datetime($daily_appointment->date);
+                $tmpDate = $tmpDate->format('Y-m-d');
+
+                $tmp_slot = $tmpDate ;
+
+                $start = new \DateTime($tmp_slot . " " . $appointment_hour->start);
+                $end = new \DateTime($tmp_slot . " " . $appointment_hour->end);
+                for($start; $start<$end; $start->modify("+{$appointment->duration} minutes")){
+                    Log::info("mana3");
+                    $timeslot = new Timeslot();
+                    $timeslot->daily_appointments_id = $daily_appointment->id;
+                    $timeslot->slot = $start;
+                    $timeslot->save();
+                }
+            }
+        }
+
+        ///////////////////
 
         return redirect('/manageAppointments')->with('success', 'Appointment saved!');
     }
