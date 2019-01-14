@@ -129,9 +129,9 @@ class AppointmentController extends Controller
         $daily_appointments = DailyAppointment::where('appointment_id',$appointment->id)->get();
 
         foreach ($daily_appointments as $daily_appointment){
-            Log::info("mana1");
+
             foreach ($appointment_hours as $appointment_hour){
-                Log::info("mana2");
+
                 $tmpDate = new \Datetime($daily_appointment->date);
                 $tmpDate = $tmpDate->format('Y-m-d');
 
@@ -140,7 +140,7 @@ class AppointmentController extends Controller
                 $start = new \DateTime($tmp_slot . " " . $appointment_hour->start);
                 $end = new \DateTime($tmp_slot . " " . $appointment_hour->end);
                 for($start; $start<$end; $start->modify("+{$appointment->duration} minutes")){
-                    Log::info("mana3");
+
                     $timeslot = new Timeslot();
                     $timeslot->daily_appointments_id = $daily_appointment->id;
                     $timeslot->slot = $start;
