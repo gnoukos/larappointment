@@ -147,6 +147,9 @@ class AppointmentController extends Controller
                     $timeslot->save();
                 }
             }
+
+            $daily_appointment->free_slots= Timeslot::where('daily_appointments_id',$daily_appointment->id)->count();
+            $daily_appointment->save();
         }
 
         ///////////////////

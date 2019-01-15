@@ -26,30 +26,35 @@ class PageController extends Controller
         $optionId = Input::get('option');
         $dailyAppointments = DailyAppointment::whereHas('appointment.option', function ($q) use($optionId) {
             $q->where('id', $optionId);
-        })->where('free_slots', '>', 0)->orderBy('date', 'asc')->get();
+        })->where('free_slots', '>', 0)->orderBy('date', 'desc')->get();
 
-        Log::info($dailyAppointments);
+
 
         $current = date("Y-m-d");
         $disabledDates = [$current];
+
 
         while($current <= $dailyAppointments[0]->date){
             $current = date('Y-m-d', strtotime($current .' +1 day'));
             array_push($disabledDates, $current);
         }
 
+
         foreach ($dailyAppointments as $dailyAppointment){
-            if (($key = array_search($dailyAppointment->date, $disabledDates)) !== false) {
+            if (($key = array_search(substr($dailyAppointment->date, 0, -9), $disabledDates)) !== false) {
                 unset($disabledDates[$key]);
             }
         }
 
-        $maxAvailDate = $dailyAppointments[0]->date;
 
+        Log::info($dailyAppointments);
         Log::info($disabledDates);
-        Log::info($maxAvailDate);
 
-        return view('pages.datepicker');
+
+       $maxAvailDate = $dailyAppointments[0]->date;
+
+
+        return view('pages.datepicker')->with(['disabledDates'=>$disabledDates, 'maxAvailDate'=>$maxAvailDate]);
     }
 
     public function adminDashboard(){

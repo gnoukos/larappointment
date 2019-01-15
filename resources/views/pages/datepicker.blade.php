@@ -61,17 +61,11 @@
         </div>
     </div>
     <script>
-        var disabledDatesArray = [
-            '2018-11-15',
-            '2018-10-29',
-            '2018-10-14',
-            '2018-10-30',
-            '2018-11-03',
-            '2018-11-01',
-            '2018-10-31'
-        ];
+        var disabledDatesArray = [@foreach ($disabledDates as $disabledDate)
+           '{{ $disabledDate }}',
+        @endforeach];
 
-        var maxAvailDate = '2019-05-22';
+        var maxAvailDate = '{{$maxAvailDate}}';
 
         $("#hoursCard").fadeIn(1000); // fade in the hour selection box
 

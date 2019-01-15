@@ -19,7 +19,7 @@ class CreateTimeslotsTable extends Migration
             $table->integer('user_id')->nullable();
             $table->integer('daily_appointments_id');
             $table->integer('ticket_num')->nullable();
-            $table->timestamp('slot');
+            $table->timestamp('slot')->nullable();
             $table->text('comment')->nullable();
         });
     }

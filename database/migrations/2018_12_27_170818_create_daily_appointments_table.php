@@ -15,7 +15,7 @@ class CreateDailyAppointmentsTable extends Migration
     {
         Schema::create('daily_appointments', function (Blueprint $table) {
             $table->increments('id');
-            $table->timestamp('date');
+            $table->timestamp('date')->nullable();
             $table->integer('appointment_id');
             $table->integer('free_slots');
         });
