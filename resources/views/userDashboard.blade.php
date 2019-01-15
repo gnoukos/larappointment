@@ -97,7 +97,7 @@
                                     {{Form::label('password', 'Password')}}
                                     {{Form::password('password', ['class' => 'form-control'])}}
                                     {{Form::label('password', 'Password Repeat')}}
-                                    {{Form::password('password_repeat', ['class' => 'form-control'])}}
+                                    {{Form::password('password_confirmation', ['class' => 'form-control'])}}
                                 {{Form::hidden('_method', 'PATCH')}}
                                 {{Form::submit('Submit', ['class' => 'btn btn-primary mt-2'])}}
                                 {!! Form::close() !!}

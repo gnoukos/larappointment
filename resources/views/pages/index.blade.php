@@ -8,12 +8,13 @@
             <form action="/datepicker" method="get" id="optionsMenuForm" class="justify-content-center">
                 <div id="optionsMenu" class="form-group">
                     <label for="level1" class="h5 mt-2">Level 1</label>
-                    <select name="option" class="form-control" id="level_1_selection" onchange="getNextLevel(value,1)">
+                    <select class="form-control" id="level_1_selection" onchange="getNextLevel(value,1)">
                         <option value="-1">Select Option</option>
                         @foreach($options as $option)
                         <option value="{{$option->id}}">{{$option->title}}</option>
                         @endforeach
                     </select>
+                    <input type="hidden" name="option" id="selectedOption" value="">
                 </div>
 
                 <button type="submit" class="btn btn-dark">Choose Date</button>
@@ -47,7 +48,6 @@
 
         function getNextLevel(id,level) {
             $("#invalidInput").hide();
-            //var labelChildren = $("#optionsMenu > label").length+1;
             var selectChildren = $("#optionsMenu > select").length+1;
 
             for(var i=level+1; i<selectChildren; i++){
@@ -69,6 +69,7 @@
                     }
                 });
             }
+            $('#selectedOption').val(id);
         }
 
 

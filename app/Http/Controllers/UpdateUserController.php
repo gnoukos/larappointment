@@ -10,19 +10,19 @@ use Illuminate\Support\Facades\Hash;
 class UpdateUserController extends Controller
 {
     public function update(Request $request){
-
+        $user = Auth::user();
         $this->validate(request(), [
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:6|confirmed'
+            'email' => 'unique:users,email,'.$user->id,
+            'password' => 'required|confirmed|min:6'
         ]);
 
         //create post
 
-        $user = Auth::user();
+
         $user->mobile_num = $request->input('mobile');
         $user->email = $request->input('email');
         if(!empty($request->input('password'))){
-            if($request->input('password')==$request->input('password_repeat')){
+            if($request->input('password')==$request->input('password_confirmation')){
                 $user->password = Hash::make($request->input('password'));
             }
         }

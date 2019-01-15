@@ -21,36 +21,12 @@
             <div class="card" id="hoursCard" style="display: none;">
                 <div class="card-body">
                     <h5 class="card-title">Choose Hour</h5>
-                    <p class="card-text">First choose date to see available hours.</p>
+                    <p class="card-text" id="chooseDatePrompt">First choose date to see available hours.</p>
                     <div class="wrapper text-center">
-                        <div class="btn-group-md btn-group-toggle text-center" data-toggle="buttons">
-                            <label class="btn btn-secondary ml-1 mt-1 mb-1 mr-1">
+                        <div class="btn-group-md btn-group-toggle text-center" data-toggle="buttons" id="hourButtonContainer">
+                            {{--<label class="btn btn-secondary ml-1 mt-1 mb-1 mr-1">
                                 <input type="radio" name="13:30" id="hourRadio" autocomplete="off" value="13:30"> 13:30
-                            </label>
-                            <label class="btn btn-secondary ml-1 mt-1 mb-1 mr-1">
-                                <input type="radio" name="13:40" id="hourRadio" autocomplete="off" value="13:40"> 13:40
-                            </label>
-                            <label class="btn btn-secondary ml-1 mt-1 mb-1 mr-1">
-                                <input type="radio" name="13:50" id="hourRadio" autocomplete="off" value="13:50"> 13:50
-                            </label>
-                            <label class="btn btn-secondary ml-1 mt-1 mb-1 mr-1">
-                                <input type="radio" name="13:30" id="hourRadio" autocomplete="off" value="13:31"> 13:30
-                            </label>
-                            <label class="btn btn-secondary ml-1 mt-1 mb-1 mr-1">
-                                <input type="radio" name="13:40" id="hourRadio" autocomplete="off" value="13:41"> 13:40
-                            </label>
-                            <label class="btn btn-secondary ml-1 mt-1 mb-1 mr-1">
-                                <input type="radio" name="13:50" id="hourRadio" autocomplete="off" value="13:51"> 13:50
-                            </label>
-                            <label class="btn btn-secondary ml-1 mt-1 mb-1 mr-1">
-                                <input type="radio" name="13:30" id="hourRadio" autocomplete="off" value="13:32"> 13:30
-                            </label>
-                            <label class="btn btn-secondary ml-1 mt-1 mb-1 mr-1">
-                                <input type="radio" name="13:40" id="hourRadio" autocomplete="off" value="13:42"> 13:40
-                            </label>
-                            <label class="btn btn-secondary ml-1 mt-1 mb-1 mr-1">
-                                <input type="radio" name="13:50" id="hourRadio" autocomplete="off" value="13:52"> 13:50
-                            </label>
+                            </label>--}}
                         </div>
                         <div class="col-12 text-center mt-4">
                             <a href="#" class="btn btn-primary" id="makeAppointmentButton">Make the Appointment</a>
@@ -71,11 +47,9 @@
 
         $("#pignoseCalendar").fadeIn(1000); // fade in the calendar
 
-        $('input:radio[id=hourRadio]').change(function(){ //check when radio clicked and get value
-            var val = $(this).val(); // retrieve the value
-            console.log(val);
+        function showMakeAppointmentButton(){
             $("#makeAppointmentButton").show();
-        });
+        }
 
         $("#makeAppointmentButton").hide(); //hide button until hour selected
 
@@ -85,7 +59,17 @@
             minDate: moment().format("YYYY-MM-DD"), //disable dates before today
             maxDate: maxAvailDate, //disable dates after a certain date
             select: function(date, context) { //callback function to get selected date
-                console.log(date[0]._i); //selected date
+                try {
+                    $("#hourButtonContainer").empty();
+                    console.log(date[0]._i); //selected date
+                    var option = getUrlParameter('option');
+                    getFreeTimeslots(option, date[0]._i);
+                    $("#makeAppointmentButton").hide();
+                    $("#chooseDatePrompt").hide();
+                }catch (e) {
+                    $("#makeAppointmentButton").hide();
+                    $("#chooseDatePrompt").show();
+                }
             }
         });
 
@@ -125,6 +109,50 @@
             }
             $('.calendar').pignoseCalendar('set', moment(availDate.getTime()).format("YYYY-MM-DD")); //sets the available date to the pignose calendar
         });
+
+        function getFreeTimeslots(option, date){
+            console.log(option+ "   " + date);
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+
+            });
+            jQuery.ajax({
+                url: "{{ url('/getFreeTimeslots') }}",
+                data: {
+                    "option": option,
+                    "date": date
+                },
+                method: 'GET',
+                success: function(result){
+                    showAvailableHours(result);
+                }
+            });
+        }
+
+        function getUrlParameter(sParam) {
+            var sPageURL = window.location.search.substring(1),
+                sURLVariables = sPageURL.split('&'),
+                sParameterName,
+                i;
+
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i].split('=');
+
+                if (sParameterName[0] === sParam) {
+                    return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+                }
+            }
+        };
+
+        function showAvailableHours(result) {
+            console.log("mana");
+            $.each(result, function(i, item) {
+                console.log(item.slot);
+                $("#hourButtonContainer").append('<label class="btn btn-secondary ml-1 mt-1 mb-1 mr-1" onclick="showMakeAppointmentButton();"><input type="radio" name="hourRadio" id="hourRadio" autocomplete="off" value="'+item.slot.split(" ")[1].slice(0, -3)+'">'+item.slot.split(" ")[1].slice(0, -3)+'</label>');
+            });
+        }
 
 
     </script>

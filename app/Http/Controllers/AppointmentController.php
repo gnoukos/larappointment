@@ -267,4 +267,18 @@ class AppointmentController extends Controller
         Appointment::destroy($id);
         return redirect('/manageAppointments');
     }
+
+    public function getFreeTimeslots(Request $request)
+    {
+        $option = $request->option;
+        $date = $request->date;
+
+        $timeslots = Timeslot::whereHas('daily_appointment.appointment.option', function ($q) use($option, $date) {
+            $q->where('id', $option);
+        })->where('slot', 'like', $date.'%')->orderBy('slot', 'asc')->get();
+
+        Log::info($timeslots);
+
+        return response()->json($timeslots);
+    }
 }

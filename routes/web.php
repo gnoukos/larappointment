@@ -36,3 +36,5 @@ Route::post('options/update', 'OptionController@updateHierarchy');
 Route::get('options/{option}/children', 'OptionController@children');
 
 Route::resource('appointment', 'AppointmentController');
+
+Route::get('getFreeTimeslots', 'AppointmentController@getFreeTimeslots');
