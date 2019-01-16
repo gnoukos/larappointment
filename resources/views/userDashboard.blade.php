@@ -21,24 +21,20 @@
                                     <thead>
                                     <tr>
                                         <th scope="col">Date</th>
-                                        <th scope="col">Type</th>
+                                        <th scope="col">Category</th>
                                         <th scope="col">Time</th>
                                         <th scope="col">Cancel</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <th scope="row">30/10/2018</th>
-                                        <td>radiological</td>
-                                        <td>12:30</td>
-                                        <td><a class="btn btn-danger" href="#" data-toggle="modal" data-target="#confirmationModal">&times;</a></td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">31/10/2018</th>
-                                        <td>pediatric</td>
-                                        <td>09:45</td>
-                                        <td><a class="btn btn-danger" href="#" data-toggle="modal" data-target="#confirmationModal">&times;</a></td>
-                                    </tr>
+                                    @foreach($timeslots as $timeslot)
+                                        <tr>
+                                            <th scope="row">{{$timeslot->daily_appointment->date}}</th>
+                                            <td>{{$timeslot->daily_appointment->appointment->option->title}}</td>
+                                            <td>{{$timeslot->slot}}</td>
+                                            <td><a class="btn btn-danger" href="#" data-toggle="modal" data-target="#confirmationModal">&times;</a></td>
+                                        </tr>
+                                    @endforeach
                                     </tbody>
                                 </table>
                                 <!-- appointments table ENDS-->

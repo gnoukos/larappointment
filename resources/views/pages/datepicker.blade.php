@@ -18,22 +18,49 @@
             <button class="btn btn-dark mt-3" id="nextAvailableDateButton">Next available date</button>
         </div>
         <div class="col-lg mt-5">
-            <div class="card" id="hoursCard" style="display: none;">
-                <div class="card-body">
-                    <h5 class="card-title">Choose Hour</h5>
-                    <p class="card-text" id="chooseDatePrompt">First choose date to see available hours.</p>
-                    <div class="wrapper text-center">
-                        <div class="btn-group-md btn-group-toggle text-center" data-toggle="buttons" id="hourButtonContainer">
-                            {{--<label class="btn btn-secondary ml-1 mt-1 mb-1 mr-1">
-                                <input type="radio" name="13:30" id="hourRadio" autocomplete="off" value="13:30"> 13:30
-                            </label>--}}
-                        </div>
-                        <div class="col-12 text-center mt-4">
-                            <a href="#" class="btn btn-primary" id="makeAppointmentButton">Make the Appointment</a>
+            <form method="post" action="{{action('AppointmentController@makeAppointment')}}">
+                <div class="card" id="hoursCard" style="display: none;">
+                    <div class="card-body">
+                        <h5 class="card-title">Choose Hour</h5>
+                        <p class="card-text" id="chooseDatePrompt">First choose date to see available hours.</p>
+                        <div class="wrapper text-center">
+                            <div class="btn-group-md btn-group-toggle text-center" data-toggle="buttons" id="hourButtonContainer">
+                                {{--<label class="btn btn-secondary ml-1 mt-1 mb-1 mr-1">
+                                       <input type="radio" name="13:30" id="hourRadio" autocomplete="off" value="13:30"> 13:30
+                                   </label>--}}
+                            </div>
+                            <input name="_token" type="hidden" value="{{ csrf_token() }}"/>
+                            <div class="col-12 text-center mt-4">
+                                <button type="submit" value="Submit" class="btn btn-primary" id="makeAppointmentButton">Make the Appointment</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+                @guest
+                <div class="card mt-4" id="userDetailsCard">
+                    <div class="card-body">
+                        <h5 class="card-title">Fill in your details</h5>
+                        <div class="wrapper text-center">
+                            <div class="form-group row">
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="tmpUserEmail" name="email" placeholder="Email" >
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="tmpUserName" name="name" placeholder="Your Name" >
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="tmpUserPhone" name="phone" placeholder="Your Phone" >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endguest
+            </form>
         </div>
     </div>
     <script>
@@ -147,10 +174,9 @@
         };
 
         function showAvailableHours(result) {
-            console.log("mana");
             $.each(result, function(i, item) {
                 console.log(item.slot);
-                $("#hourButtonContainer").append('<label class="btn btn-secondary ml-1 mt-1 mb-1 mr-1" onclick="showMakeAppointmentButton();"><input type="radio" name="hourRadio" id="hourRadio" autocomplete="off" value="'+item.slot.split(" ")[1].slice(0, -3)+'">'+item.slot.split(" ")[1].slice(0, -3)+'</label>');
+                $("#hourButtonContainer").append('<label class="btn btn-secondary ml-1 mt-1 mb-1 mr-1" onclick="showMakeAppointmentButton();"><input type="radio" name="timeslot" id="hourRadio" autocomplete="off" value="'+item.id+'">'+item.slot.split(" ")[1].slice(0, -3)+'</label>');
             });
         }
 

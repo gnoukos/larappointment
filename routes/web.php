@@ -38,3 +38,5 @@ Route::get('options/{option}/children', 'OptionController@children');
 Route::resource('appointment', 'AppointmentController');
 
 Route::get('getFreeTimeslots', 'AppointmentController@getFreeTimeslots');
+
+Route::post('makeAppointment', 'AppointmentController@makeAppointment');

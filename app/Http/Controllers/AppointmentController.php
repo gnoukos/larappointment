@@ -5,12 +5,17 @@ namespace App\Http\Controllers;
 use App\Appointment;
 use App\DailyAppointment;
 use App\Option;
+use App\User;
+use Illuminate\Support\Facades\App;
+use Session;
 use App\AppointmentHours;
 use App\Timeslot;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Log;
 use Validator;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AppointmentController extends Controller
 {
@@ -275,10 +280,66 @@ class AppointmentController extends Controller
 
         $timeslots = Timeslot::whereHas('daily_appointment.appointment.option', function ($q) use($option, $date) {
             $q->where('id', $option);
-        })->where('slot', 'like', $date.'%')->orderBy('slot', 'asc')->get();
+        })->where('slot', 'like', $date.'%')->where('user_id', null)->orderBy('slot', 'asc')->get();
 
-        Log::info($timeslots);
+        //Log::info($timeslots);
 
         return response()->json($timeslots);
     }
+
+    public function makeAppointment(Request $request)
+    {
+        $timeslot = Timeslot::findOrFail($request->timeslot);
+
+        $optionId = $request->session()->get('optionId');
+
+        if(!Auth::check()){
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users',
+                'phone' => 'required|numeric|min:8'
+            ]);
+
+            if ($validator->fails()) {
+                return redirect('/datepicker?option='.$optionId)->withErrors($validator);
+            }
+
+            $user = new User();
+            $randomUserPassword = str_random(8);
+            $user->name = $request->name;
+            $user->role = 'user';
+            $user->password = Hash::make($randomUserPassword);
+            $user->email = $request->email;
+            $user->mobile_num = $request->phone;
+            $user->save();
+
+            if($timeslot->user_id == null) {
+                $timeslot->user_id = $user->id;
+                $timeslot->save();
+            }
+
+        }else{
+
+            $user = Auth::user();
+
+            if($timeslot->user_id == null) {
+                $timeslot->user_id = $user->id;
+                $timeslot->save();
+            }
+        }
+
+        return response()->json($timeslot);
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+

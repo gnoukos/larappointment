@@ -47,7 +47,7 @@
             </div>
         @endif
         {{ Form::open(['action' => ['AppointmentController@update',$appointment->id], 'method' => 'PUT']) }}
-        <div id="appointmentOption"><h4>Appointment refers to: </h4>
+        <div id="appointmentOption"><h4>Category refers to: </h4>
             <select class="custom-select" name="belongToOption">
                 <option>Choose an option</option>
                 @foreach($options as $option)

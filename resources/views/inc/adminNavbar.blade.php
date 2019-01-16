@@ -38,12 +38,12 @@
         <li class="nav-item">
             <a class="nav-link" href="/createAppointment">
                 <i class="fas fa-plus"></i>
-                <span>New Appointment</span></a>
+                <span>New Category</span></a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="/manageAppointments">
                 <i class="fas fa-list"></i>
-                <span>Appointment Types</span></a>
+                <span>Categories</span></a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="/" target="_blank">

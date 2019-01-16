@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Option;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Input;
+use Session;
+use Illuminate\Support\Facades\Auth;
 
 class PageController extends Controller
 {
@@ -24,6 +26,9 @@ class PageController extends Controller
 
     public function datePicker(){
         $optionId = Input::get('option');
+
+        session(['optionId' => $optionId]);
+
         $dailyAppointments = DailyAppointment::whereHas('appointment.option', function ($q) use($optionId) {
             $q->where('id', $optionId);
         })->where('free_slots', '>', 0)->orderBy('date', 'desc')->get();
@@ -58,20 +63,39 @@ class PageController extends Controller
     }
 
     public function adminDashboard(){
-        return view('pages.admin.adminDashboard');
+        if (Auth::user()->role=='admin') {
+            return view('pages.admin.adminDashboard');
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
     }
 
     public function hierarchy(){
-        return view('pages.admin.hierarchy');
+
+        if (Auth::user()->role=='admin') {
+            return view('pages.admin.hierarchy');
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
     }
 
     public function createAppointment(){
-        $options = Option::doesntHave('children')->get();
-        return view('pages.admin.createAppointment')->with('options', $options);
+
+        if (Auth::user()->role=='admin') {
+            $options = Option::doesntHave('children')->get();
+            return view('pages.admin.createAppointment')->with('options', $options);
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
     }
 
     public function manageAppointments(){
-        $appointments = Appointment::all();
-        return view('pages.admin.manageAppointments')->with('appointments', $appointments);
+
+        if (Auth::user()->role=='admin') {
+            $appointments = Appointment::all();
+            return view('pages.admin.manageAppointments')->with('appointments', $appointments);
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
     }
 }
