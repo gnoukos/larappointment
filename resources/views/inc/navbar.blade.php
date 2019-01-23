@@ -11,7 +11,7 @@
             @auth
                 @if(auth()->user()->role=='admin')
                     <li class="nav-item">
-                        <a class="nav-link text-dark" href="about.html">Admin</a>
+                        <a class="nav-link text-dark" href="/admin">Admin</a>
                     </li>
                 @endif
             @endauth

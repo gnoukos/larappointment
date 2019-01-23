@@ -32,7 +32,11 @@
                                             <th scope="row">{{$timeslot->daily_appointment->date}}</th>
                                             <td>{{$timeslot->daily_appointment->appointment->option->title}}</td>
                                             <td>{{$timeslot->slot}}</td>
-                                            <td><a class="btn btn-danger" href="#" data-toggle="modal" data-target="#confirmationModal">&times;</a></td>
+                                            @if(Carbon\Carbon::today()->lt($timeslot->daily_appointment->date))
+                                                <td><a class="btn btn-danger" href="#" data-toggle="modal" data-target="#confirmationModal">&times;</a></td>
+                                            @else
+                                                <td><a class="btn btn-danger disabled" href="#" data-toggle="modal" data-target="#confirmationModal">&times;</a></td>
+                                            @endif
                                         </tr>
                                     @endforeach
                                     </tbody>
