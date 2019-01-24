@@ -17,8 +17,11 @@
     <link href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
 
     <!-- Page level plugin CSS-->
-    <link href="{{ asset('vendor/datatables/dataTables.bootstrap4.css') }}" rel="stylesheet">
 
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/buttons/1.5.2/css/buttons.bootstrap4.min.css" rel="stylesheet">
     <!-- Custom styles for this template-->
     <link href="{{ asset('css/sb-admin.css') }}" rel="stylesheet">
     @yield('include')
@@ -42,12 +45,12 @@
 <script src="{{ asset('vendor/jquery-easing/jquery.easing.min.js') }}"></script>
 <!-- Page level plugin JavaScript-->
 <script src="{{ asset('vendor/chart.js/Chart.min.js') }}"></script>
-<script src="{{ asset('vendor/datatables/jquery.dataTables.js') }}"></script>
-<script src="{{ asset('vendor/datatables/dataTables.bootstrap4.js') }}"></script>
+
+
 <!-- Custom scripts for all pages-->
 <script src="{{ asset('js/sb-admin.min.js') }}"></script>
 <!-- Demo scripts for this page-->
-<script src="{{ asset('js/demo/datatables-demo.js') }}"></script>
+{{--<script src="{{ asset('js/demo/datatables-demo.js') }}"></script>--}}
 <script src="{{ asset('js/demo/chart-area-demo.js') }}"></script>
 @yield('footer_include')
 </body>

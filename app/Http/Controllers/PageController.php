@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Appointment;
+use App\User;
 use App\DailyAppointment;
+use App\Timeslot;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Option;
 use Illuminate\Support\Facades\Log;
@@ -64,7 +67,12 @@ class PageController extends Controller
 
     public function adminDashboard(){
         if (Auth::user()->role=='admin') {
-            return view('pages.admin.adminDashboard');
+            $timeslotsToday = Timeslot::where('slot', 'like', Carbon::now()->format('Y-M-d').'%')->where('user_id', '!=', null)->count();
+            $timeslotsMonth = Timeslot::where('slot', 'like', '%-'.date('m').'-%')->where('user_id', '!=', null)->where('slot', '>', Carbon::now()->toDateTimeString())->count();
+            $usersNum = User::where('role', '!=', 'admin')->count();
+            Log::info(date('m'));
+            $timeslots = Timeslot::where('slot', '>', Carbon::now()->toDateTimeString())->where('user_id', '!=', null)->get();
+            return view('pages.admin.adminDashboard')->with(['timeslots' => $timeslots, 'timeslotsToday' => $timeslotsToday, 'timeslotsMonth'=>$timeslotsMonth, 'usersNum' => $usersNum]);
         } else {
             abort(403, 'Unauthorized action.');
         }
@@ -101,18 +109,32 @@ class PageController extends Controller
 
     public function levels(){
         if (Auth::user()->role=='admin') {
-            $optionLevels = array();
-            $options = Option::where('parent', null)->get();
-            $level = array();
-
-            array_push($optionLevels, $options);
-
-            foreach ($options as $option){
-                array_push($level, $option->children);
+            $options = Option::all();
+            $levels = array();
+            $depth = 1;
+            $done = false;
+            while(!$done){
+                $levels[$depth] = array();
+                foreach($options as $option){
+                    if($depth == 1){
+                        if($option->parent == NULL){
+                            array_push($levels[$depth],$option);
+                        }
+                    }else{
+                        if(count(array_filter($levels[$depth-1],function($o) use ($option){
+                                return $o->id == $option->parent;
+                            })) > 0){
+                            array_push($levels[$depth],$option);
+                        }
+                    }
+                }
+                if(count($levels[$depth]) == 0 ){
+                    $done = true;
+                }
+                $depth++;
             }
-            array_push($optionLevels, $level);
 
-            return view('pages.admin.levels')->with('options', $options);
+            return view('pages.admin.levels')->with('levels', $levels);
         } else {
             abort(403, 'Unauthorized action.');
         }

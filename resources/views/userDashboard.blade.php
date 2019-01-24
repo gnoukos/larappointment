@@ -33,9 +33,13 @@
                                             <td>{{$timeslot->daily_appointment->appointment->option->title}}</td>
                                             <td>{{$timeslot->slot}}</td>
                                             @if(Carbon\Carbon::today()->lt($timeslot->daily_appointment->date))
-                                                <td><a class="btn btn-danger" href="#" data-toggle="modal" data-target="#confirmationModal">&times;</a></td>
+                                                <td>
+                                                    {!! Form::open(['url' => ['flushSlot',$timeslot->id], 'method' => 'POST']) !!}
+                                                    <button type="submit" class="btn btn-danger"  onclick="return confirm('Do you want to delete this appointment category ? ')">Delete</button>
+                                                    {!! Form::close() !!}
+                                                </td>
                                             @else
-                                                <td><a class="btn btn-danger disabled" href="#" data-toggle="modal" data-target="#confirmationModal">&times;</a></td>
+                                                <td><a class="btn btn-danger disabled" href="#">&times;</a></td>
                                             @endif
                                         </tr>
                                     @endforeach
@@ -78,7 +82,7 @@
                                         }
                                     });
                                 </script>
-                                @if ($errors->any())
+                                @if ($errors->has('update_name') || $errors->has('update_email') || $errors->has('update_password') || $errors->has('update_mobile'))
                                     <div class="alert alert-danger">
                                         <ul>
                                             @foreach ($errors->all() as $error)
@@ -89,15 +93,15 @@
                                 @endif
                                 {!! Form::open(['action' => ['UpdateUserController@update'], 'method' => 'POST']) !!}
                                     {{Form::label('name', 'Name')}}
-                                    {{Form::text('name', $user->name, ['class' => 'form-control', 'readonly'])}}
+                                    {{Form::text('update_name', $user->name, ['class' => 'form-control', 'readonly'])}}
                                     {{Form::label('email', 'Email-Address')}}
-                                    {{Form::text('email', $user->email, ['class' => 'form-control'])}}
+                                    {{Form::text('update_email', $user->email, ['class' => 'form-control'])}}
                                     {{Form::label('mobile', 'Phone')}}
-                                    {{Form::text('mobile', $user->mobile_num, ['class' => 'form-control'])}}
+                                    {{Form::text('update_mobile', $user->mobile_num, ['class' => 'form-control'])}}
                                     {{Form::label('password', 'Password')}}
-                                    {{Form::password('password', ['class' => 'form-control'])}}
+                                    {{Form::password('update_password', ['class' => 'form-control'])}}
                                     {{Form::label('password', 'Password Repeat')}}
-                                    {{Form::password('password_confirmation', ['class' => 'form-control'])}}
+                                    {{Form::password('update_password_confirmation', ['class' => 'form-control'])}}
                                 {{Form::hidden('_method', 'PATCH')}}
                                 {{Form::submit('Submit', ['class' => 'btn btn-primary mt-2'])}}
                                 {!! Form::close() !!}

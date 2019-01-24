@@ -12,7 +12,8 @@
             </li>
             <li class="breadcrumb-item active">Levels</li>
         </ol>
-        <div id="saveSuccess" class="alert alert-success alert-dismissible fade show" role="alert" style="display: none;">
+        <div id="saveSuccess" class="alert alert-success alert-dismissible fade show" role="alert"
+             style="display: none;">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -30,41 +31,18 @@
         <form>
             <div class="form-group">
                 <div class="row">
-                    <div class="col-md-4 mb-5 mt-5">
-                        <input type="text" class="form-control" id="level1" placeholder="Level 1">
-                        <ul>
-                            <li>Item 1</li>
-                            <li>Item 6</li>
-                        </ul>
-                    </div>
-                    <div class="col-md-4 mb-5 mt-5">
-                        <input type="text" class="form-control" id="level1" placeholder="Level 1">
-                        <ul>
-                            <li>Item 1</li>
-                            <li>Item 6</li>
-                        </ul>
-                    </div>
-                    <div class="col-md-4 mb-5 mt-5">
-                        <input type="text" class="form-control" id="level1" placeholder="Level 1">
-                        <ul>
-                            <li>Item 1</li>
-                            <li>Item 6</li>
-                        </ul>
-                    </div>
-                    <div class="col-md-4 mb-5 mt-5">
-                        <input type="text" class="form-control" id="level1" placeholder="Level 1">
-                        <ul>
-                            <li>Item 1</li>
-                            <li>Item 6</li>
-                        </ul>
-                    </div>
-                    <div class="col-md-4 mb-5 mt-5">
-                        <input type="text" class="form-control" id="level1" placeholder="Level 1">
-                        <ul>
-                            <li>Item 1</li>
-                            <li>Item 6</li>
-                        </ul>
-                    </div>
+                    @foreach($levels as $depth => $options)
+                        @if(count($options) > 0)
+                        <div class="col-md-4 mb-5 mt-5">
+                            <input type="text" class="form-control" id="level{{$depth}}" placeholder="Level {{$depth}}">
+                            <ul>
+                                @foreach($options as $option)
+                                    <li>{{$option->title}}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        @endif
+                    @endforeach
                 </div>
                 <div class="mt-5 col-lg-3">
                     <div class="alert alert-danger" role="alert" id="invalidInput" style="display: none;"></div>

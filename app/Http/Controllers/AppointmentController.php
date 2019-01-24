@@ -328,7 +328,21 @@ class AppointmentController extends Controller
             }
         }
 
-        return response()->json($timeslot);
+        return view('pages.successfulAssignation')->with('timeslot', $timeslot);
+    }
+
+    public function flushSlot($id){
+
+        $timeslot = Timeslot::find($id);
+        if(Auth::user()->id == $timeslot->user_id || Auth::user()->role == 'admin'){
+            $timeslot->user_id = null;
+            $timeslot->save();
+        }
+
+        if(Auth::user()->role == 'admin'){
+            return redirect('/admin');
+        }
+        return redirect('/dashboard');
     }
 }
 

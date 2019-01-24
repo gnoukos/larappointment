@@ -25,7 +25,7 @@
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <h6 class="alert-heading">Hierarchy Saved!</h6>
+            <h6 class="alert-heading">Appointment Saved!</h6>
         </div>
         <div id="saveError" class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -56,7 +56,7 @@
                         <td><a class="btn btn-secondary" href="appointment/{{$appointment->id}}/edit">Edit</a></td>
                         <td>
                             {!! Form::open(['action' => ['AppointmentController@destroy',$appointment->id], 'method' => 'DELETE']) !!}
-                            {{Form::submit('Delete', ['class' => 'btn btn-danger', 'id' => 'deleteAppointment'])}}
+                            <button type="submit" class="btn btn-danger"  onclick="return confirm('Do you want to delete this appointment category ? ')">Delete</button>
                             {!! Form::close() !!}
                         </td>
                     </tr>

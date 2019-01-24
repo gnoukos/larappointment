@@ -36,4 +36,5 @@ class UserDashboardController extends Controller
 
         return view('userDashboard')->with(['user'=>$user,'timeslots'=>$timeslots]);
     }
+
 }

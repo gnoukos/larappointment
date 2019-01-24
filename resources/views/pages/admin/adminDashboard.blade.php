@@ -18,7 +18,7 @@
                             <div class="card-body-icon">
                                 <i class="fas fa-calendar-check"></i>
                             </div>
-                            <div class="mr-5">7 New Appointments Today!</div>
+                            <div class="mr-5">{{ $timeslotsToday }} Appointments Today!</div>
                         </div>
                     </div>
                 </div>
@@ -28,7 +28,7 @@
                             <div class="card-body-icon">
                                 <i class="far fa-calendar-check"></i>
                             </div>
-                            <div class="mr-5">28 Appointments This Month!</div>
+                            <div class="mr-5">{{ $timeslotsMonth }} Appointments remaining This Month!</div>
                         </div>
                     </div>
                 </div>
@@ -38,7 +38,7 @@
                             <div class="card-body-icon">
                                 <i class="fas fa-users"></i>
                             </div>
-                            <div class="mr-5">143 Registered Users</div>
+                            <div class="mr-5">{{ $usersNum }} Registered Users</div>
                         </div>
                     </div>
                 </div>
@@ -51,65 +51,55 @@
                     All the Appointments
                 </div>
                 <div class="card-body">
+                    <div id="datatable-button-wrapper"></div>
                     <div class="table-responsive">
                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                             <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Type</th>
-                                <th>Date</th>
-                                <th>Phone</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
                                 <th class="unsortable"></th>
                             </tr>
                             </thead>
-                            <thead id="titles">
-                            <tr>
-                                <th>Name</th>
-                                <th>Type</th>
-                                <th>Date</th>
-                                <th>Phone</th>
-                                <th class="unsortable">Cancel</th>
-                            </tr>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Date</th>
+                                    <th>Phone</th>
+                                    <th>Time</th>
+                                    <th class="unsortable">Cancel</th>
+                                </tr>
                             </thead>
-                            <tfoot>
-                            <tr>
-                                <th>Name</th>
-                                <th>Type</th>
-                                <th>Date</th>
-                                <th>Phone</th>
-                                <th class="unsortable">Cancel</th>
-                            </tr>
-                            </tfoot>
                             <tbody>
-                            <tr>
-                                <td>Tiger Nixon</td>
-                                <td>System Architect</td>
-                                <td>Edinburgh</td>
-                                <td>2011/04/25</td>
-                                <td class="unsortable"><a class="btn btn-danger" href="#" data-toggle="modal" data-target="#confirmationModal">&times;</a></td>
-                            </tr>
-                            <tr>
-                                <td>Garrett Winters</td>
-                                <td>Accountant</td>
-                                <td>Tokyo</td>
-                                <td>2011/07/25</td>
-                                <td class="unsortable"><a class="btn btn-danger" href="#" data-toggle="modal" data-target="#confirmationModal">&times;</a></td>
-                            </tr>
-                            <tr>
-                                <td>Ashton Cox</td>
-                                <td>Junior Technical Author</td>
-                                <td>San Francisco</td>
-                                <td>2009/01/12</td>
-                                <td class="unsortable"><a class="btn btn-danger" href="#" data-toggle="modal" data-target="#confirmationModal">&times;</a></td>
-                            </tr>
-                            <tr>
-                                <td>Gavin Joyce</td>
-                                <td>Developer</td>
-                                <td>Edinburgh</td>
-                                <td>2010/12/22</td>
-                                <td class="unsortable"><a class="btn btn-danger" href="#" data-toggle="modal" data-target="#confirmationModal">&times;</a></td>
-                            </tr>
+                            @foreach($timeslots as $timeslot)
+                                <tr>
+                                    <td>{{ $timeslot->user->name }}</td>
+                                    <td>{{ $timeslot->daily_appointment->appointment->option->title }}</td>
+                                    <td>{{ substr($timeslot->daily_appointment->date,0,10) }}</td>
+                                    <td>{{ $timeslot->user->mobile_num }}</td>
+                                    <td>{{ substr($timeslot->slot,11,5) }}</td>
+                                    <td class="unsortable">
+                                        {!! Form::open(['url' => ['flushSlot',$timeslot->id], 'method' => 'POST']) !!}
+                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Do you want to cancel the appointment of {{$timeslot->user->name}}? ')">&times;</button>
+                                        {!! Form::close() !!}
+                                    </td>
+                                </tr>
+                            @endforeach
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Date</th>
+                                    <th>Phone</th>
+                                    <th>Time</th>
+                                    <th class="unsortable">Cancel</th>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -119,7 +109,7 @@
         <!-- /.container-fluid -->
 
         <!-- confirmation Modal -->
-        <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="ConfirmationModalLabel" aria-hidden="true">
+        <!--<div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="ConfirmationModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -141,23 +131,36 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
         <!-- end of confirmation Modal -->
 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+        <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.bootstrap4.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.print.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.colVis.min.js"></script>
         <script>
 
-            $(document).ready(function() {
-                $('#dataTable').DataTable( {
+
+
+
+                var table = $('#dataTable').DataTable( {
                     initComplete: function () {
                         this.api().columns(':not(.unsortable)').every( function () {
                             var column = this;
                             var select = $('<select><option value=""></option></select>')
                                 .appendTo( $(column.header()).empty() )
                                 .on( 'change', function () {
-                                    var val = $.fn.dataTable.util.escapeRegex(
-                                        $(this).val()
-                                    );
+                                    // var val = $.fn.dataTable.util.escapeRegex(
+                                    //     $(this).val()
+                                    // );
+                                    var val = $(this).val();
 
                                     column
                                         .search( val ? '^'+val+'$' : '', true, false )
@@ -168,8 +171,16 @@
                                 select.append( '<option value="'+d+'">'+d+'</option>' )
                             } );
                         } );
-                    }
+                    },
+                    lengthChange: false,
+                    buttons: [ 'copy', 'excel', {
+                        extend: 'pdf',
+                        header: false
+                    } ],
                 } );
-            } );
+
+                table.buttons().container()
+                    .appendTo( '#datatable-button-wrapper' );
+
         </script>
 @endsection
