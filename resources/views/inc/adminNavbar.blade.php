@@ -37,6 +37,11 @@
                 <span>Hierarchy</span></a>
         </li>
         <li class="nav-item">
+            <a class="nav-link" href="/levels">
+                <i class="fas fa-level-down-alt"></i>
+                <span>Levels</span></a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link" href="/createAppointment">
                 <i class="fas fa-plus"></i>
                 <span>New Category</span></a>

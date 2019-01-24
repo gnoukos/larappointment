@@ -86,28 +86,28 @@
                                 <td>System Architect</td>
                                 <td>Edinburgh</td>
                                 <td>2011/04/25</td>
-                                <td class="unsortable"><a class="btn btn-danger" href="#">&times;</a></td>
+                                <td class="unsortable"><a class="btn btn-danger" href="#" data-toggle="modal" data-target="#confirmationModal">&times;</a></td>
                             </tr>
                             <tr>
                                 <td>Garrett Winters</td>
                                 <td>Accountant</td>
                                 <td>Tokyo</td>
                                 <td>2011/07/25</td>
-                                <td class="unsortable"><a class="btn btn-danger" href="#">&times;</a></td>
+                                <td class="unsortable"><a class="btn btn-danger" href="#" data-toggle="modal" data-target="#confirmationModal">&times;</a></td>
                             </tr>
                             <tr>
                                 <td>Ashton Cox</td>
                                 <td>Junior Technical Author</td>
                                 <td>San Francisco</td>
                                 <td>2009/01/12</td>
-                                <td class="unsortable"><a class="btn btn-danger" href="#">&times;</a></td>
+                                <td class="unsortable"><a class="btn btn-danger" href="#" data-toggle="modal" data-target="#confirmationModal">&times;</a></td>
                             </tr>
                             <tr>
                                 <td>Gavin Joyce</td>
                                 <td>Developer</td>
                                 <td>Edinburgh</td>
                                 <td>2010/12/22</td>
-                                <td class="unsortable"><a class="btn btn-danger" href="#">&times;</a></td>
+                                <td class="unsortable"><a class="btn btn-danger" href="#" data-toggle="modal" data-target="#confirmationModal">&times;</a></td>
                             </tr>
                             </tbody>
                         </table>
@@ -117,6 +117,33 @@
             </div>
         </div>
         <!-- /.container-fluid -->
+
+        <!-- confirmation Modal -->
+        <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="ConfirmationModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="ConfirmationModalLabel">Do you want to cancel the appointment ?</h5>
+                    </div>
+                    <div class="modal-body text-center">
+                        <form>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col">
+                                        <button type="button" class="btn btn-dark" data-dismiss="modal" aria-label="Close">No</button>
+                                    </div>
+                                    <div class="col">
+                                        <button type="submit" class="btn btn-danger">Yes</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end of confirmation Modal -->
+
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script>
 

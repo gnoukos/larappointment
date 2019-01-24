@@ -25,6 +25,8 @@ Route::get('/admin', 'PageController@adminDashboard')->name('adminDashboard');
 
 Route::get('/hierarchy', 'PageController@hierarchy')->name('hierarchy');
 
+Route::get('/levels', 'PageController@levels')->name('levels');
+
 Route::get('/createAppointment', 'PageController@createAppointment')->name('createAppointment');
 
 Route::get('/manageAppointments', 'PageController@manageAppointments')->name('manageAppointments');

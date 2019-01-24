@@ -98,4 +98,23 @@ class PageController extends Controller
             abort(403, 'Unauthorized action.');
         }
     }
+
+    public function levels(){
+        if (Auth::user()->role=='admin') {
+            $optionLevels = array();
+            $options = Option::where('parent', null)->get();
+            $level = array();
+
+            array_push($optionLevels, $options);
+
+            foreach ($options as $option){
+                array_push($level, $option->children);
+            }
+            array_push($optionLevels, $level);
+
+            return view('pages.admin.levels')->with('options', $options);
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
+    }
 }
