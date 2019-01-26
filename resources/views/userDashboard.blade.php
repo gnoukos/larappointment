@@ -16,35 +16,39 @@
                     <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade show active" id="appointments" role="tabpanel" aria-labelledby="appointments-tab">
                             <div class="inner-tab-content mt-5">
-                                <table class="table table-hover">
-                                    <!-- appointments table -->
-                                    <thead>
-                                    <tr>
-                                        <th scope="col">Date</th>
-                                        <th scope="col">Category</th>
-                                        <th scope="col">Time</th>
-                                        <th scope="col">Cancel</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    @foreach($timeslots as $timeslot)
+                                @if(count($timeslots)>0)
+                                    <table class="table table-hover">
+                                        <!-- appointments table -->
+                                        <thead>
                                         <tr>
-                                            <th scope="row">{{$timeslot->daily_appointment->date}}</th>
-                                            <td>{{$timeslot->daily_appointment->appointment->option->title}}</td>
-                                            <td>{{$timeslot->slot}}</td>
-                                            @if(Carbon\Carbon::today()->lt($timeslot->daily_appointment->date))
-                                                <td>
-                                                    {!! Form::open(['url' => ['flushSlot',$timeslot->id], 'method' => 'POST']) !!}
-                                                    <button type="submit" class="btn btn-danger"  onclick="return confirm('Do you want to delete this appointment category ? ')">Delete</button>
-                                                    {!! Form::close() !!}
-                                                </td>
-                                            @else
-                                                <td><a class="btn btn-danger disabled" href="#">&times;</a></td>
-                                            @endif
+                                            <th scope="col">Date</th>
+                                            <th scope="col">Category</th>
+                                            <th scope="col">Time</th>
+                                            <th scope="col">Cancel</th>
                                         </tr>
-                                    @endforeach
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                        @foreach($timeslots as $timeslot)
+                                            <tr>
+                                                <th scope="row">{{$timeslot->daily_appointment->date}}</th>
+                                                <td>{{$timeslot->daily_appointment->appointment->option->title}}</td>
+                                                <td>{{$timeslot->slot}}</td>
+                                                @if(Carbon\Carbon::today()->lt($timeslot->daily_appointment->date))
+                                                    <td>
+                                                        {!! Form::open(['url' => ['flushSlot',$timeslot->id], 'method' => 'POST']) !!}
+                                                        <button type="submit" class="btn btn-danger"  onclick="return confirm('Do you want to delete this appointment category ? ')">Delete</button>
+                                                        {!! Form::close() !!}
+                                                    </td>
+                                                @else
+                                                    <td><a class="btn btn-danger disabled" href="#">&times;</a></td>
+                                                @endif
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
+                                    </table>
+                                @else
+                                    No appointments found
+                                @endif
                                 <!-- appointments table ENDS-->
                                 <!-- confirmation Modal -->
                                 <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="ConfirmationModalLabel" aria-hidden="true">

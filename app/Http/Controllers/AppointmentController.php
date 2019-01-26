@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Appointment;
 use App\DailyAppointment;
+use App\Mail\successfullAssignation;
 use App\Option;
 use App\User;
 use Illuminate\Support\Facades\App;
@@ -16,6 +17,7 @@ use Illuminate\Support\Facades\Log;
 use Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class AppointmentController extends Controller
 {
@@ -67,30 +69,7 @@ class AppointmentController extends Controller
         $appointment->duration = $request->duration;
         $appointment->belong_to_option = $request->belongToOption;
 
-        /*$daysArray = array();
-        if($request->has('monday')){
-            array_push($daysArray, 'monday');
-        }
-        if($request->has('tuesday')){
-            array_push($daysArray, 'tuesday');
-        }
-        if($request->has('wednesday')){
-            array_push($daysArray, 'wednesday');
-        }
-        if($request->has('thursday')){
-            array_push($daysArray, 'thursday');
-        }
-        if($request->has('friday')){
-            array_push($daysArray, 'friday');
-        }
-        if($request->has('saturday')){
-            array_push($daysArray, 'saturday');
-        }
-        if($request->has('sunday')){
-            array_push($daysArray, 'sunday');
-        }*/
-
-        $appointment->repeat = json_encode($request->days);
+                $appointment->repeat = json_encode($request->days);
 
         $appointment->save();
 
@@ -214,29 +193,6 @@ class AppointmentController extends Controller
         $appointment->duration = $request->duration;
         $appointment->belong_to_option = $request->belongToOption;
 
-        /*$daysArray = array();
-        if($request->has('monday')){
-            array_push($daysArray, 'monday');
-        }
-        if($request->has('tuesday')){
-            array_push($daysArray, 'tuesday');
-        }
-        if($request->has('wednesday')){
-            array_push($daysArray, 'wednesday');
-        }
-        if($request->has('thursday')){
-            array_push($daysArray, 'thursday');
-        }
-        if($request->has('friday')){
-            array_push($daysArray, 'friday');
-        }
-        if($request->has('saturday')){
-            array_push($daysArray, 'saturday');
-        }
-        if($request->has('sunday')){
-            array_push($daysArray, 'sunday');
-        }*/
-
         $appointment->repeat = json_encode($request->days);
 
         $appointment->save();
@@ -327,6 +283,9 @@ class AppointmentController extends Controller
                 $timeslot->save();
             }
         }
+
+
+        Mail::to($request->user())->send(new successfullAssignation($timeslot));
 
         return view('pages.successfulAssignation')->with('timeslot', $timeslot);
     }

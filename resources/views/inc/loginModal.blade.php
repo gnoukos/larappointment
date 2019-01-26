@@ -15,14 +15,14 @@
                     @csrf
                     <i class="fas fa-lock mb-3" style="font-size: 4rem;"></i>
                     <label for="inputEmail" class="sr-only">{{ __('E-Mail Address') }}</label>
-                    <input type="login_email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}" name="email" placeholder="Email address" oninput="this.setCustomValidity('')" oninvalid="this.setCustomValidity('Enter your email')" required autofocus>
+                    <input type="text" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}" name="email" placeholder="Email address" oninput="this.setCustomValidity('')" oninvalid="this.setCustomValidity('Enter your email')" required autofocus>
                     @if ($errors->has('email'))
                         <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('login_email') }}</strong>
+                                        <strong>{{ $errors->first('email') }}</strong>
                                     </span>
                     @endif
                     <label for="inputPassword" class="sr-only">{{ __('Password') }}</label>
-                    <input type="login_password" class="form-control mt-1 {{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="Password" name="password" oninput="this.setCustomValidity('')" oninvalid="this.setCustomValidity('Enter your password')" required>
+                    <input type="password" class="form-control mt-1 {{ $errors->has('password') ? ' is-invalid' : '' }}" placeholder="Password" name="password" oninput="this.setCustomValidity('')" oninvalid="this.setCustomValidity('Enter your password')" required>
                     @if ($errors->has('password'))
                         <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('password') }}</strong>

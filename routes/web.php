@@ -15,6 +15,8 @@ Route::get('/', 'PageController@index')->name('index');
 
 Route::get('/datepicker', 'PageController@datePicker');
 
+Route::post('/datepicker', 'AppointmentController@makeAppointment');
+
 Auth::routes();
 
 Route::get('/dashboard', 'UserDashboardController@index');
@@ -41,6 +43,6 @@ Route::resource('appointment', 'AppointmentController');
 
 Route::get('getFreeTimeslots', 'AppointmentController@getFreeTimeslots');
 
-Route::post('makeAppointment', 'AppointmentController@makeAppointment');
+//Route::post('makeAppointment', 'AppointmentController@makeAppointment');
 
 Route::post('flushSlot/{id}', 'AppointmentController@flushSlot');
