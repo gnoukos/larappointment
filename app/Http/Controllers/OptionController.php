@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Option;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Collection;
 use Validator;
 
 class OptionController extends Controller
@@ -119,6 +121,47 @@ class OptionController extends Controller
     {
         $options = Option::setEagerLoads([])->where('parent',$id)->get();
         return response()->json($options);
+    }
+
+    public function storeLevels(Request $request){
+        $validator = Validator::make($request->all(), [
+            'levels' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return redirect('/levels')->withErrors($validator);
+        }
+
+        $levels = Option::setEagerLoads([])->where('parent', -1)->get();
+
+
+        while(!$levels->isEmpty()){
+            $id = $levels->first()->id;
+            $levels->first()->delete();
+            $levels = Option::where('parent', $id);
+            var_dump($levels);
+        }
+
+        $levels = $request->levels;
+
+        $parent = null;
+        foreach ($levels as $key => $level) {
+            if($key == 0){
+                $option = new Option();
+                $option->title = $level;
+                $option->parent = -1;
+                $option->save();
+                $parent = $option->id;
+            }else{
+                $option = new Option();
+                $option->title = $level;
+                $option->parent = $parent;
+                $option->save();
+                $parent = $option->id;
+            }
+        }
+
+        return redirect('/levels')->with('success', 'success');
     }
 
 }

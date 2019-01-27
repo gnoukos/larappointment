@@ -173,10 +173,7 @@
                         } );
                     },
                     lengthChange: false,
-                    buttons: [ 'copy', 'excel', {
-                        extend: 'pdf',
-                        header: false
-                    } ],
+                    buttons: [ { extend: 'pdf', header: false}, { extend: 'copy', header: false}, { extend: 'print', header: false}, { extend: 'excel', header: false}, ],
                 } );
 
                 table.buttons().container()

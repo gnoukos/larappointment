@@ -46,3 +46,5 @@ Route::get('getFreeTimeslots', 'AppointmentController@getFreeTimeslots');
 //Route::post('makeAppointment', 'AppointmentController@makeAppointment');
 
 Route::post('flushSlot/{id}', 'AppointmentController@flushSlot');
+
+Route::post('storeLevels', 'OptionController@storeLevels');

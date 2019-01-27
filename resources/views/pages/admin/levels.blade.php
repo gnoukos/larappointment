@@ -28,13 +28,13 @@
     </div>
     <!-- /.container-fluid -->
     <div class="container">
-        <form>
+        {{ Form::open(['action' => ['OptionController@storeLevels'], 'method' => 'POST']) }}
             <div class="form-group">
                 <div class="row">
                     @foreach($levels as $depth => $options)
                         @if(count($options) > 0)
                         <div class="col-md-4 mb-5 mt-5">
-                            <input type="text" class="form-control" id="level{{$depth}}" placeholder="Level {{$depth}}">
+                            <input type="text" class="form-control" name="levels[]" id="level{{$depth}}" placeholder="Level {{$depth}}">
                             <ul>
                                 @foreach($options as $option)
                                     <li>{{$option->title}}</li>
@@ -45,10 +45,20 @@
                     @endforeach
                 </div>
                 <div class="mt-5 col-lg-3">
-                    <div class="alert alert-danger" role="alert" id="invalidInput" style="display: none;"></div>
-                    <button type="submit" class="btn btn-primary mt-2">Save Level Names</button>
+                    @if(count($errors)>0)
+                        @foreach($errors as $error)
+                            <div class="alert alert-danger" role="alert" id="invalidInput" style="display: none;">{{ $error }}</div>
+                        @endforeach
+                    @endif
+                    @if(session('success'))
+                            <div class="alert alert-success">
+                                {{session('success')}}
+                            </div>
+                    @endif
+                    {{ Form::submit('Save Level Names', ['class' => 'btn btn-large btn-primary mt-5 mb-5']) }}
                 </div>
             </div>
-        </form>
+
+        {{ Form::close() }}
     </div>
 @endsection
