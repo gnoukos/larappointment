@@ -132,15 +132,15 @@ class OptionController extends Controller
             return redirect('/levels')->withErrors($validator);
         }
 
-        $levels = Option::setEagerLoads([])->where('parent', -1)->get();
+        $levels = Option::setEagerLoads([])->where('parent', -1)->first();
 
 
-        while(!$levels->isEmpty()){
-            $id = $levels->first()->id;
-            $levels->first()->delete();
-            $levels = Option::where('parent', $id);
-            var_dump($levels);
+        while($levels){
+            $id = $levels->id;
+            $levels->delete();
+            $levels = Option::where('parent', $id)->first();
         }
+
 
         $levels = $request->levels;
 
@@ -163,5 +163,6 @@ class OptionController extends Controller
 
         return redirect('/levels')->with('success', 'success');
     }
+
 
 }
