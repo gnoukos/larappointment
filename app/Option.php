@@ -9,7 +9,7 @@ class Option extends Model
     public $timestamps = false;
     protected $with = array('children');
 
-    public function parent()
+    public function getParent()
     {
         return $this->belongsTo('\App\Option', 'parent');
     }

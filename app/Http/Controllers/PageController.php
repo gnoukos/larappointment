@@ -17,14 +17,9 @@ use Illuminate\Support\Facades\Auth;
 class PageController extends Controller
 {
     public function index(){
-
         $options = Option::setEagerLoads([])->where('parent',null)->get();
-        //$options = Option::setEagerLoads(array('children'))->where('parent', 1)->get();
-//       $options = Option::where('id', 1)->with(array('children:id,title' =>function($query){
-//          $query->setEagerLoads([]);
-//       }))->get();
-       // return response()->json($options);
-        return view('pages.index')->with('options',$options);
+        $level1 = Option::where('parent', -1)->first();
+        return view('pages.index')->with(['options' => $options, 'level1' => $level1]);
     }
 
     public function datePicker(){
@@ -36,7 +31,15 @@ class PageController extends Controller
             $q->where('id', $optionId);
         })->where('free_slots', '>', 0)->orderBy('date', 'desc')->get();
 
+        if($dailyAppointments->isEmpty()){
+            return view('pages.notAvailableAppointments');
+        }
 
+        $isTicket = false;
+        $appointment  = Appointment::where('belong_to_option', $optionId)->first();
+        if($appointment->type=='ticket'){
+            $isTicket = true;
+        }
 
         $current = date("Y-m-d");
         $disabledDates = [$current];
@@ -54,13 +57,11 @@ class PageController extends Controller
             }
         }
 
+        $maxAvailDate = $dailyAppointments[0]->date;
 
-        Log::info($dailyAppointments);
-        Log::info($disabledDates);
-
-
-       $maxAvailDate = $dailyAppointments[0]->date;
-
+        if($isTicket){
+            return view('pages.datepickerTicket')->with(['disabledDates'=>$disabledDates, 'maxAvailDate'=>$maxAvailDate]);
+        }
 
         return view('pages.datepicker')->with(['disabledDates'=>$disabledDates, 'maxAvailDate'=>$maxAvailDate]);
     }
@@ -91,6 +92,22 @@ class PageController extends Controller
 
         if (Auth::user()->role=='admin') {
             $options = Option::doesntHave('children')->get();
+            $options = $options->keyBy('id');
+            foreach($options as $option){
+                $parent = $option->getParent;
+                while($parent->id != -1){ // this loop removes the last level child from available appointment types
+                    $parent = $parent->getParent;
+                    if($parent){
+                        if($parent->parent == -1){
+                            Log::info($option->title);
+                            $options->forget($option->id);
+                        }
+                    }else{
+                        break;
+                    }
+                }
+            }
+
             return view('pages.admin.createAppointment')->with('options', $options);
         } else {
             abort(403, 'Unauthorized action.');
@@ -134,7 +151,19 @@ class PageController extends Controller
                 $depth++;
             }
 
-            return view('pages.admin.levels')->with('levels', $levels);
+            $levelNames = array();
+            $level = Option::setEagerLoads([])->where('parent', -1)->first();
+            array_push($levelNames, $level->title);
+            while($level){
+                $id = $level->id;
+                $level = Option::where('parent', $id)->first();
+                if($level){
+                    array_push($levelNames, $level->title);
+                }
+            }
+
+
+            return view('pages.admin.levels')->with(['levels' => $levels, 'levelNames' => $levelNames]);
         } else {
             abort(403, 'Unauthorized action.');
         }

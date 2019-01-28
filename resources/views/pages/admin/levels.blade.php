@@ -12,13 +12,14 @@
             </li>
             <li class="breadcrumb-item active">Levels</li>
         </ol>
-        <div id="saveSuccess" class="alert alert-success alert-dismissible fade show" role="alert"
-             style="display: none;">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            <h6 class="alert-heading">Hierarchy Saved!</h6>
-        </div>
+        @if(session('success'))
+            <div id="saveSuccess" class="alert alert-success alert-dismissible fade show" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h6 class="alert-heading">{{session('success')}}</h6>
+            </div>
+        @endif
         <div id="saveError" class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
@@ -34,10 +35,10 @@
                     @foreach($levels as $depth => $options)
                         @if(count($options) > 0)
                         <div class="col-md-4 mb-5 mt-5">
-                            <input type="text" class="form-control" name="levels[]" id="level{{$depth}}" placeholder="Level {{$depth}}">
-                            <ul>
+                            <input type="text" class="form-control text-center" name="levels[]" id="level{{$depth}}" placeholder="Level {{$depth}}" @if(isset($levelNames[$depth-1])) value="{{ $levelNames[$depth-1] }}" @endif>
+                            <ul class="list-group mt-2">
                                 @foreach($options as $option)
-                                    <li>{{$option->title}}</li>
+                                    <li class="list-group-item list-group-item-primary">{{$option->title}}</li>
                                 @endforeach
                             </ul>
                         </div>
@@ -49,11 +50,6 @@
                         @foreach($errors as $error)
                             <div class="alert alert-danger" role="alert" id="invalidInput" style="display: none;">{{ $error }}</div>
                         @endforeach
-                    @endif
-                    @if(session('success'))
-                            <div class="alert alert-success">
-                                {{session('success')}}
-                            </div>
                     @endif
                     {{ Form::submit('Save Level Names', ['class' => 'btn btn-large btn-primary mt-5 mb-5']) }}
                 </div>

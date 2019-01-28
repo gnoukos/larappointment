@@ -98,7 +98,7 @@ class AppointmentController extends Controller
             if(in_array($weekday, $repeat)){
                 $daily_appointment = new DailyAppointment();
 
-                $daily_appointment->date = gmdate("Y-m-d H:i:s", $current);
+                $daily_appointment->date = date("Y-m-d H:i:s", $current);
                 $daily_appointment->appointment_id = $appointment->id;
                 $daily_appointment->free_slots = 0;
 

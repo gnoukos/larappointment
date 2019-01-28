@@ -162,7 +162,7 @@
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <h6 class="alert-heading">Hierarchy Saved!</h6>
+            <h6 class="alert-heading">Hierarchy Saved! Consider renaming properly your level names at <a href="/levels">Levels page.</a></h6>
         </div>
         <div id="saveError" class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">

@@ -161,7 +161,7 @@ class OptionController extends Controller
             }
         }
 
-        return redirect('/levels')->with('success', 'success');
+        return redirect('/levels')->with('success', 'Level names saved!');
     }
 
 

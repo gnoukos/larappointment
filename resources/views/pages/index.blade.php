@@ -7,8 +7,8 @@
         <div class="info-form mt-5 mb-5">
             <form action="/datepicker" method="get" id="optionsMenuForm" class="justify-content-center">
                 <div id="optionsMenu" class="form-group">
-                    <label for="level1" class="h5 mt-2">Level 1</label>
-                    <select class="form-control" id="level_1_selection" onchange="getNextLevel(value,1)">
+                    <label for="level1" class="h5 mt-2">{{ $level1->title }}</label>
+                    <select class="form-control" id="level_1_selection" onchange="getNextLevel(value,1,{{ $level1->id }})">
                         <option value="-1">Select Option</option>
                         @foreach($options as $option)
                         <option value="{{$option->id}}">{{$option->title}}</option>
@@ -46,7 +46,7 @@
             }
         });
 
-        function getNextLevel(id,level) {
+        function getNextLevel(id,level,levelId) {
             $("#invalidInput").hide();
             var selectChildren = $("#optionsMenu > select").length+1;
 
@@ -58,15 +58,18 @@
 
             if(id!=-1){
                 $.getJSON("{{ url('/options') }}/"+id+"/children", function (result) {
-                    if (!(result == undefined || result == null || result.length == 0)){
-                        $("#optionsMenu").append('<label id="level'+(level+1)+'" for="level'+(level+1)+'" class="h5 mt-2">Level'+(level+1)+'</label>');
-                        $("#optionsMenu").append('<select class="form-control" id="level_'+(level+1)+'_selection" onchange="getNextLevel(value,'+(level+1)+')"> </select>');
-                        var $dropdown = $("#level_"+(level+1)+"_selection");
-                        $dropdown.append($("<option />").val(-1).text("Select Option"));
-                        $.each(result, function () {
-                            $dropdown.append($("<option />").val(this.id).text(this.title));
-                        });
-                    }
+                    $.getJSON("{{ url('/options') }}/"+levelId+"/children", function(json){
+                        console.log(json);
+                        if (!(result == undefined || result == null || result.length == 0)){
+                            $("#optionsMenu").append('<label id="level'+(level+1)+'" for="level'+(level+1)+'" class="h5 mt-2">'+json[0].title+'</label>');
+                            $("#optionsMenu").append('<select class="form-control" id="level_'+(level+1)+'_selection" onchange="getNextLevel(value,'+(level+1)+','+ json[0].id +')"> </select>');
+                            var $dropdown = $("#level_"+(level+1)+"_selection");
+                            $dropdown.append($("<option />").val(-1).text("Select Option"));
+                            $.each(result, function () {
+                                $dropdown.append($("<option />").val(this.id).text(this.title));
+                            });
+                        }
+                    });
                 });
             }
             $('#selectedOption').val(id);
