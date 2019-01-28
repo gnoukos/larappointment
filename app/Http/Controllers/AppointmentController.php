@@ -244,6 +244,20 @@ class AppointmentController extends Controller
         return response()->json($timeslots);
     }
 
+    public function getDailyAppointment(Request $request){
+        $option = $request->option;
+        $date = $request->date;
+
+        $dailyAppointment = DailyAppointment::whereHas('appointment.option', function($q) use($option, $date) {
+            $q->where('id', $option);
+        })->where('date', 'like', $date.'%')->first();
+
+        //$dailyAppointmentId = $dailyAppointment->id;
+
+        return response()->json($dailyAppointment);
+
+    }
+
     public function makeAppointment(Request $request)
     {
         $timeslot = Timeslot::findOrFail($request->timeslot);
@@ -289,6 +303,41 @@ class AppointmentController extends Controller
         Mail::to($request->user())->send(new successfullAssignation($timeslot));
 
         return view('pages.successfulAssignation')->with('timeslot', $timeslot);
+    }
+
+    public function getTicket(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'dailyAppointmentId' => 'required|numeric'
+        ]);
+
+        $optionId = $request->session()->get('optionId');
+
+        if ($validator->fails()) {
+            return redirect('/datepicker?option='.$optionId)->withErrors($validator);
+        }
+
+        $dailyAppointmentId = $request->dailyAppointmentId;
+        $dailyAppointment = DailyAppointment::find($dailyAppointmentId);
+        Log::info($dailyAppointment);
+        if($dailyAppointment && $dailyAppointment->free_slots > 0){
+            $dailyAppointment->free_slots = $dailyAppointment->free_slots - 1;
+            $dailyAppointment->save();
+        }else{
+            return redirect('/datepicker?option='.$optionId)->withErrors("No available tickets");
+        }
+
+        $timeslot = Timeslot::where('daily_appointments_id', $dailyAppointmentId)->where('user_id', null)->where('ticket_num', null)->orderBy('slot', 'asc')->first();
+
+        $totalTimeslots = Timeslot::where('daily_appointments_id', $dailyAppointmentId)->count();
+
+        $freeTimeslots = Timeslot::where('daily_appointments_id', $dailyAppointmentId)->where('ticket_num', null)->count();
+
+        $timeslot->ticket_num = ($totalTimeslots - $freeTimeslots)+1;
+
+        $timeslot->save();
+
+        return view('pages.Ticket')->with('timeslot', $timeslot);
     }
 
     public function flushSlot($id){

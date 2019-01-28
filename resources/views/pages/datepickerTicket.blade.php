@@ -18,11 +18,22 @@
             <button class="btn btn-dark mt-3" id="nextAvailableDateButton">Next available date</button>
         </div>
         <div class="col-lg mt-5">
-            <form method="post" action="{{action('AppointmentController@makeAppointment')}}">
+            <form method="post" action="{{action('AppointmentController@getTicket')}}">
                 <div class="card" id="hoursCard" style="display: none;">
                     <div class="card-body">
                         <h5 class="card-title">Get your Ticket</h5>
                         <p class="card-text" id="chooseDatePrompt">First choose date to get Ticket.</p>
+                        <div id="selectedDate">
+                            <div class="alert alert-info text-center" role="alert">
+                                You Selected: <strong id="date"></strong>
+                            </div>
+                        </div>
+                        <div id="noAvailableTicket">
+                            <div class="alert alert-danger text-center" role="alert">
+                                <strong>There is not available ticket.</strong>
+                            </div>
+                        </div>
+                        <input type="hidden" name="dailyAppointmentId" id="dailyAppointmentId" value="">
                         <div class="wrapper text-center">
                             <input name="_token" type="hidden" value="{{ csrf_token() }}"/>
                             <div class="col-12 text-center mt-4">
@@ -47,6 +58,10 @@
 
         $("#makeAppointmentButton").hide(); //hide button until hour selected
 
+        $("#noAvailableTicket").hide();
+
+        $("#selectedDate").hide();
+
         $('.calendar').pignoseCalendar({ //initialize pignose calendar
             initialize: false,
             disabledDates: disabledDatesArray,
@@ -54,14 +69,73 @@
             maxDate: maxAvailDate, //disable dates after a certain date
             select: function(date, context) { //callback function to get selected date
                 try {
+                    $('#selectedDate #date').empty();
                     console.log(date[0]._i); //selected date
                     $("#makeAppointmentButton").show();
+                    $("#chooseDatePrompt").hide();
+                    var option = getUrlParameter('option');
+                    getDailyAppointment(option, date[0]._i);
                 }catch (e) {
                     $("#makeAppointmentButton").hide();
+                    $("#chooseDatePrompt").show();
+                    $('#selectedDate #date').empty();
+                    $("#selectedDate").hide();
                 }
             }
         });
 
+        function getDailyAppointment(option, date){
+            console.log(option+ "   " + date);
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+
+            });
+            jQuery.ajax({
+                url: "{{ url('/getDailyAppointment') }}",
+                data: {
+                    "option": option,
+                    "date": date
+                },
+                method: 'GET',
+                success: function(result){
+                    if(result){
+                        var weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+                        var monthNames = [
+                            "January", "February", "March",
+                            "April", "May", "June", "July",
+                            "August", "September", "October",
+                            "November", "December"
+                        ];
+                        $("#noAvailableTicket").hide();
+                        var d = new Date(date);
+                        $("#selectedDate").show();
+                        var dateMsg = weekday[d.getDay()] + ' ' + d.getDate() + ' ' + monthNames[d.getMonth()] + ' ' + d.getFullYear();
+                        $('#selectedDate #date').append(dateMsg);
+                        $('#dailyAppointmentId').val(result.id);
+                        console.log(result);
+                    }else{
+                        $("#noAvailableTicket").show();
+                    }
+                }
+            });
+        }
+
+        function getUrlParameter(sParam) {
+            var sPageURL = window.location.search.substring(1),
+                sURLVariables = sPageURL.split('&'),
+                sParameterName,
+                i;
+
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i].split('=');
+
+                if (sParameterName[0] === sParam) {
+                    return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+                }
+            }
+        };
 
         var availDate = new Date(moment().format("YYYY-MM-DD"));//just a temporary object that will store the first available date found
 

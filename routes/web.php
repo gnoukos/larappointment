@@ -43,7 +43,11 @@ Route::resource('appointment', 'AppointmentController');
 
 Route::get('getFreeTimeslots', 'AppointmentController@getFreeTimeslots');
 
+Route::post('getTicket', 'AppointmentController@getTicket');
+
 //Route::post('makeAppointment', 'AppointmentController@makeAppointment');
+
+Route::get('getDailyAppointment', 'AppointmentController@getDailyAppointment');
 
 Route::post('flushSlot/{id}', 'AppointmentController@flushSlot');
 
