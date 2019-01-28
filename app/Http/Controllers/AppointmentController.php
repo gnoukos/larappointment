@@ -111,7 +111,8 @@ class AppointmentController extends Controller
         /// CREATING TIMESLOTS
         $appointment_hours = AppointmentHours::where('appointment_id',$appointment->id)->get();
         $daily_appointments = DailyAppointment::where('appointment_id',$appointment->id)->get();
-
+        Log::info($appointment_hours);
+        Log::info($daily_appointments);
         foreach ($daily_appointments as $daily_appointment){
 
             foreach ($appointment_hours as $appointment_hour){

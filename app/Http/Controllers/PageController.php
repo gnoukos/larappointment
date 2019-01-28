@@ -153,12 +153,14 @@ class PageController extends Controller
 
             $levelNames = array();
             $level = Option::setEagerLoads([])->where('parent', -1)->first();
-            array_push($levelNames, $level->title);
-            while($level){
-                $id = $level->id;
-                $level = Option::where('parent', $id)->first();
-                if($level){
-                    array_push($levelNames, $level->title);
+            if($level){
+                array_push($levelNames, $level->title);
+                while($level){
+                    $id = $level->id;
+                    $level = Option::where('parent', $id)->first();
+                    if($level){
+                        array_push($levelNames, $level->title);
+                    }
                 }
             }
 
