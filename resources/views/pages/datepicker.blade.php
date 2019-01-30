@@ -40,20 +40,42 @@
                 <div class="card mt-4" id="userDetailsCard">
                     <div class="card-body">
                         <h5 class="card-title">Fill in your details</h5>
+                        @if(count($errors))
+                            <ul class="alert alert-danger">
+                                @foreach($errors->all() as $error)
+                                    <li>{{$error}}</li>
+                                @endforeach
+                            </ul>
+                        @endif
                         <div class="wrapper text-center">
                             <div class="form-group row">
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="tmpUserEmail" name="email" placeholder="Email" >
+                                    <input type="text" class="form-control" id="tmpUserEmail" name="guest_email" value="{{ old('guest_email') }}" placeholder="Email" >
+                                    @if ($errors->has('guest_email'))
+                                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('guest_email') }}</strong>
+                                    </span>
+                                    @endif
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="tmpUserName" name="name" placeholder="Your Name" >
+                                    <input type="text" class="form-control" id="tmpUserName" name="guest_name" value="{{ old('guest_name') }}" placeholder="Your Name" >
+                                    @if ($errors->has('guest_name'))
+                                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('guest_name') }}</strong>
+                                    </span>
+                                    @endif
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="tmpUserPhone" name="phone" placeholder="Your Phone" >
+                                    <input type="text" class="form-control" id="tmpUserPhone" name="guest_phone" value="{{ old('guest_phone') }}" placeholder="Your Phone" >
+                                    @if ($errors->has('guest_phone'))
+                                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $errors->first('guest_phone') }}</strong>
+                                    </span>
+                                    @endif
                                 </div>
                             </div>
                         </div>

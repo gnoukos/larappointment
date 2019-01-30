@@ -29,7 +29,7 @@
 
     @yield('include')
 </head>
-<body>
+<body onbeforeunload="resetSelected()">
 
 @include('inc.navbar')
     <div class="container">

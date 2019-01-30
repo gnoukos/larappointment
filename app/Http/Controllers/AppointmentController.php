@@ -266,22 +266,32 @@ class AppointmentController extends Controller
 
         if(!Auth::check()){
             $validator = Validator::make($request->all(), [
-                'name' => 'required|string|max:255',
-                'email' => 'required|string|email|max:255|unique:users',
-                'phone' => 'required|numeric|min:8'
+                'guest_name' => 'required|string|max:255',
+                'guest_email' => 'required|string|email|max:255|unique:users',
+                'guest_phone' => 'required|numeric|min:8'
             ]);
 
+            $attributeNames = array(
+                'guest_name' => 'name',
+                'guest_email' => 'e-mail',
+                'guest_phone' => 'phone',
+
+            );
+
+            $validator->setAttributeNames($attributeNames);
+
+
             if ($validator->fails()) {
-                return redirect('/datepicker?option='.$optionId)->withErrors($validator);
+                return redirect(url('/datepicker?option='.$optionId))->withErrors($validator)->withInput();
             }
 
             $user = new User();
             $randomUserPassword = str_random(8);
-            $user->name = $request->name;
+            $user->name = $request->guest_name;
             $user->role = 'user';
             $user->password = Hash::make($randomUserPassword);
-            $user->email = $request->email;
-            $user->mobile_num = $request->phone;
+            $user->email = $request->guest_email;
+            $user->mobile_num = $request->guest_phone;
             $user->save();
 
             if($timeslot->user_id == null) {
@@ -300,7 +310,7 @@ class AppointmentController extends Controller
         }
 
 
-        Mail::to($request->user())->send(new successfullAssignation($timeslot));
+        //Mail::to($request->user())->send(new successfullAssignation($timeslot));
 
         return view('pages.successfulAssignation')->with('timeslot', $timeslot);
     }

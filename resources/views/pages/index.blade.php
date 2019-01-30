@@ -5,7 +5,7 @@
     <div class="col-md-6 offset-md-3 text-center mt-5">
         <h1 class="display-4">Make an Appointment</h1>
         <div class="info-form mt-5 mb-5">
-            <form action="/datepicker" method="get" id="optionsMenuForm" class="justify-content-center">
+            <form action="{{ url('/datepicker') }}" method="get" id="optionsMenuForm" class="justify-content-center">
                 <div id="optionsMenu" class="form-group">
                     <label for="level1" class="h5 mt-2">{{ $level1->title }}</label>
                     <select class="form-control" id="level_1_selection" onchange="getNextLevel(value,1,{{ $level1->id }})">
@@ -73,6 +73,10 @@
                 });
             }
             $('#selectedOption').val(id);
+        }
+
+        function resetSelected(){
+            $('.form-control').prop('selectedIndex',0);
         }
 
 
