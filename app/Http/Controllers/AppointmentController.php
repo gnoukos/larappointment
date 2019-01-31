@@ -267,7 +267,7 @@ class AppointmentController extends Controller
         if(!Auth::check()){
             $validator = Validator::make($request->all(), [
                 'guest_name' => 'required|string|max:255',
-                'guest_email' => 'required|string|email|max:255|unique:users',
+                'guest_email' => 'required|string|email|max:255|unique:users,email',
                 'guest_phone' => 'required|numeric|min:8'
             ]);
 
