@@ -40,7 +40,7 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th scope="col"></th>
+                    <th scope="col">Name</th>
                     <th scope="col">Type</th>
                     <th scope="col">created</th>
                     <th scope="col"></th>
