@@ -39,7 +39,7 @@
                 @guest
                 <div class="card mt-4" id="userDetailsCard">
                     <div class="card-body">
-                        <h5 class="card-title">Fill in your details</h5>
+                        <h5 class="card-title">Fill with your details</h5>
                         @if(count($errors))
                             <ul class="alert alert-danger">
                                 @foreach($errors->all() as $error)
