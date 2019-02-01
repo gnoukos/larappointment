@@ -17,7 +17,7 @@
             @endauth
             @auth
 
-                @if(auth()->user()->role=='user')
+                @if(auth())
                     <li class="nav-item">
                         <a class="nav-link text-dark mr-md-1" href="/dashboard">{{auth()->user()->name}}</a>
                     </li>

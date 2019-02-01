@@ -30,9 +30,11 @@
                                    </label>--}}
                             </div>
                             <input name="_token" type="hidden" value="{{ csrf_token() }}"/>
+                            @auth
                             <div class="col-12 text-center mt-4">
                                 <button type="submit" value="Submit" class="btn btn-primary" id="makeAppointmentButton">Make the Appointment</button>
                             </div>
+                            @endauth
                         </div>
                     </div>
                 </div>
@@ -40,19 +42,19 @@
                 <div class="card mt-4" id="userDetailsCard">
                     <div class="card-body">
                         <h5 class="card-title">Fill with your details</h5>
-                        @if(count($errors))
-                            <ul class="alert alert-danger">
-                                @foreach($errors->all() as $error)
-                                    <li>{{$error}}</li>
-                                @endforeach
-                            </ul>
-                        @endif
+                        {{--@if(count($errors))--}}
+                            {{--<ul class="alert alert-danger">--}}
+                                {{--@foreach($errors->all() as $error)--}}
+                                    {{--<li>{{$error}}</li>--}}
+                                {{--@endforeach--}}
+                            {{--</ul>--}}
+                        {{--@endif--}}
                         <div class="wrapper text-center">
                             <div class="form-group row">
                                 <div class="col-sm-10">
                                     <input type="text" class="form-control" id="tmpUserEmail" name="guest_email" value="{{ old('guest_email') }}" placeholder="Email" >
                                     @if ($errors->has('guest_email'))
-                                        <span class="invalid-feedback" role="alert">
+                                        <span class="text-danger" role="alert">
                                         <strong>{{ $errors->first('guest_email') }}</strong>
                                     </span>
                                     @endif
@@ -62,7 +64,7 @@
                                 <div class="col-sm-10">
                                     <input type="text" class="form-control" id="tmpUserName" name="guest_name" value="{{ old('guest_name') }}" placeholder="Your Name" >
                                     @if ($errors->has('guest_name'))
-                                        <span class="invalid-feedback" role="alert">
+                                        <span class="text-danger" role="alert">
                                         <strong>{{ $errors->first('guest_name') }}</strong>
                                     </span>
                                     @endif
@@ -72,15 +74,20 @@
                                 <div class="col-sm-10">
                                     <input type="text" class="form-control" id="tmpUserPhone" name="guest_phone" value="{{ old('guest_phone') }}" placeholder="Your Phone" >
                                     @if ($errors->has('guest_phone'))
-                                        <span class="invalid-feedback" role="alert">
+                                        <span class="text-danger" role="alert">
                                         <strong>{{ $errors->first('guest_phone') }}</strong>
                                     </span>
                                     @endif
                                 </div>
                             </div>
                         </div>
+                        <div class="col-12 text-center mt-4">
+                            <button type="submit" value="Submit" class="btn btn-primary" id="makeAppointmentButton">Make the Appointment</button>
+                        </div>
                     </div>
+
                 </div>
+
                 @endguest
             </form>
         </div>
@@ -157,6 +164,14 @@
                 }
             }
             $('.calendar').pignoseCalendar('set', moment(availDate.getTime()).format("YYYY-MM-DD")); //sets the available date to the pignose calendar
+            console.log( $('[data-date="'+moment(availDate.getTime()).format("YYYY-MM-DD")+'"]'));
+
+            $(document).on ("click", "[data-date=\"'+moment(availDate.getTime()).format(\"YYYY-MM-DD\")+'\"]", function () {
+                alert("hi");
+            });
+
+
+
         });
 
         function getFreeTimeslots(option, date){

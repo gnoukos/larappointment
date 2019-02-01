@@ -61,12 +61,14 @@
                                 <th></th>
                                 <th></th>
                                 <th></th>
+                                <th></th>
                                 <th class="unsortable"></th>
                             </tr>
                             </thead>
                             <thead>
                                 <tr>
                                     <th>Name</th>
+                                    <th>Category</th>
                                     <th>Type</th>
                                     <th>Date</th>
                                     <th>Phone</th>
@@ -79,6 +81,7 @@
                                 <tr>
                                     <td>{{ $timeslot->user->name }}</td>
                                     <td>{{ $timeslot->daily_appointment->appointment->option->title }}</td>
+                                    <td>{{ $timeslot->daily_appointment->appointment->type }}</td>
                                     <td>{{ substr($timeslot->daily_appointment->date,0,10) }}</td>
                                     <td>{{ $timeslot->user->mobile_num }}</td>
                                     <td>{{ substr($timeslot->slot,11,5) }}</td>
@@ -93,6 +96,7 @@
                             <tfoot>
                                 <tr>
                                     <th>Name</th>
+                                    <th>Category</th>
                                     <th>Type</th>
                                     <th>Date</th>
                                     <th>Phone</th>

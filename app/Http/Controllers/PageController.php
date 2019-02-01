@@ -71,7 +71,7 @@ class PageController extends Controller
             $timeslotsToday = Timeslot::where('slot', 'like', Carbon::now()->format('Y-M-d').'%')->where('user_id', '!=', null)->count();
             $timeslotsMonth = Timeslot::where('slot', 'like', '%-'.date('m').'-%')->where('user_id', '!=', null)->where('slot', '>', Carbon::now()->toDateTimeString())->count();
             $usersNum = User::where('role', '!=', 'admin')->count();
-            Log::info(date('m'));
+            //Log::info(date('m'));
             $timeslots = Timeslot::where('slot', '>', Carbon::now()->toDateTimeString())->where('user_id', '!=', null)->get();
             return view('pages.admin.adminDashboard')->with(['timeslots' => $timeslots, 'timeslotsToday' => $timeslotsToday, 'timeslotsMonth'=>$timeslotsMonth, 'usersNum' => $usersNum]);
         } else {
@@ -91,19 +91,22 @@ class PageController extends Controller
     public function createAppointment(){
 
         if (Auth::user()->role=='admin') {
+
             $options = Option::doesntHave('children')->get();
             $options = $options->keyBy('id');
             foreach($options as $option){
                 $parent = $option->getParent;
-                while($parent->id != -1){ // this loop removes the last level child from available appointment types
-                    $parent = $parent->getParent;
-                    if($parent){
-                        if($parent->parent == -1){
-                            Log::info($option->title);
-                            $options->forget($option->id);
+                if($parent) {
+                    while ($parent->id != -1) { // this loop removes the last level child from available appointment types
+                        $parent = $parent->getParent;
+                        if ($parent) {
+                            if ($parent->parent == -1) {
+                                Log::info($option->title);
+                                $options->forget($option->id);
+                            }
+                        } else {
+                            break;
                         }
-                    }else{
-                        break;
                     }
                 }
             }

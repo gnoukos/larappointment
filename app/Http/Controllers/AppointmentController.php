@@ -111,8 +111,8 @@ class AppointmentController extends Controller
         /// CREATING TIMESLOTS
         $appointment_hours = AppointmentHours::where('appointment_id',$appointment->id)->get();
         $daily_appointments = DailyAppointment::where('appointment_id',$appointment->id)->get();
-        Log::info($appointment_hours);
-        Log::info($daily_appointments);
+       // Log::info($appointment_hours);
+      //  Log::info($daily_appointments);
         foreach ($daily_appointments as $daily_appointment){
 
             foreach ($appointment_hours as $appointment_hour){
@@ -241,6 +241,7 @@ class AppointmentController extends Controller
 
         //Log::info($timeslots);
 
+
         return response()->json($timeslots);
     }
 
@@ -310,9 +311,30 @@ class AppointmentController extends Controller
         }
 
 
+        $parent = Option::setEagerLoads([])->whereHas('children',function($q) use($timeslot) {
+            $q->where('id',$timeslot->daily_appointment->appointment->option->id);
+        })->first();
+
+        $parents=[$timeslot->daily_appointment->appointment->option->title];
+        if($parent){
+            array_push($parents, $parent->title);
+            while($parent){
+                $id = $parent->id;
+                $parent = Option::setEagerLoads([])->whereHas('children',function($q) use($id) {
+                    $q->where('id',$id);
+                })->first();
+                if($parent){
+                    array_push($parents, $parent->title);
+                }
+            }
+        }
+
+        $parents=array_reverse($parents);
+
+
         //Mail::to($request->user())->send(new successfullAssignation($timeslot));
 
-        return view('pages.successfulAssignation')->with('timeslot', $timeslot);
+        return view('pages.successfulAssignation')->with(['timeslot' => $timeslot,'parents'=>$parents]);
     }
 
     public function getTicket(Request $request)
@@ -344,6 +366,8 @@ class AppointmentController extends Controller
         $freeTimeslots = Timeslot::where('daily_appointments_id', $dailyAppointmentId)->where('ticket_num', null)->count();
 
         $timeslot->ticket_num = ($totalTimeslots - $freeTimeslots)+1;
+
+        $timeslot->user_id=Auth::user()->id;
 
         $timeslot->save();
 
