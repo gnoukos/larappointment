@@ -80,18 +80,19 @@
                             @foreach($timeslots as $timeslot)
                                 <tr>
                                     <td>{{ $timeslot->user->name }}</td>
-                                    <td>@for ($i=0; $i<count($timeslot->parents); $i++ )
-                                            @if ($i!=count($timeslot->parents)-1)
-                                                {{$timeslot->parents[$i]}} ->
-                                            @else
-                                                {{$timeslot->parents[$i]}}
-                                            @endif
-                                        @endfor
+                                    <td>
+                                        {{--@for ($i=0; $i<count($timeslot->parents); $i++ )--}}
+                                            {{--@if ($i!=count($timeslot->parents)-1)--}}
+                                                {{--{{$timeslot->parents[$i]}} ->--}}
+                                            {{--@else--}}
+                                                {{--{{$timeslot->parents[$i]}}--}}
+                                            {{--@endif--}}
+                                        {{--@endfor--}}
                                     </td>
                                     <td>{{ $timeslot->daily_appointment->appointment->type }}</td>
                                     <td>{{ substr($timeslot->daily_appointment->date,0,10) }}</td>
                                     <td>{{ $timeslot->user->mobile_num }}</td>
-                                    <td>{{ substr($timeslot->slot,11,5) }}</td>
+                                    <td>{{ $timeslot->slot }}</td>
                                     <td class="unsortable">
                                         {!! Form::open(['url' => ['flushSlot',$timeslot->id], 'method' => 'POST']) !!}
                                         <button type="submit" class="btn btn-danger" onclick="return confirm('Do you want to cancel the appointment of {{$timeslot->user->name}}? ')">&times;</button>

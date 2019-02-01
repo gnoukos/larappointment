@@ -28,7 +28,7 @@ class UserDashboardController extends Controller
     {
         $user=Auth::user();
 
-        $timeslots = Timeslot::where('user_id', $user->id)->orderBy('slot', 'desc')->get();
+        $timeslots = Timeslot::with('daily_appointment.appointment.option')->where('user_id', $user->id)->orderBy('slot', 'desc')->get();
 
         foreach ($timeslots as $timeslot){
             $timeslot->daily_appointment->date = substr($timeslot->daily_appointment->date,0,10);

@@ -72,7 +72,7 @@ class PageController extends Controller
             $timeslotsMonth = Timeslot::where('slot', 'like', '%-'.date('m').'-%')->where('user_id', '!=', null)->where('slot', '>', Carbon::now()->toDateTimeString())->count();
             $usersNum = User::where('role', '!=', 'admin')->count();
             //Log::info(date('m'));
-            $timeslots = Timeslot::where('slot', '>', Carbon::now()->toDateTimeString())->where('user_id', '!=', null)->get();
+            $timeslots = Timeslot::with('user')->with('daily_appointment.appointment.option')->where('slot', '>', Carbon::now()->toDateTimeString())->where('user_id', '!=', null)->get();
 
             foreach ($timeslots as $timeslot) {
                 $timeslot->daily_appointment->date = substr($timeslot->daily_appointment->date, 0, 10);
