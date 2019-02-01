@@ -351,7 +351,6 @@ class AppointmentController extends Controller
 
         $dailyAppointmentId = $request->dailyAppointmentId;
         $dailyAppointment = DailyAppointment::find($dailyAppointmentId);
-        Log::info($dailyAppointment);
         if($dailyAppointment && $dailyAppointment->free_slots > 0){
             $dailyAppointment->free_slots = $dailyAppointment->free_slots - 1;
             $dailyAppointment->save();

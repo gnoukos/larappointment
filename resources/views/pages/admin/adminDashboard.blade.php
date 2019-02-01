@@ -80,7 +80,14 @@
                             @foreach($timeslots as $timeslot)
                                 <tr>
                                     <td>{{ $timeslot->user->name }}</td>
-                                    <td>{{ $timeslot->daily_appointment->appointment->option->title }}</td>
+                                    <td>@for ($i=0; $i<count($timeslot->parents); $i++ )
+                                            @if ($i!=count($timeslot->parents)-1)
+                                                {{$timeslot->parents[$i]}} ->
+                                            @else
+                                                {{$timeslot->parents[$i]}}
+                                            @endif
+                                        @endfor
+                                    </td>
                                     <td>{{ $timeslot->daily_appointment->appointment->type }}</td>
                                     <td>{{ substr($timeslot->daily_appointment->date,0,10) }}</td>
                                     <td>{{ $timeslot->user->mobile_num }}</td>

@@ -31,7 +31,15 @@
                                         @foreach($timeslots as $timeslot)
                                             <tr>
                                                 <th scope="row">{{$timeslot->daily_appointment->date}}</th>
-                                                <td>{{$timeslot->daily_appointment->appointment->option->title}}</td>
+                                                <td>
+                                                    @for ($i=0; $i<count($timeslot->parents); $i++ )
+                                                        @if ($i!=count($timeslot->parents)-1)
+                                                            {{$timeslot->parents[$i]}} ->
+                                                        @else
+                                                            {{$timeslot->parents[$i]}}
+                                                        @endif
+                                                    @endfor
+                                                </td>
                                                 <td>{{$timeslot->slot}}</td>
                                                 @if(Carbon\Carbon::today()->lt($timeslot->daily_appointment->date))
                                                     <td>

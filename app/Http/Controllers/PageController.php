@@ -73,6 +73,34 @@ class PageController extends Controller
             $usersNum = User::where('role', '!=', 'admin')->count();
             //Log::info(date('m'));
             $timeslots = Timeslot::where('slot', '>', Carbon::now()->toDateTimeString())->where('user_id', '!=', null)->get();
+
+            foreach ($timeslots as $timeslot) {
+                $timeslot->daily_appointment->date = substr($timeslot->daily_appointment->date, 0, 10);
+                $timeslot->slot = substr($timeslot->slot, 11, 5);
+
+                $parent = Option::setEagerLoads([])->whereHas('children', function ($q) use ($timeslot) {
+                    $q->where('id', $timeslot->daily_appointment->appointment->option->id);
+                })->first();
+
+                $parents = [$timeslot->daily_appointment->appointment->option->title];
+                if ($parent) {
+                    array_push($parents, $parent->title);
+                    while ($parent) {
+                        $id = $parent->id;
+                        $parent = Option::setEagerLoads([])->whereHas('children', function ($q) use ($id) {
+                            $q->where('id', $id);
+                        })->first();
+                        if ($parent) {
+                            array_push($parents, $parent->title);
+                        }
+                    }
+                }
+
+                $timeslot->parents=array_reverse($parents);
+            }
+
+
+
             return view('pages.admin.adminDashboard')->with(['timeslots' => $timeslots, 'timeslotsToday' => $timeslotsToday, 'timeslotsMonth'=>$timeslotsMonth, 'usersNum' => $usersNum]);
         } else {
             abort(403, 'Unauthorized action.');
