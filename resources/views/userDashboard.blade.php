@@ -23,6 +23,7 @@
                                         <tr>
                                             <th scope="col">Date</th>
                                             <th scope="col">Category</th>
+                                            <th scope="col">Type</th>
                                             <th scope="col">Time</th>
                                             <th scope="col">Cancel</th>
                                         </tr>
@@ -40,11 +41,12 @@
                                                         @endif
                                                     @endfor
                                                 </td>
+                                                <td>{{$timeslot->daily_appointment->appointment->type}}@if($timeslot->daily_appointment->appointment->type == "ticket"): {{$timeslot->ticket_num}} @endif </td>
                                                 <td>{{$timeslot->slot}}</td>
                                                 @if(Carbon\Carbon::today()->lt($timeslot->daily_appointment->date))
                                                     <td>
                                                         {!! Form::open(['url' => ['flushSlot',$timeslot->id], 'method' => 'POST']) !!}
-                                                        <button type="submit" class="btn btn-danger"  onclick="return confirm('Do you want to delete this appointment category ? ')">Delete</button>
+                                                        <button type="submit" class="btn btn-danger"  onclick="return confirm('Do you want to delete this appointment category ? ')">&times;</button>
                                                         {!! Form::close() !!}
                                                     </td>
                                                 @else

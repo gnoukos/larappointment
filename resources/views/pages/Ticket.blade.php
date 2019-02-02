@@ -7,7 +7,14 @@
                 <div class="card-body">
                     <h1 class="card-title mt-5 mb-5"><i class="fas fa-receipt fa-5x"></i></h1>
                     <div class="wrapper text-center mt-5 mb-5">
-                        <h3>Your Ticket number for <span class="text-success">{{ $timeslot->daily_appointment->appointment->option->title }}</span>, at: <span class="text-success">{{ \Carbon\Carbon::parse($timeslot->slot)->format('l d/m/Y') }} </span> is</h3>
+                        <h3>Your Ticket number for <span class="text-success">
+                                @for ($i=0; $i<count($parents); $i++ )
+                                    @if ($i!=count($parents)-1)
+                                        {{$parents[$i]}} ->
+                                    @else
+                                        {{$parents[$i]}}
+                                    @endif
+                                @endfor</span>, at: <span class="text-success">{{ \Carbon\Carbon::parse($timeslot->slot)->format('l d/m/Y') }}</span> and time: <span class="text-success"> {{\Carbon\Carbon::parse($startingHour)->format('H:i')}}</span> is</h3>
                         <br><button type="button" class="btn btn-dark btn-lg">{{ $timeslot->ticket_num }}</button><br>
                         <button id="downloadTicket" class="btn btn-primary mt-5">Download Ticket</button>
                     </div>
@@ -24,6 +31,7 @@
             doc.text(text, 10, 10);
             doc.save('ticket.pdf');
         });
+
 
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.5/jspdf.debug.js"></script>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Appointment;
 use App\DailyAppointment;
+use App\Mail\appointmentCanceled;
 use App\Mail\successfullAssignation;
 use App\Option;
 use App\User;
@@ -331,8 +332,12 @@ class AppointmentController extends Controller
 
         $parents=array_reverse($parents);
 
+        if(Auth::check()){
+            Mail::to($request->user())->send(new successfullAssignation($timeslot, $parents));
+        }else{
+            Mail::to($request->input('guest_email'))->send(new successfullAssignation($timeslot, $parents));
+        }
 
-        //Mail::to($request->user())->send(new successfullAssignation($timeslot));
 
         return view('pages.successfulAssignation')->with(['timeslot' => $timeslot,'parents'=>$parents]);
     }
@@ -358,6 +363,9 @@ class AppointmentController extends Controller
             return redirect('/datepicker?option='.$optionId)->withErrors("No available tickets");
         }
 
+        $startingHour = Timeslot::where('daily_appointments_id', $dailyAppointmentId)->orderBy('slot', 'asc')->first();
+        $startingHour = $startingHour->slot;
+
         $timeslot = Timeslot::where('daily_appointments_id', $dailyAppointmentId)->where('user_id', null)->where('ticket_num', null)->orderBy('slot', 'asc')->first();
 
         $totalTimeslots = Timeslot::where('daily_appointments_id', $dailyAppointmentId)->count();
@@ -370,19 +378,64 @@ class AppointmentController extends Controller
 
         $timeslot->save();
 
-        return view('pages.Ticket')->with('timeslot', $timeslot);
+        $parent = Option::setEagerLoads([])->whereHas('children',function($q) use($timeslot) {
+            $q->where('id',$timeslot->daily_appointment->appointment->option->id);
+        })->first();
+
+        $parents=[$timeslot->daily_appointment->appointment->option->title];
+        if($parent){
+            array_push($parents, $parent->title);
+            while($parent){
+                $id = $parent->id;
+                $parent = Option::setEagerLoads([])->whereHas('children',function($q) use($id) {
+                    $q->where('id',$id);
+                })->first();
+                if($parent){
+                    array_push($parents, $parent->title);
+                }
+            }
+        }
+
+        $parents=array_reverse($parents);
+
+        return view('pages.Ticket')->with(['timeslot' => $timeslot,'parents'=>$parents, 'startingHour'=>$startingHour]);
     }
 
     public function flushSlot($id){
 
         $timeslot = Timeslot::find($id);
         if(Auth::user()->id == $timeslot->user_id || Auth::user()->role == 'admin'){
+            $userId = $timeslot->user_id;
             $timeslot->user_id = null;
             $timeslot->save();
+
+            $user = User::find($userId);
+
+            $parent = Option::setEagerLoads([])->whereHas('children',function($q) use($timeslot) {
+                $q->where('id',$timeslot->daily_appointment->appointment->option->id);
+            })->first();
+            $parents=[$timeslot->daily_appointment->appointment->option->title];
+            if($parent){
+                array_push($parents, $parent->title);
+                while($parent){
+                    $id = $parent->id;
+                    $parent = Option::setEagerLoads([])->whereHas('children',function($q) use($id) {
+                        $q->where('id',$id);
+                    })->first();
+                    if($parent){
+                        array_push($parents, $parent->title);
+                    }
+                }
+            }
+
+            $parents=array_reverse($parents);
+
+
+            Mail::to($user->email)->send(new appointmentCanceled($timeslot, $parents));
         }
 
         if(Auth::user()->role == 'admin'){
-            return redirect('/admin');
+            return redirect('/admin')->with('success', 'Appointment Canceled Successfully.');
         }
         return redirect('/dashboard');
     }

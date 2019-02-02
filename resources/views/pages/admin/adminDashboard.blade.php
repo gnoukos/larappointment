@@ -51,6 +51,13 @@
                     All the Appointments
                 </div>
                 <div class="card-body">
+                    @if(session('success'))
+
+                        <div class="alert alert-success">
+                            {{session('success')}}
+                        </div>
+
+                    @endif
                     <div id="datatable-button-wrapper"></div>
                     <div class="table-responsive">
                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -63,6 +70,7 @@
                                 <th></th>
                                 <th></th>
                                 <th class="unsortable"></th>
+                                <th class="unsortable"></th>
                             </tr>
                             </thead>
                             <thead>
@@ -73,6 +81,7 @@
                                     <th>Date</th>
                                     <th>Phone</th>
                                     <th>Time</th>
+                                    <th class="unsortable">Remaining</th>
                                     <th class="unsortable">Cancel</th>
                                 </tr>
                             </thead>
@@ -81,18 +90,19 @@
                                 <tr>
                                     <td>{{ $timeslot->user->name }}</td>
                                     <td>
-                                        {{--@for ($i=0; $i<count($timeslot->parents); $i++ )--}}
-                                            {{--@if ($i!=count($timeslot->parents)-1)--}}
-                                                {{--{{$timeslot->parents[$i]}} ->--}}
-                                            {{--@else--}}
-                                                {{--{{$timeslot->parents[$i]}}--}}
-                                            {{--@endif--}}
-                                        {{--@endfor--}}
+                                        @for ($i=0; $i<count($timeslot->parents); $i++ )
+                                            @if ($i!=count($timeslot->parents)-1)
+                                                {{$timeslot->parents[$i]}} ->
+                                            @else
+                                                {{$timeslot->parents[$i]}}
+                                            @endif
+                                        @endfor
                                     </td>
                                     <td>{{ $timeslot->daily_appointment->appointment->type }}</td>
                                     <td>{{ substr($timeslot->daily_appointment->date,0,10) }}</td>
                                     <td>{{ $timeslot->user->mobile_num }}</td>
                                     <td>{{ $timeslot->slot }}</td>
+                                    <td>{{ $timeslot->daily_appointment->free_slots }}</td>
                                     <td class="unsortable">
                                         {!! Form::open(['url' => ['flushSlot',$timeslot->id], 'method' => 'POST']) !!}
                                         <button type="submit" class="btn btn-danger" onclick="return confirm('Do you want to cancel the appointment of {{$timeslot->user->name}}? ')">&times;</button>
@@ -109,6 +119,7 @@
                                     <th>Date</th>
                                     <th>Phone</th>
                                     <th>Time</th>
+                                    <th class="unsortable">Remaining</th>
                                     <th class="unsortable">Cancel</th>
                                 </tr>
                             </tfoot>

@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Request;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Input;
+//use Illuminate\Support\Facades\Input;
 use Validator;
 use Illuminate\Support\Facades\Hash;
+
 
 class UpdateUserController extends Controller
 {
@@ -18,10 +19,10 @@ class UpdateUserController extends Controller
             'update_password' => 'required|confirmed|min:6'
         ]);*/
 
-        $validator = Validator::make($request::all(), [
+        $validator = Validator::make($request->all(), [
             //'update_email' => 'unique:users,email,'.$user->id,
             'update_email' => 'required|email|unique:users,email,'.$user->id,
-            'update_password' => 'required|confirmed|min:6'
+            'update_password' => 'nullable|required|min:6|confirmed'
         ]);
 
         //create post

@@ -1,6 +1,6 @@
 <footer class="pt-4 my-md-5 pt-md-5 border-top">
     <div class="row ">
-        <div class="col-12 col-md">
+{{--        <div class="col-12 col-md">
             <small class="d-block mb-3 text-light">&copy; 2017-2018</small>
         </div>
         <div class="col-6 col-md">
@@ -23,6 +23,6 @@
                 <li><a class="text-light" href="#">Team</a></li>
                 <li><a class="text-light" href="#">License</a></li>
             </ul>
-        </div>
+        </div>--}}
     </div>
 </footer>

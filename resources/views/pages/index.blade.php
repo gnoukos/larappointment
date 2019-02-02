@@ -17,7 +17,7 @@
                     <input type="hidden" name="option" id="selectedOption" value="">
                 </div>
 
-                <button type="submit" class="btn btn-dark">Choose Date</button>
+                <button type="submit" class="btn btn-dark" id="chooseDateButton" disabled>Choose Date</button>
                 <div id="invalidInput" class="alert alert-danger alert-dismissible fade show mt-5" role="alert" style="display: none;">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -31,7 +31,7 @@
 
     <script>
 
-        $("#optionsMenuForm").submit(function(e){
+        /*$("#optionsMenuForm").submit(function(e){
             var selectChildren = $("#optionsMenu > select").length+1;
             var ok = true;
             for(var i=1; i<selectChildren; i++){
@@ -44,7 +44,7 @@
                 e.preventDefault();
                 $("#invalidInput").show();
             }
-        });
+        });*/
 
         function getNextLevel(id,level,levelId) {
             $("#invalidInput").hide();
@@ -68,6 +68,8 @@
                             $.each(result, function () {
                                 $dropdown.append($("<option />").val(this.id).text(this.title));
                             });
+                        }else{
+                            $('#chooseDateButton').prop("disabled", false);
                         }
                     });
                 });
@@ -75,7 +77,7 @@
             $('#selectedOption').val(id);
         }
 
-        function resetSelected(){
+        function resetSelected(){ // re-initialize options selection
             $('.form-control').prop('selectedIndex',0);
         }
 

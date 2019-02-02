@@ -149,6 +149,27 @@ class PageController extends Controller
 
         if (Auth::user()->role=='admin') {
             $appointments = Appointment::all();
+
+            /*$parent = Option::setEagerLoads([])->whereHas('children',function($q) use($timeslot) {
+                $q->where('id',$timeslot->daily_appointment->appointment->option->id);
+            })->first();
+
+            $parents=[$timeslot->daily_appointment->appointment->option->title];
+            if($parent){
+                array_push($parents, $parent->title);
+                while($parent){
+                    $id = $parent->id;
+                    $parent = Option::setEagerLoads([])->whereHas('children',function($q) use($id) {
+                        $q->where('id',$id);
+                    })->first();
+                    if($parent){
+                        array_push($parents, $parent->title);
+                    }
+                }
+            }
+
+            $parents=array_reverse($parents);*/
+
             return view('pages.admin.manageAppointments')->with('appointments', $appointments);
         } else {
             abort(403, 'Unauthorized action.');

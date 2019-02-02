@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+
 use App\Option;
 use App\Timeslot;
 use Illuminate\Bus\Queueable;
@@ -9,7 +10,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class successfullAssignation extends Mailable
+class appointmentCanceled extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -31,6 +32,6 @@ class successfullAssignation extends Mailable
      */
     public function build()
     {
-        return $this->view('mails.successfulAssignation')->subject("Successful Assignation")->with(['timeslot'=>$this->timeslot, 'parents'=>$this->parents]);
+        return $this->view('mails.appointmentCanceled')->subject("Appointment Canceled")->with(['timeslot'=>$this->timeslot, 'parents'=>$this->parents]);
     }
 }

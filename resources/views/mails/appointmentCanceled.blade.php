@@ -142,7 +142,7 @@
                                             <font face="Arial, Helvetica, sans-serif" size="5" color="#57697e"
                                                   style="font-size: 34px;">
                         <span style="font-family: Arial, Helvetica, sans-serif; font-size: 34px; color: #57697e;">
-                        Successfull Assignation to Appointment
+                        Appointment Canceled!
                         </span></font>
                                         </div>
                                         <!-- padding -->
@@ -155,7 +155,7 @@
                                             <font face="Arial, Helvetica, sans-serif" size="4" color="#57697e"
                                                   style="font-size: 15px;">
                         <span style="font-family: Arial, Helvetica, sans-serif; font-size: 15px; color: #57697e;">
-                        You have successfully made an appointment for:
+                        Your Appointment for:
                             <span class="text-success">
                                 @for ($i=0; $i<count($parents); $i++ )
                                     @if ($i!=count($parents)-1)
@@ -164,7 +164,7 @@
                                         {{$parents[$i]}}
                                     @endif
                                 @endfor
-                            </span>, for: <span class="text-success">{{ \Carbon\Carbon::parse($timeslot->slot)->format('l d/m/Y') }}</span> at <span class="text-success">{{ \Carbon\Carbon::parse($timeslot->slot)->format('H:i') }}</span>
+                            </span>, in: <span class="text-success">{{ \Carbon\Carbon::parse($timeslot->slot)->format('l d/m/Y') }}</span> at <span class="text-success">{{ \Carbon\Carbon::parse($timeslot->slot)->format('H:i') }}</span> has been canceled!
                         </span></font>
                                         </div>
                                         <!-- padding -->
