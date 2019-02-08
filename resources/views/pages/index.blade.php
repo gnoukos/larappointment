@@ -31,20 +31,6 @@
 
     <script>
 
-        /*$("#optionsMenuForm").submit(function(e){
-            var selectChildren = $("#optionsMenu > select").length+1;
-            var ok = true;
-            for(var i=1; i<selectChildren; i++){
-                if($("#level_"+i+"_selection").val()==-1){
-                    ok = false;
-                    break;
-                }
-            }
-            if(ok==false) {
-                e.preventDefault();
-                $("#invalidInput").show();
-            }
-        });*/
 
         function getNextLevel(id,level,levelId) {
             $("#invalidInput").hide();
@@ -68,11 +54,14 @@
                             $.each(result, function () {
                                 $dropdown.append($("<option />").val(this.id).text(this.title));
                             });
+                            $('#chooseDateButton').prop("disabled", true);
                         }else{
                             $('#chooseDateButton').prop("disabled", false);
                         }
                     });
                 });
+            }else{
+                $('#chooseDateButton').prop("disabled", true);
             }
             $('#selectedOption').val(id);
         }
