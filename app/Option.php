@@ -18,4 +18,9 @@ class Option extends Model
     {
         return $this->hasMany('\App\Option', 'parent');
     }
+
+    public function appointments()
+    {
+        return $this->hasMany('\App\Appointment', 'belong_to_option');
+    }
 }

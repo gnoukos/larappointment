@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\appointmentCanceled;
+use Illuminate\Support\Facades\Mail;
 use App\Option;
+use App\Timeslot;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Collection;
@@ -111,19 +115,53 @@ class OptionController extends Controller
      */
     public function destroy($id)
     {
-//        if(Auth::check() && Auth::user()->role == 'ADMIN'){
-//
-//        }
-        Option::destroy($id);
+        $option = Option::where('id', $id)->with('appointments', 'appointments.appointment_hours', 'appointments.daily_appointments', 'appointments.daily_appointments.timeslots')->first();
+        foreach ($option->appointments as $appointment) {
+            foreach ($appointment->daily_appointments as $daily) {
+                foreach ($daily->timeslots as $slot){
+                    if($slot->user){
+
+                        $parent = Option::setEagerLoads([])->whereHas('children',function($q) use($slot) {
+                            $q->where('id',$slot->daily_appointment->appointment->option->id);
+                        })->first();
+                        $parents=[$slot->daily_appointment->appointment->option->title];
+                        if($parent){
+                            array_push($parents, $parent->title);
+                            while($parent){
+                                $id = $parent->id;
+                                $parent = Option::setEagerLoads([])->whereHas('children',function($q) use($id) {
+                                    $q->where('id',$id);
+                                })->first();
+                                if($parent){
+                                    array_push($parents, $parent->title);
+                                }
+                            }
+                        }
+
+                        $parents=array_reverse($parents);
+
+                        Mail::to($slot->user)->send(new appointmentCanceled($slot, $parents));
+                    }
+                }
+                $daily->timeslots()->delete();
+            }
+            $appointment->daily_appointments()->delete();
+            $appointment->appointment_hours()->delete();
+        }
+        $option->appointments()->delete();
+        $option->delete();
+        return response()->json("sarantis");
+        //Option::destroy($id);
     }
 
     public function children($id)
     {
-        $options = Option::setEagerLoads([])->where('parent',$id)->get();
+        $options = Option::setEagerLoads([])->where('parent', $id)->get();
         return response()->json($options);
     }
 
-    public function storeLevels(Request $request){
+    public function storeLevels(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'levels' => 'required'
         ]);
@@ -135,7 +173,7 @@ class OptionController extends Controller
         $levels = Option::setEagerLoads([])->where('parent', -1)->first();
 
 
-        while($levels){
+        while ($levels) {
             $id = $levels->id;
             $levels->delete();
             $levels = Option::where('parent', $id)->first();
@@ -146,13 +184,13 @@ class OptionController extends Controller
 
         $parent = null;
         foreach ($levels as $key => $level) {
-            if($key == 0){
+            if ($key == 0) {
                 $option = new Option();
                 $option->title = $level;
                 $option->parent = -1;
                 $option->save();
                 $parent = $option->id;
-            }else{
+            } else {
                 $option = new Option();
                 $option->title = $level;
                 $option->parent = $parent;

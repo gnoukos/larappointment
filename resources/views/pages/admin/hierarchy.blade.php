@@ -14,7 +14,7 @@
                 });
         */
 
-        function deleteItem(id){
+        function deleteItem(id) {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -22,9 +22,9 @@
 
             });
             jQuery.ajax({
-                url: "{{ url('/options') }}/"+id,
+                url: "{{ url('/options') }}/" + id,
                 method: 'DELETE',
-                success: function(result){
+                success: function (result) {
                     $('.dd').nestable('remove', id);
                 }
             });
@@ -42,31 +42,39 @@
                 });
 
                 $('#dd-outer-list').append(output);
-                $('.dd').nestable({scroll: true, maxDepth: 30,
-                    beforeDragStop: function(l,e, p){
-                        //console.log($( "li.dd-item" ).parent());
-                        //$( "li.dd-item" ).parent().css( "background-color", "red" );
-                        console.log(e.attr('data-id'));
+                $('.dd').nestable({
+                    scroll: true, maxDepth: 30,
+                    beforeDragStop: function (l, e, p) {
                         var dataId = e.attr('data-id');
                         var numOfChildren = $(e).find("li").length;
-                        console.log(numOfChildren);
-
-                        /*if(numOfChildren==0){
-                            $(e).$( ".dd-handle" ).append( "<button class='float-right' onmousedown='deleteItem(0)'>X</button>" );;
-                        }else{
-                            $(p).closest('div[class="dd-item"]').remove("button");
-                        }*/
+                    },
+                    callback: function (l, e) {
+                        $(".del-option").remove();
+                        var data = $('.dd').nestable('serialize');
+                        $.each(data, function (order, item) {
+                            addDeleteButtonToDeepestChildren(item);
+                        });
                     }
                 });
             });
 
+            function addDeleteButtonToDeepestChildren(item) {
+                if (item.hasOwnProperty("children")) {
+                    $.each(item.children, function (order, child) {
+                        addDeleteButtonToDeepestChildren(child);
+                    });
+                } else {
+                    $("#" + item.id).append("<button class='float-right del-option' onmousedown='deleteItem(" + item.id + ")'>X</button>");
+                }
+            }
+
             function buildItem(item) {
                 var html = "<li class='dd-item' data-id='" + item.id + "'>";
-                html += "<div class='dd-handle'>" + item.title;
-                if(item.children.length == 0){
-                    html+= "<button class='float-right' onmousedown='deleteItem("+item.id+")'>X</button>";
+                html += "<div class='dd-handle' id='" + item.id + "'>" + item.title;
+                if (item.children.length == 0) {
+                    html += "<button class='float-right del-option' onmousedown='deleteItem(" + item.id + ")'>X</button>";
                 }
-                html+="</div>";
+                html += "</div>";
                 if (item.children.length > 0) {
                     //console.log("in children parser");
                     html += "<ol class='dd-list'>";
@@ -136,10 +144,10 @@
                 data: {
                     output: output
                 },
-                success: function() {
+                success: function () {
                     $("#saveSuccess").show();
                 },
-                fail: function(xhr, textStatus, errorThrown){
+                fail: function (xhr, textStatus, errorThrown) {
                     $("#saveError").show();
                 }
             });
@@ -158,11 +166,13 @@
             </li>
             <li class="breadcrumb-item active">Hierarchy</li>
         </ol>
-        <div id="saveSuccess" class="alert alert-success alert-dismissible fade show" role="alert" style="display: none;">
+        <div id="saveSuccess" class="alert alert-success alert-dismissible fade show" role="alert"
+             style="display: none;">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <h6 class="alert-heading">Hierarchy Saved! Consider renaming properly your level names at <a href="/levels">Levels page.</a></h6>
+            <h6 class="alert-heading">Hierarchy Saved! Consider renaming properly your level names at <a href="/levels">Levels
+                    page.</a></h6>
         </div>
         <div id="saveError" class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">

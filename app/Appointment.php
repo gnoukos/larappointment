@@ -6,15 +6,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class Appointment extends Model
 {
-    public function option(){
+    public function option()
+    {
         return $this->belongsTo('\App\Option', 'belong_to_option');
     }
 
-    public function appointment_hours(){
+    public function appointment_hours()
+    {
         return $this->hasMany('\App\AppointmentHours');
     }
 
-    public function daily_appointments(){
+    public function daily_appointments()
+    {
         return $this->hasMany('\App\DailyAppointment');
     }
 }
