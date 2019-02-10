@@ -19,10 +19,12 @@ class UpdateUserController extends Controller
             'update_password' => 'required|confirmed|min:6'
         ]);*/
 
+//        die(json_encode($request->all()));
+
         $validator = Validator::make($request->all(), [
             //'update_email' => 'unique:users,email,'.$user->id,
             'update_email' => 'required|email|unique:users,email,'.$user->id,
-            'update_password' => 'nullable|required|min:6|confirmed'
+            'update_password' => 'nullable|min:6|confirmed'
         ]);
 
         //create post
@@ -32,7 +34,7 @@ class UpdateUserController extends Controller
 
         $user->mobile_num = $request->input('update_mobile');
         $user->email = $request->input('update_email');
-        if(!empty($request->input('update_password'))){
+        if(!empty($request->input('update_password')) && $request->input('update_password') != null){
             if($request->input('update_password')==$request->input('update_password_confirmation')){
                 $user->password = Hash::make($request->input('update_password'));
             }

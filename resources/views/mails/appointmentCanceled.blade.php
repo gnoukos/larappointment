@@ -159,7 +159,7 @@
                             <span class="text-success">
                                 @for ($i=0; $i<count($parents); $i++ )
                                     @if ($i!=count($parents)-1)
-                                        {{$parents[$i]["title"]}}} ->
+                                        {{$parents[$i]["title"]}} ->
                                     @else
                                         {{$parents[$i]["title"]}}
                                     @endif
