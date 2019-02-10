@@ -120,26 +120,7 @@ class OptionController extends Controller
             foreach ($appointment->daily_appointments as $daily) {
                 foreach ($daily->timeslots as $slot){
                     if($slot->user){
-
-                        $parent = Option::setEagerLoads([])->whereHas('children',function($q) use($slot) {
-                            $q->where('id',$slot->daily_appointment->appointment->option->id);
-                        })->first();
-                        $parents=[$slot->daily_appointment->appointment->option->title];
-                        if($parent){
-                            array_push($parents, $parent->title);
-                            while($parent){
-                                $id = $parent->id;
-                                $parent = Option::setEagerLoads([])->whereHas('children',function($q) use($id) {
-                                    $q->where('id',$id);
-                                })->first();
-                                if($parent){
-                                    array_push($parents, $parent->title);
-                                }
-                            }
-                        }
-
-                        $parents=array_reverse($parents);
-
+                        $parents = getTimeSlotOptionParentsArray($slot);
                         Mail::to($slot->user)->send(new appointmentCanceled($slot, $parents));
                     }
                 }

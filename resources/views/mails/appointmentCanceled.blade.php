@@ -159,9 +159,9 @@
                             <span class="text-success">
                                 @for ($i=0; $i<count($parents); $i++ )
                                     @if ($i!=count($parents)-1)
-                                        {{$parents[$i]}} ->
+                                        {{$parents[$i]["title"]}}} ->
                                     @else
-                                        {{$parents[$i]}}
+                                        {{$parents[$i]["title"]}}
                                     @endif
                                 @endfor
                             </span>, in: <span class="text-success">{{ \Carbon\Carbon::parse($timeslot->slot)->format('l d/m/Y') }}</span> at <span class="text-success">{{ \Carbon\Carbon::parse($timeslot->slot)->format('H:i') }}</span> has been canceled!

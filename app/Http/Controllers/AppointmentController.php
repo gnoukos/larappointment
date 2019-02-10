@@ -227,7 +227,19 @@ class AppointmentController extends Controller
      */
     public function destroy($id) //Appointment $appointment
     {
-        Appointment::destroy($id);
+        $appointment = Appointment::where('id',$id)->with('daily_appointments.timeslots','appointment_hours')->first();
+        foreach ($appointment->daily_appointments as $daily) {
+            foreach ($daily->timeslots as $slot){
+                if($slot->user){
+                    $parents = getTimeSlotOptionParentsArray($slot);
+                    Mail::to($slot->user)->send(new appointmentCanceled($slot, $parents));
+                }
+            }
+            $daily->timeslots()->delete();
+        }
+        $appointment->appointment_hours()->delete();
+        $appointment->daily_appointments()->delete();
+        $appointment->delete();
         return redirect('/manageAppointments');
     }
 
