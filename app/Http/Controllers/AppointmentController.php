@@ -87,7 +87,7 @@ class AppointmentController extends Controller
         for($hid=1;$hid<=30;$hid++){
 
 
-            if($request->has('hourBoxFrom'.$hid) && $request->has('hourBoxTo'.$hid)) {
+            if($request->has('hourBoxFrom'.$hid) && $request->has('hourBoxTo'.$hid) && $request->{'hourBoxFrom'.$hid} != null && $request->{'hourBoxTo'.$hid} != null) {
 
 
                 $appointment_hours = new AppointmentHours();
