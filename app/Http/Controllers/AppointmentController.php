@@ -55,10 +55,15 @@ class AppointmentController extends Controller
             'days' => 'required|min:1',
             'hourBoxFrom1' => 'required',
             'hourBoxTo1' => 'required',
-            'weeks' => 'required',
+
+            'endDate' => 'this_or_that:weeks|date',
             'duration' => 'required',
             'typeOfAppointment' => 'required|in:regular,ticket'
+        ],[
+            'endDate.this_or_that' => 'You must fill either an end date or just weeks',
         ]);
+
+        Log::info("mana:".$request->endDate);
 
         if ($validator->fails()) {
             return redirect('/createAppointment')->withErrors($validator)->withInput();
@@ -67,6 +72,11 @@ class AppointmentController extends Controller
         $appointment = new Appointment();
         $appointment->type = $request->typeOfAppointment;
         $appointment->weeks = $request->weeks;
+        $appointment->enabled = true;
+        if ($request->has("weeks")){
+            $appointment->weeks = $request->weeks;
+        }
+
         $appointment->duration = $request->duration;
         $appointment->belong_to_option = $request->belongToOption;
 
@@ -92,7 +102,12 @@ class AppointmentController extends Controller
         //CREATING DAILY APPOINTMENTS
         $repeat = json_decode($appointment->repeat);
         $start = time()+86400;
-        $end = $start + 604800*$appointment->weeks;
+        if ($request->has("endDate")){
+            $end=strtotime($request->endDate);
+        }
+        else {
+            $end = $start + 604800*$appointment->weeks;
+        }
         $current = $start;
         while($current < $end){
             $weekday = strtolower(date('l', $current));
@@ -450,6 +465,18 @@ class AppointmentController extends Controller
             return redirect('/admin')->with('success', 'Appointment Canceled Successfully.');
         }
         return redirect('/dashboard');
+    }
+
+    public function changeAppointmentState(Request $request){
+        $appointment = Appointment::find($request->appointmentId);
+
+        if($appointment->enabled){
+            $appointment->enabled = false;
+        }else{
+            $appointment->enabled = true;
+        }
+
+        $appointment->save();
     }
 }
 

@@ -37,14 +37,13 @@
             var selectChildren = $("#optionsMenu > select").length+1;
 
             for(var i=level+1; i<selectChildren; i++){
-                //console.log("level "+i);
                 $("#level"+i).remove();
                 $("#level_"+i+"_selection").remove();
             }
 
             if(id!=-1){
-                $.getJSON("{{ url('/options') }}/"+id+"/children", function (result) {
-                    $.getJSON("{{ url('/options') }}/"+levelId+"/children", function(json){
+                $.getJSON("{{ url('/options') }}/"+id+"/children", { isOption: true } ,function (result) {
+                    $.getJSON("{{ url('/options') }}/"+levelId+"/children",{ isOption: false } ,function(json){
                         console.log(json);
                         if (!(result == undefined || result == null || result.length == 0)){
                             $("#optionsMenu").append('<label id="level'+(level+1)+'" for="level'+(level+1)+'" class="h5 mt-2">'+json[0].title+'</label>');

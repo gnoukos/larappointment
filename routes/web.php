@@ -52,3 +52,5 @@ Route::get('getDailyAppointment', 'AppointmentController@getDailyAppointment');
 Route::post('flushSlot/{id}', 'AppointmentController@flushSlot');
 
 Route::post('storeLevels', 'OptionController@storeLevels');
+
+Route::post('changeAppointmentState', 'AppointmentController@changeAppointmentState');

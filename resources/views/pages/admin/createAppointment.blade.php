@@ -83,7 +83,7 @@
         <hr>
         <h4>Settings</h4>
         <hr>
-        <div class="form-inline"><p class="h6">Available Appointments for: <input class="form-control mr-3" type="number" name="weeks">weeks</p></div>
+        <div class="form-inline"><p class="h6">Appointment Available Until: <input class="form-control mr-3" type="date" name="endDate" min="{{ Carbon\Carbon::now()->format('Y-m-d') }}"> or <input class="form-control mr-3 ml-3" type="number" name="weeks"> weeks</p></div>
         <div class="form-inline"><p class="h6">Average Duration of Appointment: <input class="form-control mr-3" type="number" name="duration">minutes</p></div>
         <div class="form-inline"><p class="h6">Type: <select class="custom-select" name="typeOfAppointment"><option value="regular">Regular</option><option value="ticket">Ticket</option></select></p></div>
         {{ Form::submit('Save', ['class' => 'btn btn-large btn-primary mt-5 mb-5']) }}

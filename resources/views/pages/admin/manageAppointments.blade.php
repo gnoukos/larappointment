@@ -1,14 +1,39 @@
 @extends('layouts.admin')
 @section('footer_include')
     <script>
-        $("#deleteAppointment").click(function(e){
-            cosole.log("mana");
-            e.preventDefault();
-            /*var $form=$(this);
-            $("#confirmationModal").modal().on('click', '#deleteAppointment', function(){
-                $form.submit();
-            });*/
-        });
+       //toggle for bootsrap 4
+        $(function() {
+
+        })
+
+       $(function() {
+           $('.toggle-event').change(function() {
+               console.log('Toggle: ' + $(this).prop('checked') + $(this).attr('data-id'));
+               var id = $(this).attr('data-id');
+               $.ajaxSetup({
+                   headers: {
+                       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                   }
+
+               });
+               jQuery.ajax({
+                   url: "{{ url('/changeAppointmentState') }}",
+                   method: 'post',
+                   data: {
+                       appointmentId: id
+                   },
+                   success: function () {
+                        console.log("success");
+                   },
+                   fail: function (xhr, textStatus, errorThrown) {
+                       console.log("manana");
+                       console.log(id);
+                       $("[data-id="+id+"]").bootstrapToggle('toggle');
+                   }
+               });
+           })
+       })
+
     </script>
 @endsection
 @section('content')
@@ -43,6 +68,7 @@
                     <th scope="col">Name</th>
                     <th scope="col">Type</th>
                     <th scope="col">created</th>
+                    <th scope="col">State</th>
                     <th scope="col"></th>
                     <th scope="col"></th>
                 </tr>
@@ -53,6 +79,7 @@
                         <th scope="row">{{ $appointment->option->title }}</th>
                         <td>{{ $appointment->type }}</td>
                         <td>{{ $appointment->created_at }}</td>
+                        <td><input type="checkbox" data-toggle="toggle" id="toggle-event" class="toggle-event" data-id="{{$appointment->id}}" data-onstyle="success" data-offstyle="danger" data-on="Ενεργό" data-off="Ανενεργό" @if($appointment->enabled) checked @endif ></td>
                         <td><a class="btn btn-secondary" href="appointment/{{$appointment->id}}/edit">Edit</a></td>
                         <td>
                             {!! Form::open(['action' => ['AppointmentController@destroy',$appointment->id], 'method' => 'DELETE']) !!}

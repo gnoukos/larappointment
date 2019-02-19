@@ -131,13 +131,27 @@ class OptionController extends Controller
         }
         $option->appointments()->delete();
         $option->delete();
-        return response()->json("sarantis");
-        //Option::destroy($id);
+
+
     }
 
-    public function children($id)
+    public function children($id,Request $request)
     {
-        $options = Option::setEagerLoads([])->where('parent', $id)->get();
+        $options = Option::setEagerLoads([])->where('parent', $id)->with('appointments')->get();
+
+        foreach ($options as $key=>$option){ //remove disabled or empty(NO APPOINTMENTS) options
+            if($request->isOption=='true' && !$option->children->count() && !$option->appointments->count()){
+                $options->forget($key);
+            }else{
+                foreach ($option->appointments as $appointment){
+                    if(!$appointment->enabled){
+                        $options->forget($key);
+                        break;
+                    }
+
+                }
+            }
+        }
         return response()->json($options);
     }
 
