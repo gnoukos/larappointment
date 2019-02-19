@@ -64,7 +64,7 @@
                         addDeleteButtonToDeepestChildren(child);
                     });
                 } else {
-                    $("#" + item.id).append("<button style='padding: 0; margin:1px;' class='btn float-right del-option' onmousedown='deleteItem(" + item.id + ")'>X</button>");
+                    $("#" + item.id).append("<button class='float-right del-option btn' style='padding:0; line-height:15px;' onmousedown='deleteItem(" + item.id + ")'>X</button>");
                 }
             }
 
@@ -72,7 +72,7 @@
                 var html = "<li class='dd-item' data-id='" + item.id + "'>";
                 html += "<div class='dd-handle' id='" + item.id + "'>" + item.title;
                 if (item.children.length == 0) {
-                    html += "<button style='padding: 0; margin:1px;' class='btn float-right del-option' onmousedown='deleteItem(" + item.id + ")'>X</button>";
+                    html += "<button class='float-right del-option btn' style='padding:1px; line-height:15px; ' onmousedown='deleteItem(" + item.id + ")'>X</button>";
                 }
                 html += "</div>";
                 if (item.children.length > 0) {
