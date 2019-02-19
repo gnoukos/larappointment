@@ -67,7 +67,8 @@ class PageController extends Controller
     }
 
     public function adminDashboard(){
-        if (Auth::user()->role=='admin') {
+
+        if (Auth::check() && Auth::user()->role=='admin' ) {
             $timeslotsToday = Timeslot::where('slot', 'like', Carbon::now()->format('Y-M-d').'%')->where('user_id', '!=', null)->count();
             $timeslotsMonth = Timeslot::where('slot', 'like', '%-'.date('m').'-%')->where('user_id', '!=', null)->where('slot', '>', Carbon::now()->toDateTimeString())->count();
             $usersNum = User::where('role', '!=', 'admin')->count();
@@ -109,7 +110,7 @@ class PageController extends Controller
 
     public function hierarchy(){
 
-        if (Auth::user()->role=='admin') {
+        if (Auth::check() && Auth::user()->role=='admin') {
             return view('pages.admin.hierarchy');
         } else {
             abort(403, 'Unauthorized action.');
@@ -118,7 +119,7 @@ class PageController extends Controller
 
     public function createAppointment(){
 
-        if (Auth::user()->role=='admin') {
+        if (Auth::check() && Auth::user()->role=='admin') {
 
             $options = Option::doesntHave('children')->get();
             $options = $options->keyBy('id');
@@ -147,8 +148,15 @@ class PageController extends Controller
 
     public function manageAppointments(){
 
-        if (Auth::user()->role=='admin') {
-            $appointments = Appointment::all();
+        if (Auth::check() && Auth::user()->role=='admin') {
+            $appointments = Appointment::with('daily_appointments','daily_appointments.timeslots')->get();
+
+            foreach ($appointments as $appointment){
+
+                foreach ($appointment->daily_appointments as $daily_appointment){
+                    $appointment->OccupiedSlots+= $daily_appointment->timeslots->where('user_id','!=',null)->count();
+                }
+                }
 
             /*$parent = Option::setEagerLoads([])->whereHas('children',function($q) use($timeslot) {
                 $q->where('id',$timeslot->daily_appointment->appointment->option->id);
@@ -177,7 +185,7 @@ class PageController extends Controller
     }
 
     public function levels(){
-        if (Auth::user()->role=='admin') {
+        if (Auth::check() && Auth::user()->role=='admin') {
             $options = Option::all();
             $levels = array();
             $depth = 1;

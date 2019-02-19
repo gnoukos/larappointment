@@ -80,7 +80,8 @@
                         <td>{{ $appointment->type }}</td>
                         <td>{{ $appointment->created_at }}</td>
                         <td><input type="checkbox" data-toggle="toggle" id="toggle-event" class="toggle-event" data-id="{{$appointment->id}}" data-onstyle="success" data-offstyle="danger" data-on="Ενεργό" data-off="Ανενεργό" @if($appointment->enabled) checked @endif ></td>
-                        <td><a class="btn btn-secondary" href="appointment/{{$appointment->id}}/edit">Edit</a></td>
+
+                        <td><a class="btn btn-secondary  @if($appointment->OccupiedSlots > 0) disabled @endif" href="appointment/{{$appointment->id}}/edit">Edit</a></td>
                         <td>
                             {!! Form::open(['action' => ['AppointmentController@destroy',$appointment->id], 'method' => 'DELETE']) !!}
                             <button type="submit" class="btn btn-danger"  onclick="return confirm('Do you want to delete this appointment category ? ')">Delete</button>

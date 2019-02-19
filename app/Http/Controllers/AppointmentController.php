@@ -8,6 +8,7 @@ use App\Mail\appointmentCanceled;
 use App\Mail\successfullAssignation;
 use App\Option;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
 use Session;
 use App\AppointmentHours;
@@ -72,6 +73,7 @@ class AppointmentController extends Controller
         $appointment = new Appointment();
         $appointment->type = $request->typeOfAppointment;
         $appointment->weeks = $request->weeks;
+        $appointment->end_date= $request->endDate;
         $appointment->enabled = true;
         if ($request->has("weeks")){
             $appointment->weeks = $request->weeks;
@@ -196,17 +198,37 @@ class AppointmentController extends Controller
             'days' => 'required|min:1',
             'hourBoxFrom1' => 'required',
             'hourBoxTo1' => 'required',
-            'weeks' => 'required',
+
+            'endDate' => 'this_or_that:weeks|date',
             'duration' => 'required',
             'typeOfAppointment' => 'required|in:regular,ticket'
+        ],[
+            'endDate.this_or_that' => 'You must fill either an end date or just weeks',
         ]);
+
+        Log::info("mana:".$request->endDate);
 
         if ($validator->fails()) {
             return redirect('/appointment/'.$appointment->id.'/edit')->withErrors($validator)->withInput();
         }
 
+        //$appointment = Appointment::where('id',$appointment->id)->with('daily_appointments.timeslots','appointment_hours')->first();
+        foreach ($appointment->daily_appointments as $daily) {
+
+            $daily->timeslots()->delete();
+        }
+        $appointment->appointment_hours()->delete();
+        $appointment->daily_appointments()->delete();
+        $appointment->delete();
+
+        $appointment = new Appointment();
         $appointment->type = $request->typeOfAppointment;
         $appointment->weeks = $request->weeks;
+        $appointment->enabled = true;
+        if ($request->has("weeks")){
+            $appointment->weeks = $request->weeks;
+        }
+
         $appointment->duration = $request->duration;
         $appointment->belong_to_option = $request->belongToOption;
 
@@ -214,11 +236,11 @@ class AppointmentController extends Controller
 
         $appointment->save();
 
-         AppointmentHours::where('appointment_id',$appointment->id)->delete();
-
-
         for($hid=1;$hid<=30;$hid++){
-            if($request->has('hourBoxFrom'.$hid) && $request->has('hourBoxTo'.$hid)) {
+
+
+            if($request->has('hourBoxFrom'.$hid) && $request->has('hourBoxTo'.$hid) && $request->{'hourBoxFrom'.$hid} != null && $request->{'hourBoxTo'.$hid} != null) {
+
 
                 $appointment_hours = new AppointmentHours();
 
@@ -229,7 +251,61 @@ class AppointmentController extends Controller
                 $appointment_hours->save();
             }
         }
+        //CREATING DAILY APPOINTMENTS
+        $repeat = json_decode($appointment->repeat);
+        $start = time()+86400;
+        if ($request->has("endDate")){
+            $end=strtotime($request->endDate);
+        }
+        else {
+            $end = $start + 604800*$appointment->weeks;
+        }
+        $current = $start;
+        while($current < $end){
+            $weekday = strtolower(date('l', $current));
+            if(in_array($weekday, $repeat)){
+                $daily_appointment = new DailyAppointment();
 
+                $daily_appointment->date = date("Y-m-d H:i:s", $current);
+                $daily_appointment->appointment_id = $appointment->id;
+                $daily_appointment->free_slots = 0;
+
+                $daily_appointment->save();
+            }
+            $current = $current + 86400;
+        }
+        /////////////////////
+        ///
+        /// CREATING TIMESLOTS
+        $appointment_hours = AppointmentHours::where('appointment_id',$appointment->id)->get();
+        $daily_appointments = DailyAppointment::where('appointment_id',$appointment->id)->get();
+        // Log::info($appointment_hours);
+        //  Log::info($daily_appointments);
+        foreach ($daily_appointments as $daily_appointment){
+
+            foreach ($appointment_hours as $appointment_hour){
+
+                $tmpDate = new \Datetime($daily_appointment->date);
+                $tmpDate = $tmpDate->format('Y-m-d');
+
+                $tmp_slot = $tmpDate ;
+
+                $start = new \DateTime($tmp_slot . " " . $appointment_hour->start);
+                $end = new \DateTime($tmp_slot . " " . $appointment_hour->end);
+                for($start; $start<$end; $start->modify("+{$appointment->duration} minutes")){
+
+                    $timeslot = new Timeslot();
+                    $timeslot->daily_appointments_id = $daily_appointment->id;
+                    $timeslot->slot = $start;
+                    $timeslot->save();
+                }
+            }
+
+            $daily_appointment->free_slots= Timeslot::where('daily_appointments_id',$daily_appointment->id)->count();
+            $daily_appointment->save();
+        }
+
+        ///////////////////
 
         return redirect('/manageAppointments')->with('success', 'Appointment saved!');
     }
@@ -245,7 +321,7 @@ class AppointmentController extends Controller
         $appointment = Appointment::where('id',$id)->with('daily_appointments.timeslots','appointment_hours')->first();
         foreach ($appointment->daily_appointments as $daily) {
             foreach ($daily->timeslots as $slot){
-                if($slot->user){
+                if($slot->user && $slot->slot>Carbon::now()){
                     $parents = getTimeSlotOptionParentsArray($slot);
                     Mail::to($slot->user)->send(new appointmentCanceled($slot, $parents));
                 }
@@ -438,26 +514,26 @@ class AppointmentController extends Controller
 
             $user = User::find($userId);
 
-            $parent = Option::setEagerLoads([])->whereHas('children',function($q) use($timeslot) {
-                $q->where('id',$timeslot->daily_appointment->appointment->option->id);
-            })->first();
-            $parents=[$timeslot->daily_appointment->appointment->option->title];
-            if($parent){
-                array_push($parents, $parent->title);
-                while($parent){
-                    $id = $parent->id;
-                    $parent = Option::setEagerLoads([])->whereHas('children',function($q) use($id) {
-                        $q->where('id',$id);
-                    })->first();
-                    if($parent){
-                        array_push($parents, $parent->title);
-                    }
-                }
-            }
+//            $parent = Option::setEagerLoads([])->whereHas('children',function($q) use($timeslot) {
+//                $q->where('id',$timeslot->daily_appointment->appointment->option->id);
+//            })->first();
+//            $parents=[$timeslot->daily_appointment->appointment->option->title];
+//            if($parent){
+//                array_push($parents, $parent->title);
+//                while($parent){
+//                    $id = $parent->id;
+//                    $parent = Option::setEagerLoads([])->whereHas('children',function($q) use($id) {
+//                        $q->where('id',$id);
+//                    })->first();
+//                    if($parent){
+//                        array_push($parents, $parent->title);
+//                    }
+//                }
+//            }
 
-            $parents=array_reverse($parents);
+            $parents=getTimeSlotOptionParentsArray($timeslot);
 
-
+            Log::info($user);
             Mail::to($user->email)->send(new appointmentCanceled($timeslot, $parents));
         }
 
