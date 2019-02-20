@@ -56,7 +56,6 @@ class AppointmentController extends Controller
             'days' => 'required|min:1',
             'hourBoxFrom1' => 'required',
             'hourBoxTo1' => 'required',
-
             'endDate' => 'this_or_that:weeks|date',
             'duration' => 'required',
             'typeOfAppointment' => 'required|in:regular,ticket'
@@ -82,7 +81,7 @@ class AppointmentController extends Controller
         $appointment->duration = $request->duration;
         $appointment->belong_to_option = $request->belongToOption;
 
-                $appointment->repeat = json_encode($request->days);
+        $appointment->repeat = json_encode($request->days);
 
         $appointment->save();
 
