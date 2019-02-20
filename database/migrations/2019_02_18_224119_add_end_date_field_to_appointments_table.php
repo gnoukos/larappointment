@@ -15,7 +15,7 @@ class AddEndDateFieldToAppointmentsTable extends Migration
     {
         Schema::table('appointments', function (Blueprint $table) {
             DB::statement('ALTER TABLE `appointments` MODIFY `weeks` INTEGER NULL');
-            $table->integer('end_date')->nullable();
+            $table->date('end_date')->nullable();
             $table->boolean('enabled');
         });
     }
