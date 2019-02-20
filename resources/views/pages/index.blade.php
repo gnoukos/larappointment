@@ -44,8 +44,8 @@
             if(id!=-1){
                 $.getJSON("{{ url('/options') }}/"+id+"/children", { isOption: true } ,function (result) {
                     $.getJSON("{{ url('/options') }}/"+levelId+"/children",{ isOption: false } ,function(json){
-                        console.log(json);
-                        if (!(result == undefined || result == null || result.length == 0)){
+                        console.log(result.length);
+                        if (!(result == undefined || result == null || result.length === 0)){
                             $("#optionsMenu").append('<label id="level'+(level+1)+'" for="level'+(level+1)+'" class="h5 mt-2">'+json[0].title+'</label>');
                             $("#optionsMenu").append('<select class="form-control" id="level_'+(level+1)+'_selection" onchange="getNextLevel(value,'+(level+1)+','+ json[0].id +')"> </select>');
                             var $dropdown = $("#level_"+(level+1)+"_selection");
@@ -57,6 +57,13 @@
                         }else{
                             $('#chooseDateButton').prop("disabled", false);
                         }
+
+                        if(json.length != 0 && result.length === 0){
+                            $('#chooseDateButton').prop("disabled", true);
+                            $("#optionsMenu").append('<label id="level'+(level+1)+'" for="level'+(level+1)+'" class="h5 mt-2">'+json[0].title+'</label>');
+                            $("#optionsMenu").append('<select class="form-control" id="level_'+(level+1)+'_selection" onchange="getNextLevel(value,'+(level+1)+','+ json[0].id +')"><option>Δεν υπάρχουν διαθέσιμα ραντεβού!</option></select>');
+                        }
+
                     });
                 });
             }else{

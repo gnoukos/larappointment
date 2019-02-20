@@ -8,7 +8,7 @@
 
        $(function() {
            $('.toggle-event').change(function() {
-               console.log('Toggle: ' + $(this).prop('checked') + $(this).attr('data-id'));
+               //console.log('Toggle: ' + $(this).prop('checked') + $(this).attr('data-id'));
                var id = $(this).attr('data-id');
                $.ajaxSetup({
                    headers: {
@@ -26,8 +26,6 @@
                         console.log("success");
                    },
                    fail: function (xhr, textStatus, errorThrown) {
-                       console.log("manana");
-                       console.log(id);
                        $("[data-id="+id+"]").bootstrapToggle('toggle');
                    }
                });
