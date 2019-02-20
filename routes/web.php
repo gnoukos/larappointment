@@ -25,6 +25,8 @@ Route::patch('/dashboard',  ['uses' => 'UpdateUserController@update']);
 
 Route::get('/admin', 'PageController@adminDashboard')->name('adminDashboard');
 
+Route::get('/history', 'PageController@appointmentHistory')->name('appointmentHistory');
+
 Route::get('/hierarchy', 'PageController@hierarchy')->name('hierarchy');
 
 Route::get('/levels', 'PageController@levels')->name('levels');

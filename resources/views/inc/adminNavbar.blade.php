@@ -52,6 +52,11 @@
                 <span>Categories</span></a>
         </li>
         <li class="nav-item">
+            <a class="nav-link" href="/history">
+                <i class="fas fa-history"></i>
+                <span>Appointment History</span></a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link" href="/" target="_blank">
                 <i class="fas fa-fw fa-home"></i>
                 <span>Home</span>
