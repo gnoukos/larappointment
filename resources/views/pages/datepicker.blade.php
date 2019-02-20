@@ -24,6 +24,9 @@
                         <h5 class="card-title">Choose Hour</h5>
                         <p class="card-text" id="chooseDatePrompt">First choose date to see available hours.</p>
                         <div class="wrapper text-center">
+                            <div id ="optionLoader" class="spinner-border mb-3" role="status" style="display:none">
+                                <span class="sr-only">Loading...</span>
+                            </div>
                             <div class="btn-group-md btn-group-toggle text-center" data-toggle="buttons" id="hourButtonContainer">
                                 {{--<label class="btn btn-secondary ml-1 mt-1 mb-1 mr-1">
                                        <input type="radio" name="13:30" id="hourRadio" autocomplete="off" value="13:30"> 13:30
@@ -216,6 +219,12 @@
                 $("#hourButtonContainer").append('<label class="btn btn-secondary ml-1 mt-1 mb-1 mr-1" onclick="showMakeAppointmentButton();"><input type="radio" name="timeslot" id="hourRadio" autocomplete="off" value="'+item.id+'">'+item.slot.split(" ")[1].slice(0, -3)+'</label>');
             });
         }
+
+        $(document).ajaxStart(function () {
+            $("#optionLoader").show();
+        }).ajaxStop(function () {
+            $("#optionLoader").hide();
+        });
 
 
     </script>

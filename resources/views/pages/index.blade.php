@@ -16,8 +16,10 @@
                     </select>
                     <input type="hidden" name="option" id="selectedOption" value="">
                 </div>
-
-                <button type="submit" class="btn btn-dark" id="chooseDateButton" disabled>Choose Date</button>
+                <div id ="optionLoader" class="spinner-border mb-3" role="status" style="display:none">
+                    <span class="sr-only">Loading...</span>
+                </div>
+                <div><button type="submit" class="btn btn-dark" id="chooseDateButton" disabled>Choose Date</button></div>
                 <div id="invalidInput" class="alert alert-danger alert-dismissible fade show mt-5" role="alert" style="display: none;">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -28,6 +30,8 @@
         </div>
     </div>
     </div>
+
+
 
     <script>
 
@@ -75,6 +79,15 @@
         function resetSelected(){ // re-initialize options selection
             $('.form-control').prop('selectedIndex',0);
         }
+
+
+
+            $(document).ajaxStart(function () {
+                $("#optionLoader").show();
+            }).ajaxStop(function () {
+                $("#optionLoader").hide();
+            });
+
 
 
     </script>
