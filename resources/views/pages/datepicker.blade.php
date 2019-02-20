@@ -166,14 +166,9 @@
                     break;
                 }
             }
-            $('.calendar').pignoseCalendar('set', moment(availDate.getTime()).format("YYYY-MM-DD")); //sets the available date to the pignose calendar
-            console.log( $('[data-date="'+moment(availDate.getTime()).format("YYYY-MM-DD")+'"]'));
-
-            $(document).on ("click", "[data-date=\"'+moment(availDate.getTime()).format(\"YYYY-MM-DD\")+'\"]", function () {
-                alert("hi");
-            });
-
-
+            //$('.calendar').pignoseCalendar('set', moment(availDate.getTime()).format("YYYY-MM-DD")); //sets the available date to the pignose calendar
+            $('[data-date='+moment(availDate.getTime()).format("YYYY-MM-DD")+']').click();
+            console.log( $('[data-date='+moment(availDate.getTime()).format("YYYY-MM-DD")+']'));
 
         });
 
