@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-md-12 text-center mt-5">
             <div class="card mt-4" id="userDetailsCard">
-                <div class="card-body">
+                <div class="card-body" id="ticketContent">
                     <h1 class="card-title mt-5 mb-5"><i class="fas fa-receipt fa-5x"></i></h1>
                     <div class="wrapper text-center mt-5 mb-5">
                         <h3>Your Ticket number for <span class="text-success">
@@ -24,15 +24,26 @@
     </div>
     <script>
 
-        $("#downloadTicket").click(function () {
+        $('#downloadTicket').click(function () {
+
             var doc = new jsPDF();
-            doc.setFontSize(30);
-            var text = "Your Ticket number is: {{ $timeslot->ticket_num }}";
-            doc.text(text, 10, 10);
+            var specialElementHandlers = {
+                '#editor': function (element, renderer) {
+                    return true;
+                }
+            };
+
+            doc.fromHTML($('#ticketContent').html(), 15, 15, {
+                'width': 170,
+                'elementHandlers': specialElementHandlers
+            });
             doc.save('ticket.pdf');
         });
 
-
+        if ( window.history.replaceState ) {
+            window.history.replaceState( null, null, window.location.href );
+        }
     </script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.5/jspdf.debug.js"></script>
 @endsection

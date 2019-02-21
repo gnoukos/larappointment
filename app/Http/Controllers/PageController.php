@@ -11,8 +11,9 @@ use Illuminate\Http\Request;
 use App\Option;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Input;
-use Session;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
+
 
 class PageController extends Controller
 {
@@ -267,5 +268,15 @@ class PageController extends Controller
         } else {
             abort(403, 'Unauthorized action.');
         }
+    }
+
+    public function getTicket(){
+
+        $timeslot=Session::get('Stimeslot');
+        Log::info($timeslot);
+        $parents=Session::get('Sparents');
+        Log::info($parents);
+        $startingHour=Session::get('SstartingHour');
+        return view('pages.Ticket')->with(['timeslot' => $timeslot,'parents'=>$parents, 'startingHour'=>$startingHour]);
     }
 }

@@ -10,7 +10,6 @@ use App\Option;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
-use Session;
 use App\AppointmentHours;
 use App\Timeslot;
 use Illuminate\Http\Request;
@@ -20,6 +19,8 @@ use Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 
 class AppointmentController extends Controller
 {
@@ -500,7 +501,12 @@ class AppointmentController extends Controller
 
         $parents=array_reverse($parents);
 
-        return view('pages.Ticket')->with(['timeslot' => $timeslot,'parents'=>$parents, 'startingHour'=>$startingHour]);
+
+        session(['Stimeslot' => $timeslot]);
+        session(['Sparents' => $parents]);
+        session(['SstartingHour' => $startingHour]);
+
+        return Redirect::Route('getTicketView')->with('timeslot' , $timeslot)->with('parents',$parents)->with('startingHour',$startingHour);
     }
 
     public function flushSlot($id){

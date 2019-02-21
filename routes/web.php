@@ -47,6 +47,8 @@ Route::get('getFreeTimeslots', 'AppointmentController@getFreeTimeslots');
 
 Route::post('getTicket', 'AppointmentController@getTicket');
 
+Route::get('getTicket', 'PageController@getTicket')->name('getTicketView');
+
 //Route::post('makeAppointment', 'AppointmentController@makeAppointment');
 
 Route::get('getDailyAppointment', 'AppointmentController@getDailyAppointment');
