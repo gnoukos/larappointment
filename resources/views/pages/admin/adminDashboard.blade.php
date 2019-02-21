@@ -59,6 +59,17 @@
 
                     @endif
                     <div id="datatable-button-wrapper"></div>
+                        <div class="form-group mt-3">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <select id="dateFilter" class="form-control">
+                                        <option value="0">All</option>
+                                        <option value="1">Next 7 days</option>
+                                        <option value="2">Today</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                     <div class="table-responsive">
                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                             <thead>
@@ -131,32 +142,6 @@
         </div>
         <!-- /.container-fluid -->
 
-        <!-- confirmation Modal -->
-        <!--<div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="ConfirmationModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="ConfirmationModalLabel">Do you want to cancel the appointment ?</h5>
-                    </div>
-                    <div class="modal-body text-center">
-                        <form>
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col">
-                                        <button type="button" class="btn btn-dark" data-dismiss="modal" aria-label="Close">No</button>
-                                    </div>
-                                    <div class="col">
-                                        <button type="submit" class="btn btn-danger">Yes</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>-->
-        <!-- end of confirmation Modal -->
-
         <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
         <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
         <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
@@ -169,9 +154,6 @@
         <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.print.min.js"></script>
         <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.colVis.min.js"></script>
         <script>
-
-
-
 
                 var table = $('#dataTable').DataTable( {
                     initComplete: function () {
@@ -199,8 +181,39 @@
                     buttons: [ { extend: 'pdf', header: false}, { extend: 'copy', header: false}, { extend: 'print', header: false}, { extend: 'excel', header: false}, ],
                 } );
 
+                $('#dateFilter').on('change', function() {
+                    table.draw();
+                } );
+
                 table.buttons().container()
                     .appendTo( '#datatable-button-wrapper' );
+
+
+                $.fn.dataTable.ext.search.push(
+                    function( settings, data, dataIndex ) {
+
+                        var today = new Date();
+                        var week = new Date(today.getFullYear(), today.getMonth(), today.getDate()+7);
+                        var date = Date.parse( data[4] ) || 0;
+                        console.log(today.valueOf());
+                        if($('#dateFilter').val() == 2){
+                            if ( +today.valueOf() ===  +date.valueOf()) {
+                                return true;
+                            }
+                            return false;
+                        }else if ($('#dateFilter').val() == 1){
+                            if ( +week.valueOf() >=  +date.valueOf()) {
+                                return true;
+                            }
+                            return false;
+                        }else{
+                            return true;
+                        }
+
+                    }
+                );
+
+
 
         </script>
 @endsection
