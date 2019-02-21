@@ -270,13 +270,19 @@ class PageController extends Controller
         }
     }
 
-    public function getTicket(){
+    public function getTicket()
+    {
+        if(Session::has('Stimeslot')) {
+            $timeslot=Session::get('Stimeslot');
+            Log::info($timeslot);
+            $parents=Session::get('Sparents');
+            Log::info($parents);
+            $startingHour=Session::get('SstartingHour');
+            return view('pages.Ticket')->with(['timeslot' => $timeslot,'parents'=>$parents, 'startingHour'=>$startingHour]);
+        }else{
+            return redirect('/');
 
-        $timeslot=Session::get('Stimeslot');
-        Log::info($timeslot);
-        $parents=Session::get('Sparents');
-        Log::info($parents);
-        $startingHour=Session::get('SstartingHour');
-        return view('pages.Ticket')->with(['timeslot' => $timeslot,'parents'=>$parents, 'startingHour'=>$startingHour]);
+        }
+
     }
 }
