@@ -6,6 +6,8 @@ use App\Appointment;
 use App\DailyAppointment;
 use App\Mail\appointmentCanceled;
 use App\Mail\successfullAssignation;
+use App\Jobs\appointmentCanceledJob;
+use App\Jobs\appointmentAssignationJob;
 use App\Option;
 use App\User;
 use Carbon\Carbon;
@@ -436,9 +438,18 @@ class AppointmentController extends Controller
         $parents=array_reverse($parents);
 
         if(Auth::check()){
-            Mail::to($request->user())->send(new successfullAssignation($timeslot, $parents));
+            $details['user'] = $request->user();
+            $details['timeslot'] = $timeslot;
+            $details['parents'] = $parents;
+            $mailJob = (new appointmentAssignationJob($details))->delay(Carbon::now()->addSeconds(3));
+            dispatch($mailJob);
+            //Mail::to($request->user())->queue(new successfullAssignation($timeslot, $parents));
         }else{
-            Mail::to($request->input('guest_email'))->send(new successfullAssignation($timeslot, $parents));
+            //Mail::to($request->input('guest_email'))->send(new successfullAssignation($timeslot, $parents));
+            $details['user'] = $request->input('guest_email');
+            $details['timeslot'] = $timeslot;
+            $details['parents'] = $parents;
+            dispatch(new appointmentAssignationJob($details));
         }
 
 
