@@ -549,8 +549,12 @@ class AppointmentController extends Controller
 
             $parents=getTimeSlotOptionParentsArray($timeslot);
 
-            Log::info($user);
-            Mail::to($user->email)->send(new appointmentCanceled($timeslot, $parents));
+            //Mail::to($user->email)->send(new appointmentCanceled($timeslot, $parents));
+            $details['user'] = $user->email;
+            $details['timeslot'] = $timeslot;
+            $details['parents'] = $parents;
+            $mailJob = (new appointmentCanceledJob($details))->delay(Carbon::now()->addSeconds(3));
+            dispatch($mailJob);
         }
 
         if(Auth::user()->role == 'admin'){

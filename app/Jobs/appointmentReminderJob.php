@@ -19,9 +19,9 @@ class appointmentReminderJob implements ShouldQueue
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($details)
     {
-        //
+        $this->details = $details;
     }
 
     /**
@@ -31,6 +31,6 @@ class appointmentReminderJob implements ShouldQueue
      */
     public function handle()
     {
-        //
+        Mail::to($this->details['user'])->send(new appointmentReminder($this->details['timeslot'], $this->details['parents']));
     }
 }

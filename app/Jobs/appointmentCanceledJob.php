@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Mail\appointmentCanceled;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -32,6 +33,6 @@ class appointmentCanceledJob implements ShouldQueue
      */
     public function handle()
     {
-        Mail::to($this->details['user'])->send(new successfullAssignation($this->details['timeslot'], $this->details['parents']));
+        Mail::to($this->details['user'])->send(new appointmentCanceled($this->details['timeslot'], $this->details['parents']));
     }
 }
