@@ -44,6 +44,16 @@
                 </div>
 
             </div>
+
+            <!--<div class="card mb-3">
+                <div class="card-header">
+                    <i class="fas fa-hourglass-half"></i>
+                    Current Appointment
+                </div>
+                <div class="card-body mb-5">
+
+                </div>
+            </div>-->
             <!-- DataTables Example -->
             <div class="card mb-3">
                 <div class="card-header">
@@ -102,11 +112,7 @@
                                     <td>{{ $timeslot->user->name }}</td>
                                     <td>
                                         @for ($i=0; $i<count($timeslot->parents); $i++ )
-                                            @if ($i!=count($timeslot->parents)-1)
-                                                {{$timeslot->parents[$i]}} ->
-                                            @else
-                                                {{$timeslot->parents[$i]}}
-                                            @endif
+                                            @if ($i!=count($timeslot->parents)-1){{$timeslot->parents[$i]}}->@else{{$timeslot->parents[$i]}}@endif
                                         @endfor
                                     </td>
                                     <td>{{ $timeslot->daily_appointment->appointment->type }}</td>
@@ -195,7 +201,7 @@
                         var today = new Date();
                         var week = new Date(today.getFullYear(), today.getMonth(), today.getDate()+7);
                         var date = Date.parse( data[4] ) || 0;
-                        console.log(today.valueOf());
+                        //console.log(today.valueOf());
                         if($('#dateFilter').val() == 2){
                             if ( +today.valueOf() ===  +date.valueOf()) {
                                 return true;
