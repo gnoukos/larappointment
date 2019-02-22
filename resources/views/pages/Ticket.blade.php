@@ -16,7 +16,7 @@
                                     @endif
                                 @endfor</span>, at: <span class="text-success">{{ \Carbon\Carbon::parse($timeslot->slot)->format('l d/m/Y') }}</span> and time: <span class="text-success"> {{\Carbon\Carbon::parse($startingHour)->format('H:i')}}</span> is</h3>
                         <br><button type="button" class="btn btn-dark btn-lg">{{ $timeslot->ticket_num }}</button><br>
-                        <button id="downloadTicket" class="btn btn-primary mt-5">Download Ticket</button>
+                        <a id="downloadTicket" download="ticket.jpeg" href="" class="btn btn-primary mt-5">Download Ticket</a>
                     </div>
                 </div>
             </div>
@@ -24,25 +24,31 @@
     </div>
     <script>
 
-        $('#downloadTicket').click(function () {
+        const {body} = document;
 
-            var doc = new jsPDF();
-            var specialElementHandlers = {
-                '#editor': function (element, renderer) {
-                    return true;
-                }
-            };
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = canvas.height = 1000;
 
-            doc.fromHTML($('#ticketContent').html(), 15, 15, {
-                'width': 170,
-                'elementHandlers': specialElementHandlers
-            });
-            doc.save('ticket.pdf');
+        const tempImg = document.createElement('img');
+        tempImg.addEventListener('load', onTempImageLoad);
+        tempImg.src = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="300"><foreignObject width="100%" height="100%"><div xmlns="http://www.w3.org/1999/xhtml"><style>span {color: green;}</style><h1>Your Ticket for @for ($i=0; $i<count($parents); $i++) @if($i!=count($parents)-1) {{$parents[$i]}}-> @else {{$parents[$i]}} @endif @endfor  at: <span>{{ \Carbon\Carbon::parse($timeslot->slot)->format('l d/m/Y') }}</span> and time: <span> {{\Carbon\Carbon::parse($startingHour)->format('H:i')}}</span> is <span>{{ $timeslot->ticket_num }}</span></h1> </div></foreignObject></svg>');
+        const targetImg = document.createElement('img');
+        body.appendChild(targetImg);
+
+        function onTempImageLoad(e){
+            ctx.drawImage(e.target, 0, 0);
+            targetImg.src = canvas.toDataURL('image/jpg');
+        }
+
+
+        $( document ).ready(function() {
+            mana = $('img').attr('src');
+            $('img').hide();
+            $('#downloadTicket').attr("href", mana);
+
         });
 
-        if ( window.history.replaceState ) {
-            window.history.replaceState( null, null, window.location.href );
-        }
     </script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.5/jspdf.debug.js"></script>
