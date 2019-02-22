@@ -32,7 +32,7 @@
 
         const tempImg = document.createElement('img');
         tempImg.addEventListener('load', onTempImageLoad);
-        tempImg.src = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="300"><foreignObject width="100%" height="100%"><div xmlns="http://www.w3.org/1999/xhtml"><style>span {color: green;}</style><h1>Your Ticket for @for ($i=0; $i<count($parents); $i++) @if($i!=count($parents)-1) {{$parents[$i]}}-> @else {{$parents[$i]}} @endif @endfor  at: <span>{{ \Carbon\Carbon::parse($timeslot->slot)->format('l d/m/Y') }}</span> and time: <span> {{\Carbon\Carbon::parse($startingHour)->format('H:i')}}</span> is <span>{{ $timeslot->ticket_num }}</span></h1> </div></foreignObject></svg>');
+        tempImg.src = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="300"><foreignObject width="100%" height="100%"><div xmlns="http://www.w3.org/1999/xhtml"><style>span {color: #52DEE5;} h1{background-color: #383D3B; color: #EEE5E9;}</style><h1>Ticket: <span>{{ $timeslot->ticket_num }}</span><br />@for ($i=0; $i<count($parents); $i++) @if($i!=count($parents)-1) {{$parents[$i]}}=> @else {{$parents[$i]}} @endif @endfor <br /><span>{{ \Carbon\Carbon::parse($timeslot->slot)->format('l d/m/Y') }}</span> <br /><span> {{\Carbon\Carbon::parse($startingHour)->format('H:i')}}</span></h1></div></foreignObject></svg>');
         const targetImg = document.createElement('img');
         body.appendChild(targetImg);
 
@@ -43,10 +43,9 @@
 
 
         $( document ).ready(function() {
-            mana = $('img').attr('src');
+            var src = $('img').attr('src');
             $('img').hide();
-            $('#downloadTicket').attr("href", mana);
-
+            $('#downloadTicket').attr("href", src);
         });
 
     </script>
