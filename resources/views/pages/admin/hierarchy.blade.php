@@ -26,6 +26,9 @@
                 method: 'DELETE',
                 success: function (result) {
                     $('.dd').nestable('remove', id);
+                },
+                fail: function (xhr, textStatus, errorThrown) {
+                    $("#saveError").show();
                 }
             });
         }
