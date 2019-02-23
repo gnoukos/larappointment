@@ -89,6 +89,9 @@
                 @endforeach
                 </tbody>
             </table>
+            @if($appointments->isEmpty())
+                <p>No appointment categories.</p>
+            @endif
             @if(session('success'))
 
                 <div class="alert alert-success">
