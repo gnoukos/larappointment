@@ -58,3 +58,5 @@ Route::post('flushSlot/{id}', 'AppointmentController@flushSlot');
 Route::post('storeLevels', 'OptionController@storeLevels');
 
 Route::post('changeAppointmentState', 'AppointmentController@changeAppointmentState');
+
+Route::get('api/getTicket', 'ApiController@getTicket');

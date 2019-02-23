@@ -488,7 +488,14 @@ class AppointmentController extends Controller
 
         $timeslot->ticket_num = ($totalTimeslots - $freeTimeslots)+1;
 
-        $timeslot->user_id=Auth::user()->id;
+        if(Auth::check()){
+            $timeslot->user_id=Auth::user()->id;
+        }
+        else{
+            $timeslot->user_id=null;
+        }
+
+
 
         $timeslot->save();
 
