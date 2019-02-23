@@ -140,6 +140,7 @@ class OptionController extends Controller
         $options = Option::setEagerLoads([])->where('parent', $id)->with('appointments')->get();
 
         foreach ($options as $key=>$option){ //remove disabled or empty(NO APPOINTMENTS) options
+            $option->hasAppointment = 0;
             if($request->isOption=='true' && !$option->children->count() && !$option->appointments->count()){
                 $options->forget($key);
             }else{
@@ -147,8 +148,9 @@ class OptionController extends Controller
                     if(!$appointment->enabled){
                         $options->forget($key);
                         break;
+                    }else{
+                        $option->hasAppointment = 1;
                     }
-
                 }
             }
         }

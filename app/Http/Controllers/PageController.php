@@ -18,7 +18,18 @@ use Illuminate\Support\Facades\Auth;
 class PageController extends Controller
 {
     public function index(){
-        $options = Option::setEagerLoads([])->where('parent',null)->get();
+        $options = Option::setEagerLoads([])->where('parent',null)->with('appointments')->get();
+        Log::info($options);
+        foreach ($options as $key=>$option) {
+            $option->hasAppointment = 0;
+            foreach ($option->appointments as $appointment) {
+                if ($appointment->enabled) {
+                    $option->hasAppointment = 1;
+                    break;
+                }
+            }
+        }
+
         $level1 = Option::where('parent', -1)->first();
         return view('pages.index')->with(['options' => $options, 'level1' => $level1]);
     }
