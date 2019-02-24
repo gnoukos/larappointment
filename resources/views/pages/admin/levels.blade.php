@@ -46,9 +46,11 @@
                     @endforeach
                 </div>
                 <div class="mt-5 col-lg-3">
-                    @if(count($errors)>0)
-                        @foreach($errors as $error)
-                            <div class="alert alert-danger" role="alert" id="invalidInput" style="display: none;">{{ $error }}</div>
+                    @if(count($errors) >0)
+                        @foreach($errors->all() as $error)
+                            <div class="alert alert-danger">
+                                {{$error}}
+                            </div>
                         @endforeach
                     @endif
                     {{ Form::submit('Save Level Names', ['class' => 'btn btn-large btn-primary mt-5 mb-5']) }}

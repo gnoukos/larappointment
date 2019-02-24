@@ -71,6 +71,79 @@ class OptionController extends Controller
             }
             $option->save();
         }
+
+///// find existing levels
+        $levels = array();
+        $level = Option::setEagerLoads([])->where('parent', -1)->first();
+        if($level){
+            array_push($levels, $level->title);
+            while($level){
+                $id = $level->id;
+                $level = Option::where('parent', $id)->first();
+                if($level){
+                    array_push($levels, $level->title);
+                }
+            }
+        }
+        //////find existing levels end
+//////////////////find max depth
+        $options = Option::setEagerLoads([])->where('parent', NULL)->get();
+        $depth = array();
+        $ctr=0;
+        foreach ($options as $option){
+            $depth[$ctr]=0;
+            if($option){
+                while($option){
+                    $id = $option->id;
+                    $option = Option::where('parent', $id)->first();
+                    if($option){
+                        $depth[$ctr]++;
+                    }
+                }
+            }
+            $ctr++;
+        }
+        $maxDepth=0;
+        foreach ($depth as $d){
+            if($d>$maxDepth){
+                $maxDepth=$d;
+            }
+        }
+        $maxDepth++; /// find max depth end
+ /////////////////
+        //////give names to no named levels
+
+        $loops = $maxDepth - sizeof($levels);
+
+        for($i=0; $i<$loops; $i++){
+            array_push($levels, "No Title");
+        }
+
+        $oldLevel = Option::setEagerLoads([])->where('parent', -1)->first();
+        while ($oldLevel) {
+            $id = $oldLevel->id;
+            $oldLevel->delete();
+            $oldLevel = Option::where('parent', $id)->first();
+        }
+
+        $parent = null;
+        foreach ($levels as $key => $level) {
+            if ($key == 0) {
+                $option = new Option();
+                $option->title = $level;
+                $option->parent = -1;
+                $option->save();
+                $parent = $option->id;
+            } else {
+                $option = new Option();
+                $option->title = $level;
+                $option->parent = $parent;
+                $option->save();
+                $parent = $option->id;
+            }
+        }
+
+/////give names to no named levels end
     }
 
     /**
@@ -160,7 +233,7 @@ class OptionController extends Controller
     public function storeLevels(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'levels' => 'required'
+            'levels.*' => 'required'
         ]);
 
         if ($validator->fails()) {

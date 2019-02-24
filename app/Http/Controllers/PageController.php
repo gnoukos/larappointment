@@ -19,7 +19,7 @@ class PageController extends Controller
 {
     public function index(){
         $options = Option::setEagerLoads([])->where('parent',null)->with('appointments')->get();
-        Log::info($options);
+        //Log::info($options);
         foreach ($options as $key=>$option) {
             $option->hasAppointment = 0;
             foreach ($option->appointments as $appointment) {

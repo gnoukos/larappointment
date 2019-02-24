@@ -70,11 +70,10 @@
                             }else{
                                 $('#chooseDateButton').prop("disabled", false);
                             }
-
-                            if(json.length != 0 && result.length === 0){
+                            if(json.length !== 0 && result.length === 0){
                                 $('#chooseDateButton').prop("disabled", true);
                                 $("#optionsMenu").append('<label id="level'+(level+1)+'" for="level'+(level+1)+'" class="h5 mt-2">'+json[0].title+'</label>');
-                                $("#optionsMenu").append('<select class="form-control" id="level_'+(level+1)+'_selection" onchange="getNextLevel(value,'+(level+1)+','+ json[0].id +')"><option>Δεν υπάρχουν διαθέσιμα ραντεβού!</option></select>');
+                                $("#optionsMenu").append('<select class="form-control" id="level_'+(level+1)+'_selection" onchange="getNextLevel(value,'+(level+1)+','+ json[0].id +')"><option>There are no appointments!</option></select>');
                             }
                         }
 
