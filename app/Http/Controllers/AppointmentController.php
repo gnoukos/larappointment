@@ -67,7 +67,6 @@ class AppointmentController extends Controller
             'endDate.this_or_that' => 'You must fill either an end date or just weeks',
         ]);
 
-        Log::info("mana:".$request->endDate);
 
         if ($validator->fails()) {
             return redirect('/createAppointment')->withErrors($validator)->withInput();
@@ -107,7 +106,7 @@ class AppointmentController extends Controller
         //CREATING DAILY APPOINTMENTS
         $repeat = json_decode($appointment->repeat);
         $start = time()+86400;
-        if ($request->has("endDate")){
+        if ($request->endDate != NULL){
             $end=strtotime($request->endDate);
         }
         else {
@@ -201,8 +200,8 @@ class AppointmentController extends Controller
             'days' => 'required|min:1',
             'hourBoxFrom1' => 'required',
             'hourBoxTo1' => 'required',
-
-            'endDate' => 'this_or_that:weeks|date',
+            'endDate' => 'this_or_that:weeks|date|nullable',
+            'weeks' =>'integer|nullable',
             'duration' => 'required',
             'typeOfAppointment' => 'required|in:regular,ticket'
         ],[
@@ -257,10 +256,9 @@ class AppointmentController extends Controller
         //CREATING DAILY APPOINTMENTS
         $repeat = json_decode($appointment->repeat);
         $start = time()+86400;
-        if ($request->has("endDate")){
+        if ($request->endDate != NULL){
             $end=strtotime($request->endDate);
-        }
-        else {
+        }else {
             $end = $start + 604800*$appointment->weeks;
         }
         $current = $start;
