@@ -133,7 +133,7 @@ class PageController extends Controller
 
         if (Auth::check() && Auth::user()->role=='admin') {
 
-            $options = Option::doesntHave('children')->get();
+            $options = Option::doesntHave('children')->with('appointments')->get();
             $options = $options->keyBy('id');
             /*foreach($options as $option){
                 $parent = $option->getParent;
@@ -151,6 +151,12 @@ class PageController extends Controller
                     }
                 }
             }*/
+            foreach ($options as $option){
+                if(!$option->appointments->isEmpty()){
+                    $options->forget($option->id);
+                }
+            }
+
             $level = Option::where('parent', -1)->first();
             $previous = $level;
             while($level){
