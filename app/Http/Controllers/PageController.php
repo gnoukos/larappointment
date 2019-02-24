@@ -135,7 +135,7 @@ class PageController extends Controller
 
             $options = Option::doesntHave('children')->get();
             $options = $options->keyBy('id');
-            foreach($options as $option){
+            /*foreach($options as $option){
                 $parent = $option->getParent;
                 if($parent) {
                     while ($parent->id != -1) { // this loop removes the last level child from available appointment types
@@ -150,7 +150,16 @@ class PageController extends Controller
                         }
                     }
                 }
+            }*/
+            $level = Option::where('parent', -1)->first();
+            $previous = $level;
+            while($level){
+                $level = Option::where('parent', $level->id)->first();
+                if($level){
+                    $previous = $level;
+                }
             }
+            $options->forget($previous->id);
 
             return view('pages.admin.createAppointment')->with('options', $options);
         } else {
