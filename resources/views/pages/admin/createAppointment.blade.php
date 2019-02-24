@@ -51,7 +51,7 @@
             <select class="custom-select" name="belongToOption">
                 <option>Choose an option</option>
                 @foreach($options as $option)
-                    <option value="{{$option->id}}" >{{$option->title}}</option>
+                    <option value="{{$option->id}}" @if(old('belongToOption') && old('belongToOption')==$option->id) selected="selected" @endif>{{$option->title}}</option>
                 @endforeach
             </select></div>
         <hr>
@@ -72,10 +72,10 @@
         <div id="hoursBoxes">
             <div class="row">
                 <div class="col-md-2" id="hourBoxesContainer">
-                    <label class="mr-1" for="from"><h6>From: </h6></label><input class="form-control mr-3" name="hourBoxFrom1" type="time">
+                    <label class="mr-1" for="from"><h6>From: </h6></label><input class="form-control mr-3" name="hourBoxFrom1" type="time" value="{{ old('hourBoxFrom1') }}">
                 </div>
                 <div class="col-md-2" id="hourBoxesContainer">
-                    <label class="mr-1" for="to"><h6>To: </h6></label><input class="form-control mr-3" name="hourBoxTo1" type="time">
+                    <label class="mr-1" for="to"><h6>To: </h6></label><input class="form-control mr-3" name="hourBoxTo1" type="time" value="{{ old('hourBoxTo1') }}">
                 </div>
             </div>
 
@@ -83,9 +83,9 @@
         <hr>
         <h4>Settings</h4>
         <hr>
-        <div class="form-inline"><p class="h6">Appointment Available Until: <input class="form-control mr-3" type="date" name="endDate" min="{{ Carbon\Carbon::now()->format('Y-m-d') }}"> or <input class="form-control mr-3 ml-3" type="number" name="weeks"> weeks</p></div>
-        <div class="form-inline"><p class="h6">Average Duration of Appointment: <input class="form-control mr-3" type="number" name="duration">minutes</p></div>
-        <div class="form-inline"><p class="h6">Type: <select class="custom-select" name="typeOfAppointment"><option value="regular">Regular</option><option value="ticket">Ticket</option></select></p></div>
+        <div class="form-inline"><p class="h6">Appointment Available Until: <input class="form-control mr-3" type="date" name="endDate" min="{{ Carbon\Carbon::now()->format('Y-m-d') }}" value="{{ old('endDate') }}"> or <input class="form-control mr-3 ml-3" type="number" name="weeks" value="{{ old('weeks') }}"> weeks</p></div>
+        <div class="form-inline"><p class="h6">Average Duration of Appointment: <input class="form-control mr-3" type="number" name="duration" value="{{ old('duration') }}">minutes</p></div>
+        <div class="form-inline"><p class="h6">Type: <select class="custom-select" name="typeOfAppointment"><option value="regular" @if(old('typeOfAppointment') && old('typeOfAppointment')=='regular') selected="selected" @endif>Regular</option><option value="ticket" @if(old('typeOfAppointment') && old('typeOfAppointment')=='ticket') selected="selected" @endif>Ticket</option></select></p></div>
         {{ Form::submit('Save', ['class' => 'btn btn-large btn-primary mt-5 mb-5']) }}
         {{ Form::close() }}
         @if(session('success'))
