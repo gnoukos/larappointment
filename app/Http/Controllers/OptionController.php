@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\appointmentCanceledJob;
 use App\Mail\appointmentCanceled;
 use Illuminate\Support\Facades\Mail;
 use App\Option;
@@ -194,7 +195,12 @@ class OptionController extends Controller
                 foreach ($daily->timeslots as $slot){
                     if($slot->user){
                         $parents = getTimeSlotOptionParentsArray($slot);
-                        Mail::to($slot->user)->send(new appointmentCanceled($slot, $parents));
+                        //Mail::to($slot->user)->send(new appointmentCanceled($slot, $parents));
+                        $details['user'] = $slot->user;
+                        $details['timeslot'] = $slot;
+                        $details['parents'] = $parents;
+                        $mailJob = (new appointmentCanceledJob($details))->delay(Carbon::now()->addSeconds(3));
+                        dispatch($mailJob);
                     }
                 }
                 $daily->timeslots()->delete();
