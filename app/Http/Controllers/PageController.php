@@ -142,7 +142,7 @@ class PageController extends Controller
                         $parent = $parent->getParent;
                         if ($parent) {
                             if ($parent->parent == -1) {
-                                Log::info($option->title);
+                                //Log::info($option->title);
                                 $options->forget($option->id);
                             }
                         } else {

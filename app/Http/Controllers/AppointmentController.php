@@ -59,7 +59,8 @@ class AppointmentController extends Controller
             'days' => 'required|min:1',
             'hourBoxFrom1' => 'required',
             'hourBoxTo1' => 'required',
-            'endDate' => 'this_or_that:weeks|date',
+            'endDate' => 'this_or_that:weeks|date|nullable',
+            'weeks' =>'integer|nullable',
             'duration' => 'required',
             'typeOfAppointment' => 'required|in:regular,ticket'
         ],[
