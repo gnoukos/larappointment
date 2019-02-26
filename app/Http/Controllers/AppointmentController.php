@@ -445,7 +445,7 @@ class AppointmentController extends Controller
             //Mail::to($request->user())->queue(new successfullAssignation($timeslot, $parents));
         }else{
             //Mail::to($request->input('guest_email'))->send(new successfullAssignation($timeslot, $parents));
-            $details['user'] = $request->input('guest_email');
+            $details['user'] = $user;
             $details['timeslot'] = $timeslot;
             $details['parents'] = $parents;
             dispatch(new appointmentAssignationJob($details));
