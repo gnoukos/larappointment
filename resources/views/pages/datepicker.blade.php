@@ -34,7 +34,9 @@
                             </div>
                             <input name="_token" type="hidden" value="{{ csrf_token() }}"/>
                             @auth
+
                             <div class="col-12 text-center mt-4">
+                                <textarea name="comment" class="form-control mb-4" id="userComment" rows="3" placeholder="Type your comments (optional)"></textarea>
                                 <button type="submit" value="Submit" class="btn btn-primary" id="makeAppointmentButton">Make the Appointment</button>
                             </div>
                             @endauth
@@ -83,6 +85,11 @@
                                     @endif
                                 </div>
                             </div>
+                            <div class="form-group row">
+                                <div class="col-sm-10">
+                                    <textarea name="comment" class="form-control " id="userComment" rows="3" placeholder="Type your comments (optional)"></textarea>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-12 text-center mt-4">
                             <button type="submit" value="Submit" class="btn btn-primary" id="makeAppointmentButton">Make the Appointment</button>
@@ -108,10 +115,14 @@
 
         function showMakeAppointmentButton(){
             $("#makeAppointmentButton").show();
+            @auth$("#userComment").show();@endauth
         }
 
         $("#makeAppointmentButton").hide(); //hide button until hour selected
 
+        @auth
+        $("#userComment").hide();
+        @endauth
 
 
         /////SET FIRST AVAILABLE DATE//////
@@ -147,9 +158,11 @@
                             getFreeTimeslots(option, date[0]._i);
                             $("#makeAppointmentButton").hide();
                             $("#chooseDatePrompt").hide();
+                            @auth$("#userComment").hide();@endauth
                         }catch (e) {
                             $("#makeAppointmentButton").hide();
                             $("#chooseDatePrompt").show();
+                            @auth $("#userComment").hide();@endauth
                         }
                     }
                 });

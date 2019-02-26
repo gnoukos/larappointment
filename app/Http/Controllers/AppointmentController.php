@@ -324,7 +324,12 @@ class AppointmentController extends Controller
             foreach ($daily->timeslots as $slot){
                 if($slot->user && $slot->slot>Carbon::now()){
                     $parents = getTimeSlotOptionParentsArray($slot);
-                    Mail::to($slot->user)->send(new appointmentCanceled($slot, $parents));
+
+                    $details['user'] = $slot->user;
+                    $details['timeslot'] = $slot;
+                    $details['parents'] = $parents;
+                    $mailJob = (new appointmentCanceledJob($details))->delay(Carbon::now()->addSeconds(3));
+                    dispatch($mailJob);
                 }
             }
             $daily->timeslots()->delete();
@@ -402,6 +407,7 @@ class AppointmentController extends Controller
 
             if($timeslot->user_id == null) {
                 $timeslot->user_id = $user->id;
+                $timeslot->comment = $request->comment;
                 $timeslot->save();
             }
 
@@ -411,6 +417,7 @@ class AppointmentController extends Controller
 
             if($timeslot->user_id == null) {
                 $timeslot->user_id = $user->id;
+                $timeslot->comment = $request->comment;
                 $timeslot->save();
             }
         }
