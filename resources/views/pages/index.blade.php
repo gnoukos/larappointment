@@ -54,7 +54,7 @@
             if(id!=-1){
                 $.getJSON("{{ url('/options') }}/"+id+"/children", { isOption: true } ,function (result) {
                     $.getJSON("{{ url('/options') }}/"+levelId+"/children",{ isOption: false } ,function(json){
-                        //console.log(result.length);
+                        console.log(hasAppointment);
                         if(hasAppointment == 1){
                             $('#chooseDateButton').prop("disabled", false);
                         }else{
@@ -64,7 +64,7 @@
                                 var $dropdown = $("#level_"+(level+1)+"_selection");
                                 $dropdown.append($("<option />").val(-1).text("Select Option"));
                                 $.each(result, function () {
-                                    $dropdown.append($("<option />").val(this.id).text(this.title));
+                                    $dropdown.append($("<option />").val(this.id+','+this.hasAppointment).text(this.title));
                                 });
                                 $('#chooseDateButton').prop("disabled", true);
                             }else{

@@ -205,8 +205,8 @@ class OptionController extends Controller
                 }
                 $daily->timeslots()->delete();
             }
-            $appointment->daily_appointments()->delete();
             $appointment->appointment_hours()->delete();
+            $appointment->daily_appointments()->delete();
         }
         $option->appointments()->delete();
         $option->delete();
