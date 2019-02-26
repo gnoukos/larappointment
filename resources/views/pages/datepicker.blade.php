@@ -153,7 +153,7 @@
                     select: function(date, context) { //callback function to get selected date
                         try {
                             $("#hourButtonContainer").empty();
-                            console.log(date[0]._i); //selected date
+                            //console.log(date[0]._i); //selected date
                             var option = getUrlParameter('option');
                             getFreeTimeslots(option, date[0]._i);
                             $("#makeAppointmentButton").hide();
@@ -186,7 +186,15 @@
 
             var maxDateObj = new Date(maxAvailDate); //creates max available date object to use in for loop
 
+            var preMonth = availDate.getMonth();
+
             availDate.setDate(availDate.getDate() + 1);
+
+            var nextMonth = availDate.getMonth();
+
+            if(preMonth !== nextMonth){
+                $('.pignose-calendar-top-next').click();
+            }
 
             for (var d = availDate; d.getTime() <= maxDateObj.getTime(); d.setDate(d.getDate() + 1)) { // for loop from today until max available date
 
@@ -207,7 +215,7 @@
                 }
             }
             $('[data-date='+moment(availDate.getTime()).format("YYYY-MM-DD")+']').click();
-            console.log( $('[data-date='+moment(availDate.getTime()).format("YYYY-MM-DD")+']'));
+            //console.log( $('[data-date='+moment(availDate.getTime()).format("YYYY-MM-DD")+']'));
         });
         /////////SHOW NEXT AVAILABLE DATE END //////////
 
