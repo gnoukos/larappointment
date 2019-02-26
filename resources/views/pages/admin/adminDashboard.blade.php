@@ -127,6 +127,20 @@
                                     </td>
                                 </tr>
                             @endforeach
+                            <!--<tr>
+                                <td>test</td>
+                                <td>
+                                    cat
+                                </td>
+                                <td>regular</td>
+                                <td>2019-02-26</td>
+                                <td>12344353</td>
+                                <td>17:30</td>
+                                <td>5</td>
+                                <td class="unsortable">
+                                    ...
+                                </td>
+                            </tr>-->
                             </tbody>
                             <tfoot>
                                 <tr>
@@ -200,15 +214,17 @@
 
                         var today = new Date();
                         var week = new Date(today.getFullYear(), today.getMonth(), today.getDate()+7);
-                        var date = Date.parse( data[4] ) || 0;
-                        //console.log(today.valueOf());
+                        //console.log(week);
+                        var date = new Date(Date.parse( data[3] )) || 0;
                         if($('#dateFilter').val() == 2){
-                            if ( +today.valueOf() ===  +date.valueOf()) {
+                            if ( +today.getDate() ===  +date.getDate() && +today.getMonth() ===  +date.getMonth() && +today.getFullYear() ===  +date.getFullYear()) {
+                                //console.log("TODAY");
                                 return true;
                             }
                             return false;
                         }else if ($('#dateFilter').val() == 1){
                             if ( +week.valueOf() >=  +date.valueOf()) {
+                                //console.log("next 7 days IN");
                                 return true;
                             }
                             return false;
