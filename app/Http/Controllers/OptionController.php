@@ -232,6 +232,16 @@ class OptionController extends Controller
                     }
                 }
             }
+            $sumOfFreeSlots = 0;
+            foreach ($option->appointments as $app){
+                foreach ($app->daily_appointments as $d_appointment){
+                    $sumOfFreeSlots = $sumOfFreeSlots + $d_appointment->free_slots;
+                }
+            }
+            if($sumOfFreeSlots<=0 && $request->isOption=='true' && !$option->children->count()){
+               $options->forget($key);
+            }
+
         }
         return response()->json($options);
     }
