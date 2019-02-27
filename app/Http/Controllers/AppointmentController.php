@@ -208,7 +208,7 @@ class AppointmentController extends Controller
             'endDate.this_or_that' => 'You must fill either an end date or just weeks',
         ]);
 
-        //Log::info($request->endDate);
+
 
         if ($validator->fails()) {
             return redirect('/appointment/'.$appointment->id.'/edit')->withErrors($validator)->withInput();
@@ -409,10 +409,6 @@ class AppointmentController extends Controller
                 $timeslot->user_id = $user->id;
                 $timeslot->comment = $request->comment;
                 $timeslot->save();
-
-                $tmpDailyAppointment = DailyAppointment::find($timeslot->daily_appointment->id);
-                $tmpDailyAppointment->free_slots = ($tmpDailyAppointment->free_slots) - 1;
-                $tmpDailyAppointment->save();
             }
 
         }else{
@@ -423,11 +419,6 @@ class AppointmentController extends Controller
                 $timeslot->user_id = $user->id;
                 $timeslot->comment = $request->comment;
                 $timeslot->save();
-
-                $tmpDailyAppointment = DailyAppointment::find($timeslot->daily_appointment->id);
-                $tmpDailyAppointment->free_slots = ($tmpDailyAppointment->free_slots) - 1;
-                $tmpDailyAppointment->save();
-
             }
         }
 
