@@ -300,9 +300,9 @@ class PageController extends Controller
     {
         if(Session::has('Stimeslot')) {
             $timeslot=Session::get('Stimeslot');
-            Log::info($timeslot);
+            //Log::info($timeslot);
             $parents=Session::get('Sparents');
-            Log::info($parents);
+            //Log::info($parents);
             $startingHour=Session::get('SstartingHour');
             return view('pages.Ticket')->with(['timeslot' => $timeslot,'parents'=>$parents, 'startingHour'=>$startingHour]);
         }else{

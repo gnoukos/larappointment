@@ -208,7 +208,7 @@ class AppointmentController extends Controller
             'endDate.this_or_that' => 'You must fill either an end date or just weeks',
         ]);
 
-        Log::info("mana:".$request->endDate);
+        //Log::info($request->endDate);
 
         if ($validator->fails()) {
             return redirect('/appointment/'.$appointment->id.'/edit')->withErrors($validator)->withInput();

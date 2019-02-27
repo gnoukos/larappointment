@@ -47,13 +47,6 @@
                 <div class="card mt-4" id="userDetailsCard">
                     <div class="card-body">
                         <h5 class="card-title">Fill with your details</h5>
-                        {{--@if(count($errors))--}}
-                            {{--<ul class="alert alert-danger">--}}
-                                {{--@foreach($errors->all() as $error)--}}
-                                    {{--<li>{{$error}}</li>--}}
-                                {{--@endforeach--}}
-                            {{--</ul>--}}
-                        {{--@endif--}}
                         <div class="wrapper text-center">
                             <div class="form-group row">
                                 <div class="col-sm-10">
