@@ -58,7 +58,7 @@ class AppointmentController extends Controller
             'belongToOption' => 'required',
             'days' => 'required|min:1',
             'hourBoxFrom1' => 'required',
-            'hourBoxTo1' => 'required',
+            'hourBoxTo1' => 'required|after:hourBoxFrom1',
             'endDate' => 'this_or_that:weeks|date|nullable',
             'weeks' =>'integer|nullable',
             'duration' => 'required',
@@ -199,17 +199,18 @@ class AppointmentController extends Controller
             'belongToOption' => 'required',
             'days' => 'required|min:1',
             'hourBoxFrom1' => 'required',
-            'hourBoxTo1' => 'required',
+            'hourBoxTo1' => 'required|after:hourBoxFrom1',
             'endDate' => 'this_or_that:weeks|date|nullable',
             'weeks' =>'integer|nullable',
             'duration' => 'required',
-            'typeOfAppointment' => 'required|in:regular,ticket'
+            'typeOfAppointment' => 'required|in:regular,ticket',
+
         ],[
             'endDate.this_or_that' => 'You must fill either an end date or just weeks',
         ]);
 
 
-
+        //Log::info(hourBoxFrom1);
         if ($validator->fails()) {
             return redirect('/appointment/'.$appointment->id.'/edit')->withErrors($validator)->withInput();
         }
@@ -347,7 +348,7 @@ class AppointmentController extends Controller
 
         $timeslots = Timeslot::whereHas('daily_appointment.appointment.option', function ($q) use($option, $date) {
             $q->where('id', $option);
-        })->where('slot', 'like', $date.'%')->where('user_id', null)->orderBy('slot', 'asc')->get();
+        })->where('slot', 'like', $date.'%')->where('user_id', null)->where('slot','>',Carbon::now())->orderBy('slot', 'asc')->get();
 
         //Log::info($timeslots);
 
