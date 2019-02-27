@@ -17,6 +17,52 @@
                                 @endfor</span>, at: <span class="text-success">{{ \Carbon\Carbon::parse($timeslot->slot)->format('l d/m/Y') }}</span> and time: <span class="text-success"> {{\Carbon\Carbon::parse($startingHour)->format('H:i')}}</span> is</h3>
                         <br><button type="button" class="btn btn-dark btn-lg">{{ $timeslot->ticket_num }}</button><br>
                         <a id="downloadTicket" download="ticket.jpeg" href="" class="btn btn-primary mt-5">Download Ticket</a>
+                        <form method="post" action="{{action('AppointmentController@mailTheTicket')}}">
+                            <input name="_token" type="hidden" value="{{ csrf_token() }}"/>
+                            <div class="form-group form-inline  justify-content-center mt-4">
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="ticketEmail" name="ticketEmail" value="{{ old('ticket_email') }}" placeholder="Your Email" >
+                                    @if ($errors->has('ticket_email'))
+                                        <span class="text-danger" role="alert">
+                                        <strong>{{ $errors->first('ticket_email') }}</strong>
+                                    </span>
+                                    @endif
+                                    @if(session('MailSuccess'))
+
+                                        <div class="alert alert-success mt-1">
+                                            {{session('MailSuccess')}}
+                                        </div>
+
+                                    @endif
+                                </div>
+                                <div class="col-12 text-center mt-4">
+                                    <button type="submit" value="Submit" class="btn btn-primary" id="mailTheTicket">Email me the ticket</button>
+                                </div>
+                            </div>
+                        </form>
+                        <form method="post" action="{{action('AppointmentController@smsTheTicket')}}">
+                            <input name="_token" type="hidden" value="{{ csrf_token() }}"/>
+                            <div class="form-group form-inline  justify-content-center mt-4">
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="ticketSms" name="ticketSms" value="{{ old('ticket_sms') }}" placeholder="Your mobile" >
+                                    @if ($errors->has('ticket_sms'))
+                                        <span class="text-danger" role="alert">
+                                        <strong>{{ $errors->first('ticket_sms') }}</strong>
+                                    </span>
+                                    @endif
+                                    @if(session('SmsSuccess'))
+
+                                        <div class="alert alert-success mt-1">
+                                            {{session('SmsSuccess')}}
+                                        </div>
+
+                                    @endif
+                                </div>
+                                <div class="col-12 text-center mt-4">
+                                    <button type="submit" value="Submit" class="btn btn-primary" id="mailTheTicket">Send me the ticket with sms</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

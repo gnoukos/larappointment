@@ -8,6 +8,7 @@ use App\Mail\appointmentCanceled;
 use App\Mail\successfullAssignation;
 use App\Jobs\appointmentCanceledJob;
 use App\Jobs\appointmentAssignationJob;
+use App\Jobs\mailTicketJob;
 use App\Option;
 use App\User;
 use Carbon\Carbon;
@@ -495,6 +496,8 @@ class AppointmentController extends Controller
         $startingHour = Timeslot::where('daily_appointments_id', $dailyAppointmentId)->orderBy('slot', 'asc')->first();
         $startingHour = $startingHour->slot;
 
+
+
         $timeslot = Timeslot::where('daily_appointments_id', $dailyAppointmentId)->where('user_id', null)->where('ticket_num', null)->orderBy('slot', 'asc')->first();
 
         $totalTimeslots = Timeslot::where('daily_appointments_id', $dailyAppointmentId)->count();
@@ -538,6 +541,7 @@ class AppointmentController extends Controller
         session(['Stimeslot' => $timeslot]);
         session(['Sparents' => $parents]);
         session(['SstartingHour' => $startingHour]);
+
 
         return Redirect::Route('getTicketView')->with('timeslot' , $timeslot)->with('parents',$parents)->with('startingHour',$startingHour);
     }
@@ -595,6 +599,31 @@ class AppointmentController extends Controller
         }
 
         $appointment->save();
+    }
+
+    public function mailTheTicket(Request $request){
+        $validator = Validator::make($request->all(), [
+            'ticketEmail' => 'required|email'
+        ]);
+
+        if ($validator->fails()) {
+            return redirect('/getTicket')->withErrors($validator);
+        }
+
+        $details['parents'] = Session::get('Sparents');
+        $details['timeslot'] = Session::get('Stimeslot');
+        $details['user'] = $request->ticketEmail;
+        $details['startingHour'] = Session::get('SstartingHour');
+
+        $mailJob = (new mailTicketJob($details))->delay(Carbon::now()->addSeconds(3));
+        dispatch($mailJob);
+
+        return redirect('/getTicket')->with('MailSuccess', 'Email send successfully');
+
+    }
+
+    public function smsTheTicket(Request $request){
+
     }
 }
 

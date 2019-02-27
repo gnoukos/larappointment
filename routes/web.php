@@ -60,3 +60,7 @@ Route::post('storeLevels', 'OptionController@storeLevels');
 Route::post('changeAppointmentState', 'AppointmentController@changeAppointmentState');
 
 Route::get('api/getTicket', 'ApiController@getTicket');
+
+Route::post('emailTheTicket', 'AppointmentController@mailTheTicket');
+
+Route::post('smsTheTicket', 'AppointmentController@smsTheTicket');
