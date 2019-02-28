@@ -16,53 +16,80 @@
                                     @endif
                                 @endfor</span>, at: <span class="text-success">{{ \Carbon\Carbon::parse($timeslot->slot)->format('l d/m/Y') }}</span> and time: <span class="text-success"> {{\Carbon\Carbon::parse($startingHour)->format('H:i')}}</span> is</h3>
                         <br><button type="button" class="btn btn-dark btn-lg">{{ $timeslot->ticket_num }}</button><br>
-                        <a id="downloadTicket" download="ticket.jpeg" href="" class="btn btn-primary mt-5">Download Ticket</a>
+
+                        @if(session('MailSuccess'))
+
+                             <div class="alert alert-success text-center mt-3 col-md-6 offset-md-3">
+                                 {{session('MailSuccess')}}
+                             </div>
+                        @endif
+
+                        @if(session('smsSuccess'))
+
+                            <div class="alert alert-success text-center mt-3 col-md-6 offset-md-3">
+                                {{session('smsSuccess')}}
+                            </div>
+                        @endif
+
+                        <a id="downloadTicket" download="ticket.jpeg" href="" class="btn btn-primary mt-5"><i class="fas fa-download"></i> Download Ticket</a>
+                        <button type="button" class="btn btn-secondary mt-5" data-placement="top" data-toggle="popover" title="Type your Mail" data-html='true' data-content='
                         <form method="post" action="{{action('AppointmentController@mailTheTicket')}}">
                             <input name="_token" type="hidden" value="{{ csrf_token() }}"/>
-                            <div class="form-group form-inline  justify-content-center mt-4">
-                                <div class="col-sm-6">
-                                    <input type="text" class="form-control" id="ticketEmail" name="ticketEmail" value="{{ old('ticket_email') }}" placeholder="Your Email" >
-                                    @if ($errors->has('ticket_email'))
-                                        <span class="text-danger" role="alert">
-                                        <strong>{{ $errors->first('ticket_email') }}</strong>
-                                    </span>
-                                    @endif
-                                    @if(session('MailSuccess'))
+                           <div class="input-group mb-3">
+  <input type="text" name="emailAddress" class="form-control" placeholder="Email Address" aria-label="Email Address" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="submit">Send</button>
+                        </div>
+                    </div>
+                        </form>'><i class="fas fa-envelope"></i> Send Email</button>
 
-                                        <div class="alert alert-success mt-1">
-                                            {{session('MailSuccess')}}
-                                        </div>
 
-                                    @endif
-                                </div>
-                                <div class="col-12 text-center mt-4">
-                                    <button type="submit" value="Submit" class="btn btn-primary" id="mailTheTicket">Email me the ticket</button>
-                                </div>
-                            </div>
-                        </form>
+                        <button type="button" class="btn btn-secondary mt-5" data-placement="top" data-toggle="popover" title="Type your mobile number" data-html='true' data-content='
                         <form method="post" action="{{action('AppointmentController@smsTheTicket')}}">
                             <input name="_token" type="hidden" value="{{ csrf_token() }}"/>
-                            <div class="form-group form-inline  justify-content-center mt-4">
-                                <div class="col-sm-6">
-                                    <input type="text" class="form-control" id="ticketSms" name="ticketSms" value="{{ old('ticket_sms') }}" placeholder="Your mobile" >
-                                    @if ($errors->has('ticket_sms'))
-                                        <span class="text-danger" role="alert">
-                                        <strong>{{ $errors->first('ticket_sms') }}</strong>
-                                    </span>
-                                    @endif
-                                    @if(session('SmsSuccess'))
+                            <div class="input-group mb-3">
+  <input type="text" name="mobileNumber" class="form-control" placeholder="Mobile Num" aria-label="Mobile Num" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="submit">Send</button>
+                        </div>
+                    </div>
+                        </form>'><i class="fas fa-mobile"></i> Send SMS</button>
 
-                                        <div class="alert alert-success mt-1">
-                                            {{session('SmsSuccess')}}
-                                        </div>
+                        @if ($errors->has('emailAddress'))
+                            <div class="alert alert-danger text-center mt-3 col-md-6 offset-md-3">
+                        <strong>{{ $errors->first('emailAddress') }}</strong>
+                        </div>
+                        @endif
 
-                                    @endif
-                                </div>
-                                <div class="col-12 text-center mt-4">
-                                    <button type="submit" value="Submit" class="btn btn-primary" id="mailTheTicket">Send me the ticket with sms</button>
-                                </div>
-                            </div>
-                        </form>
+                        @if ($errors->has('mobileNumber'))
+                            <div class="alert alert-danger text-center mt-3 col-md-6 offset-md-3">
+                        <strong>{{ $errors->first('mobileNumber') }}</strong>
+                        </div>
+                        @endif
+
+                        {{--<form method="post" action="{{action('AppointmentController@smsTheTicket')}}">--}}
+                            {{--<input name="_token" type="hidden" value="{{ csrf_token() }}"/>--}}
+                            {{--<div class="form-group form-inline  justify-content-center mt-4">--}}
+                                {{--<div class="col-sm-6">--}}
+                                    {{--<input type="text" class="form-control" id="ticketSms" name="ticketSms" value="{{ old('ticket_sms') }}" placeholder="Your mobile" >--}}
+                                    {{--@if ($errors->has('ticket_sms'))--}}
+                                        {{--<span class="text-danger" role="alert">--}}
+                                        {{--<strong>{{ $errors->first('ticket_sms') }}</strong>--}}
+                                    {{--</span>--}}
+                                    {{--@endif--}}
+                                    {{--@if(session('SmsSuccess'))--}}
+
+                                        {{--<div class="alert alert-success mt-1">--}}
+                                            {{--{{session('SmsSuccess')}}--}}
+                                        {{--</div>--}}
+
+                                    {{--@endif--}}
+                                {{--</div>--}}
+                                {{--<div class="col-12 text-center mt-4">--}}
+                                    {{--<button type="submit" value="Submit" class="btn btn-primary" id="smsTheTicket">Send me the ticket with sms</button>--}}
+                                {{--</div>--}}
+                            {{--</div>--}}
+                        {{--</form>--}}
                     </div>
                 </div>
             </div>
@@ -92,7 +119,16 @@
             var src = $('img').attr('src');
             $('img').hide();
             $('#downloadTicket').attr("href", src);
+
+            $('.popover-dismiss').popover({
+                trigger: 'focus'
+            })
+
+            $("[data-toggle=popover]").popover();
+
         });
+
+
 
     </script>
 

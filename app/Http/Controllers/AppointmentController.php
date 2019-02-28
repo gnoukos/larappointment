@@ -576,7 +576,7 @@ class AppointmentController extends Controller
             $parents=getTimeSlotOptionParentsArray($timeslot);
 
             //Mail::to($user->email)->send(new appointmentCanceled($timeslot, $parents));
-            $details['user'] = $user->email;
+            $details['user'] = $user;
             $details['timeslot'] = $timeslot;
             $details['parents'] = $parents;
             $mailJob = (new appointmentCanceledJob($details))->delay(Carbon::now()->addSeconds(3));
@@ -603,7 +603,7 @@ class AppointmentController extends Controller
 
     public function mailTheTicket(Request $request){
         $validator = Validator::make($request->all(), [
-            'ticketEmail' => 'required|email'
+            'emailAddress' => 'required|email'
         ]);
 
         if ($validator->fails()) {
@@ -612,17 +612,49 @@ class AppointmentController extends Controller
 
         $details['parents'] = Session::get('Sparents');
         $details['timeslot'] = Session::get('Stimeslot');
-        $details['user'] = $request->ticketEmail;
+        $details['user'] = $request->emailAddress;
         $details['startingHour'] = Session::get('SstartingHour');
 
         $mailJob = (new mailTicketJob($details))->delay(Carbon::now()->addSeconds(3));
         dispatch($mailJob);
 
-        return redirect('/getTicket')->with('MailSuccess', 'Email send successfully');
+        return redirect('/getTicket')->with('MailSuccess', 'Email sent successfully');
 
     }
 
     public function smsTheTicket(Request $request){
+
+        $validator = Validator::make($request->all(), [
+            'mobileNumber' => 'required|numeric|digits:10'
+        ]);
+
+        if ($validator->fails()) {
+            return redirect('/getTicket')->withErrors($validator);
+        }
+
+        $details['parents'] = Session::get('Sparents');
+        $details['timeslot'] = Session::get('Stimeslot');
+        $details['user'] = $request->mobileNumber;
+        $details['startingHour'] = Session::get('SstartingHour');
+
+        $parents=$details['parents'];
+
+        $parentsPath='';
+        for ($i=0; $i<count($parents); $i++ ) {
+            if ($i != count($parents) - 1) {
+                $parentsPath .= $parents[$i] . '->';
+            }else {
+                $parentsPath .= $parents[$i];
+            }
+        }
+
+        $dateInfo=Carbon::parse($details['startingHour'])->format('l d/m/Y H:i');
+
+        $smsMessage=config('app.name').', your ticket num is: '.$details['timeslot']->ticket_num.'. For '.$parentsPath.' at '.$dateInfo;
+
+        send_sms($request->mobileNumber,$smsMessage);
+
+        return redirect('/getTicket')->with('smsSuccess', 'SMS sent successfully');
 
     }
 }
