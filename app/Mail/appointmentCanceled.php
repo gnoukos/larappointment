@@ -32,6 +32,6 @@ class appointmentCanceled extends Mailable
      */
     public function build()
     {
-        return $this->view('mails.appointmentCanceled')->subject("Appointment Canceled")->with(['timeslot'=>$this->timeslot, 'parents'=>$this->parents]);
+        return $this->view('mails.appointmentCanceled')->text('mails.appointmentCanceledPlain')->subject("Appointment Canceled")->with(['timeslot'=>$this->timeslot, 'parents'=>$this->parents]);
     }
 }

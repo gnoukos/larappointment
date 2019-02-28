@@ -28,6 +28,6 @@ class appointmentReminder extends Mailable
      */
     public function build()
     {
-        return $this->view('mails.appointmentReminder')->subject("Appointment Reminder")->with(['timeslot'=>$this->timeslot, 'parents'=>$this->parents]);
+        return $this->view('mails.appointmentReminder')->text('mails.appointmentReminderPlain')->subject("Appointment Reminder")->with(['timeslot'=>$this->timeslot, 'parents'=>$this->parents]);
     }
 }

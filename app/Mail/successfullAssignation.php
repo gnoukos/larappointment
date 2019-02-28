@@ -31,6 +31,6 @@ class successfullAssignation extends Mailable
      */
     public function build()
     {
-        return $this->view('mails.successfulAssignation')->subject("Successful Assignation")->with(['timeslot'=>$this->timeslot, 'parents'=>$this->parents]);
+        return $this->view('mails.successfulAssignation')->text('mails.successfulAssignationPlain')->subject("Successful Assignation")->with(['timeslot'=>$this->timeslot, 'parents'=>$this->parents]);
     }
 }

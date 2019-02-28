@@ -32,6 +32,6 @@ class mailTicket extends Mailable
      */
     public function build()
     {
-        return $this->view('mails.mailTicket')->subject("Get Your Ticket")->with(['timeslot'=>$this->timeslot, 'parents'=>$this->parents, 'startingHour'=>$this->startingHour]);
+        return $this->view('mails.mailTicket')->text('mails.mailTicketPlain')->subject("Get Your Ticket")->with(['timeslot'=>$this->timeslot, 'parents'=>$this->parents, 'startingHour'=>$this->startingHour]);
     }
 }
