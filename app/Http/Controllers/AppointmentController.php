@@ -575,6 +575,10 @@ class AppointmentController extends Controller
 
             $parents=getTimeSlotOptionParentsArray($timeslot);
 
+            $tmpDailyAppointment = DailyAppointment::find($timeslot->daily_appointment->id);
+            $tmpDailyAppointment->free_slots = ($tmpDailyAppointment->free_slots) + 1;
+            $tmpDailyAppointment->save();
+
             //Mail::to($user->email)->send(new appointmentCanceled($timeslot, $parents));
             $details['user'] = $user;
             $details['timeslot'] = $timeslot;
