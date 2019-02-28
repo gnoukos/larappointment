@@ -18,6 +18,11 @@ class AddExtraFieldsToUsersTable extends Migration
             $table->enum('role', ['user', 'admin']);
 
         });
+
+        $admin=\App\User::find(1);
+        $admin->mobile_num='1234567890';
+        $admin->role='admin';
+        $admin->save();
     }
 
     /**
