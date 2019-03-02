@@ -3,6 +3,7 @@
 @section('content')
     <div class="row">
     <div class="col-md-6 offset-md-3 text-center mt-5">
+        @if( !empty($options) && !empty($level1))
         <h1 class="display-4">Make an Appointment</h1>
         <div class="info-form mt-5 mb-5">
             <form action="{{ url('/datepicker') }}" method="get" id="optionsMenuForm" class="justify-content-center">
@@ -28,6 +29,9 @@
                 </div>
             </form>
         </div>
+        @else
+        <h1 class="display-4">No appointment categories</h1>
+        @endif
     </div>
     </div>
 
