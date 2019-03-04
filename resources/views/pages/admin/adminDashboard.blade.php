@@ -88,7 +88,7 @@
                                 <th></th>
                                 <th></th>
                                 <th></th>
-                                <th></th>
+                                <th class="unsortable"></th>
                                 <th></th>
                                 <th class="unsortable"></th>
                                 <th class="unsortable"></th>
@@ -100,7 +100,7 @@
                                     <th>Category</th>
                                     <th>Type</th>
                                     <th>Date</th>
-                                    <th>Phone</th>
+                                    <th class="unsortable">Phone</th>
                                     <th>Time</th>
                                     <th class="unsortable">Remaining</th>
                                     <th class="unsortable">Cancel</th>
@@ -117,7 +117,7 @@
                                     </td>
                                     <td>{{ $timeslot->daily_appointment->appointment->type }}</td>
                                     <td>{{ substr($timeslot->daily_appointment->date,0,10) }}</td>
-                                    <td>{{ $timeslot->user->mobile_num }}</td>
+                                    <td class="unsortable">{{ $timeslot->user->mobile_num }}</td>
                                     <td>{{ $timeslot->slot }}</td>
                                     <td>{{ $timeslot->daily_appointment->free_slots }}</td>
                                     <td class="unsortable">
@@ -148,7 +148,7 @@
                                     <th>Category</th>
                                     <th>Type</th>
                                     <th>Date</th>
-                                    <th>Phone</th>
+                                    <th class="unsortable">Phone</th>
                                     <th>Time</th>
                                     <th class="unsortable">Remaining</th>
                                     <th class="unsortable">Cancel</th>
@@ -198,7 +198,38 @@
                         } );
                     },
                     lengthChange: false,
-                    buttons: [ { extend: 'pdf', header: false}, { extend: 'copy', header: false}, { extend: 'print', header: false}, { extend: 'excel', header: false}, ],
+
+                    buttons: [
+                        {
+                            extend: 'pdf',
+                            exportOptions: {
+                                columns: [ 0, 1, 2, 3, 5 ]
+                            },
+                            header: false
+                        },
+                        {
+                            extend: 'copy',
+                            exportOptions: {
+                                columns: [ 0, 1, 2, 3, 5 ]
+                            },
+                            header: false
+                        },
+                        {
+                            extend: 'print',
+                            exportOptions: {
+                                columns: [ 0, 1, 2, 3, 5 ]
+                            },
+                            header: false
+                        },
+                        {
+                            extend: 'excel',
+                            exportOptions: {
+                                columns: [ 0, 1, 2, 3, 5 ]
+                            },
+                            header: false
+                        }
+                    ],
+                    //buttons: [ { extend: 'pdf', header: false}, { extend: 'copy', header: false}, { extend: 'print', header: false}, { extend: 'excel', header: false}, ],
                 } );
 
                 $('#dateFilter').on('change', function() {
