@@ -11,7 +11,7 @@
             @auth
                 @if(auth()->user()->role=='admin')
                     <li class="nav-item">
-                        <a class="nav-link text-dark" href="/admin">Admin</a>
+                        <a class="nav-link text-dark" href="{{ url('/admin') }}">Admin</a>
                     </li>
                 @endif
             @endauth
@@ -19,7 +19,7 @@
 
                 @if(auth())
                     <li class="nav-item">
-                        <a class="nav-link text-dark mr-md-1" href="/dashboard">{{auth()->user()->name}}</a>
+                        <a class="nav-link text-dark mr-md-1" href="{{ url('/dashboard') }}">{{auth()->user()->name}}</a>
                     </li>
                 @endif
 
