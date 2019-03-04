@@ -32,32 +32,32 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="/hierarchy">
+            <a class="nav-link" href="{{ url('/hierarchy') }}">
                 <i class="fas fa-fw fa-table"></i>
                 <span>Hierarchy</span></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="/levels">
+            <a class="nav-link" href="{{ url('/levels') }}">
                 <i class="fas fa-level-down-alt"></i>
                 <span>Levels</span></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="/createAppointment">
+            <a class="nav-link" href="{{ url('/createAppointment') }}">
                 <i class="fas fa-plus"></i>
                 <span>New Category</span></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="/manageAppointments">
+            <a class="nav-link" href="{{ url('/manageAppointments') }}">
                 <i class="fas fa-list"></i>
                 <span>Categories</span></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="/history">
+            <a class="nav-link" href="{{ url('/history') }}">
                 <i class="fas fa-history"></i>
                 <span>Appointment History</span></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="/" target="_blank">
+            <a class="nav-link" href="{{ url('/') }}" target="_blank">
                 <i class="fas fa-fw fa-home"></i>
                 <span>Home</span>
             </a>
