@@ -53,7 +53,15 @@
                             </div>
                         @endforeach
                     @endif
-                    @if(count($options) > 0) {{ Form::submit('Save Level Names', ['class' => 'btn btn-large btn-primary mt-5 mb-5']) }} @else <h2>You must first create the <a href="{{ url("/hierarchy") }}">hierarchy</a></h2> @endif
+                        @foreach($levels as $depth => $options)
+                            @if(count($options) > 0)
+                                {{ Form::submit('Save Level Names', ['class' => 'btn btn-large btn-primary mt-5 mb-5']) }}
+                                @break
+                            @else
+                                <h2>You must first create the <a href="{{ url("/hierarchy") }}">hierarchy</a></h2>
+                                @break
+                            @endif
+                        @endforeach
                 </div>
             </div>
 
