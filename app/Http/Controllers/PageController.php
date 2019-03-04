@@ -158,15 +158,16 @@ class PageController extends Controller
             }
 
             $level = Option::where('parent', -1)->first();
-            $previous = $level;
-            while($level){
-                $level = Option::where('parent', $level->id)->first();
-                if($level){
-                    $previous = $level;
+            if($level){
+                $previous = $level;
+                while($level){
+                    $level = Option::where('parent', $level->id)->first();
+                    if($level){
+                        $previous = $level;
+                    }
                 }
+                $options->forget($previous->id);
             }
-            $options->forget($previous->id);
-
             return view('pages.admin.createAppointment')->with('options', $options);
         } else {
             abort(403, 'Unauthorized action.');
