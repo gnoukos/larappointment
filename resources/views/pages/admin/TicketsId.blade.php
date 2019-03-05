@@ -19,6 +19,7 @@
                 <tr>
                     <th scope="col">Name</th>
                     <th scope="col">Date</th>
+                    <th scope="col">API url</th>
                     <th scope="col">Remaining</th>
                     <th scope="col">Id</th>
                 </tr>
@@ -28,6 +29,7 @@
                     <tr>
                         <th scope="row">{{ $dailyAppoinment->appointment->option->title }}</th>
                         <td>{{ \Carbon\Carbon::parse($dailyAppoinment->date)->format("d/m/Y")}}</td>
+                        <td><input type="text" value="{{url('/')}}api/getTicket?da_id={{ $dailyAppoinment->id }}"></td>
                         <td>{{ $dailyAppoinment->free_slots }}</td>
                         <td>{{ $dailyAppoinment->id }}</td>
 
@@ -42,4 +44,5 @@
         </div>
 
     </div>
+
 @endsection
