@@ -117,7 +117,7 @@
         $("#userComment").hide();
         @endauth
 
-
+        @if(!session('timeslotObj')) ///BLADE
         /////SET FIRST AVAILABLE DATE//////
         var maxDateObj = new Date(maxAvailDate); //creates max available date object to use in for loop
         var availDate = new Date(moment().format("YYYY-MM-DD"));
@@ -173,7 +173,35 @@
             }
         }
         /////SET FIRST AVAILABLE DATE END//////
-
+        @else
+        $('.calendar').pignoseCalendar({ //initialize pignose calendar
+            initialize: true,
+            disabledDates: disabledDatesArray,
+            minDate: moment().format("YYYY-MM-DD"), //disable dates before today
+            maxDate: maxAvailDate, //disable dates after a certain date
+            select: function(date, context) { //callback function to get selected date
+                try {
+                    $("#hourButtonContainer").empty();
+                    //console.log(date[0]._i); //selected date
+                    var option = getUrlParameter('option');
+                    getFreeTimeslots(option, date[0]._i);
+                    $("#makeAppointmentButton").hide();
+                    $("#chooseDatePrompt").hide();
+                    @auth$("#userComment").hide();@endauth
+                }catch (e) {
+                    $("#makeAppointmentButton").hide();
+                    $("#chooseDatePrompt").show();
+                    @auth $("#userComment").hide();@endauth
+                }
+            }
+        });
+        ///SET OLD INPUT DATE AND TIME///////
+        $('[data-date={{ \Carbon\Carbon::parse(session('timeslotObj')->slot)->format("Y-m-d") }}]').click();
+        $( document ).ajaxComplete(function() {
+            $('[value={{ old('timeslot') }}]').click();
+        });
+        ///SET OLD INPUT DATE AND TIME END////
+        @endif
         /////////SHOW NEXT AVAILABLE DATE//////////
         $("#nextAvailableDateButton").click(function(){	//function to find first available date
 

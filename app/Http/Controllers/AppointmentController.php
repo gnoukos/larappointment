@@ -393,9 +393,8 @@ class AppointmentController extends Controller
 
             $validator->setAttributeNames($attributeNames);
 
-
             if ($validator->fails()) {
-                return redirect(url('/datepicker?option='.$optionId))->withErrors($validator)->withInput();
+                return redirect(url('/datepicker?option='.$optionId))->withErrors($validator)->withInput()->with('timeslotObj', $timeslot);
             }
 
             $user = new User();

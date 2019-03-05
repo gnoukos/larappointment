@@ -82,8 +82,8 @@
                         </div>
                     <div class="table-responsive">
                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                            <thead>
-                            <tr>
+                            <thead class="filtering">
+                            <tr id="filtering">
                                 <th></th>
                                 <th></th>
                                 <th></th>
@@ -198,33 +198,36 @@
                         } );
                     },
                     lengthChange: false,
-
                     buttons: [
                         {
                             extend: 'pdf',
                             exportOptions: {
-                                columns: [ 0, 1, 2, 3, 5 ]
+                                columns: [ 0, 1, 2, 3, 5 ],
+                            },
+                            customize: function (doc) {
+                                doc.content[1].table.widths =
+                                    Array(doc.content[1].table.body[0].length + 1).join('*').split('');
                             },
                             header: false
                         },
                         {
                             extend: 'copy',
                             exportOptions: {
-                                columns: [ 0, 1, 2, 3, 5 ]
+                                columns: [ 0, 1, 2, 3, 5 ],
                             },
                             header: false
                         },
                         {
                             extend: 'print',
                             exportOptions: {
-                                columns: [ 0, 1, 2, 3, 5 ]
+                                columns: [ 0, 1, 2, 3, 5 ],
                             },
                             header: false
                         },
                         {
                             extend: 'excel',
                             exportOptions: {
-                                columns: [ 0, 1, 2, 3, 5 ]
+                                columns: [ 0, 1, 2, 3, 5 ],
                             },
                             header: false
                         }
