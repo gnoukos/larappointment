@@ -61,6 +61,10 @@ Route::post('changeAppointmentState', 'AppointmentController@changeAppointmentSt
 
 Route::get('api/getTicket', 'ApiController@getTicket');
 
+Route::get('api/ticketStats', 'ApiController@ticketStats');
+
 Route::post('emailTheTicket', 'AppointmentController@mailTheTicket');
 
 Route::post('smsTheTicket', 'AppointmentController@smsTheTicket');
+
+Route::get('/ticketsId', 'PageController@ticketsId');

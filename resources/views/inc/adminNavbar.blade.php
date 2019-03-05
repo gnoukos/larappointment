@@ -57,6 +57,11 @@
                 <span>Appointment History</span></a>
         </li>
         <li class="nav-item">
+            <a class="nav-link" href="{{ url('/ticketsId') }}">
+                <i class="fas fa-receipt"></i>
+                <span>Tickets Id</span></a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link" href="{{ url('/') }}" target="_blank">
                 <i class="fas fa-fw fa-home"></i>
                 <span>Home</span>

@@ -29,7 +29,7 @@ class ApiController extends Controller
     public function getTicket(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'dailyAppointmentId' => 'required|numeric'
+            'da_id' => 'required|numeric'
         ]);
 
         $optionId = $request->session()->get('optionId');
@@ -38,7 +38,7 @@ class ApiController extends Controller
             return response()->json('Invalid Input Given');
         }
 
-        $dailyAppointmentId = $request->dailyAppointmentId;
+        $dailyAppointmentId = $request->da_id;
         $dailyAppointment = DailyAppointment::find($dailyAppointmentId);
         if($dailyAppointment && $dailyAppointment->free_slots > 0){
             $dailyAppointment->free_slots = $dailyAppointment->free_slots - 1;
@@ -96,5 +96,28 @@ class ApiController extends Controller
 
         return response()->json(['ticket_info'=>$timeslot,'parents'=>$parents,'startingHour'=>$startingHour]);
         return Redirect::Route('getTicketView')->with('timeslot' , $timeslot)->with('parents',$parents)->with('startingHour',$startingHour);
+    }
+
+    public function ticketStats(Request $request){
+
+        $validator = Validator::make($request->all(), [
+            'da_id' => 'required|numeric'
+        ]);
+
+
+        if ($validator->fails()) {
+            return response()->json('Invalid Input Given');
+        }
+
+        $dailyAppointmentId = $request->da_id;
+        $dailyAppointment = DailyAppointment::find($dailyAppointmentId);
+
+        $ticketInfo = new \stdClass();
+
+        $ticketInfo->remaining=$dailyAppointment->free_slots;
+        $ticketInfo->total=Timeslot::where('daily_appointments_id',$dailyAppointmentId)->count();
+
+        return response()->json($ticketInfo);
+
     }
 }

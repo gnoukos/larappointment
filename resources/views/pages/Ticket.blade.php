@@ -45,12 +45,12 @@
 
 
                         <button type="button" class="btn btn-secondary mt-5" data-placement="top" data-toggle="popover" title="Type your mobile number" data-html='true' data-content='
-                        <form method="post" action="{{action('AppointmentController@smsTheTicket')}}">
+                        <form id="smsSubmitForm" method="post" action="{{action('AppointmentController@smsTheTicket')}}">
                             <input name="_token" type="hidden" value="{{ csrf_token() }}"/>
                             <div class="input-group mb-3">
   <input type="text" name="mobileNumber" class="form-control" placeholder="Mobile Num" aria-label="Mobile Num" aria-describedby="basic-addon2">
                         <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="submit">Send</button>
+                            <button id="smsSubmit" class="btn btn-outline-secondary" type="submit">Send</button>
                         </div>
                     </div>
                         </form>'><i class="fas fa-mobile"></i> Send SMS</button>
@@ -101,11 +101,11 @@
 
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
-        canvas.width = canvas.height = 1000;
+        canvas.width = canvas.height = 400;
 
         const tempImg = document.createElement('img');
         tempImg.addEventListener('load', onTempImageLoad);
-        tempImg.src = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="300"><foreignObject width="100%" height="100%"><div xmlns="http://www.w3.org/1999/xhtml"><style>span {color: #52DEE5;} h1{background-color: #383D3B; color: #EEE5E9;}</style><h1>Ticket: <span>{{ $timeslot->ticket_num }}</span><br />@for ($i=0; $i<count($parents); $i++) @if($i!=count($parents)-1) {{$parents[$i]}}=> @else {{$parents[$i]}} @endif @endfor <br /><span>{{ \Carbon\Carbon::parse($timeslot->slot)->format('l d/m/Y') }}</span> <br /><span> {{\Carbon\Carbon::parse($startingHour)->format('H:i')}}</span></h1></div></foreignObject></svg>');
+        tempImg.src = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300"><foreignObject width="100%" height="100%"><div xmlns="http://www.w3.org/1999/xhtml"><style>span {color: #52DEE5;} h1{background-color: #383D3B; color: #EEE5E9;}</style><h1>Ticket: <span>{{ $timeslot->ticket_num }}</span><br />@for ($i=0; $i<count($parents); $i++) @if($i!=count($parents)-1) {{$parents[$i]}}=> @else {{$parents[$i]}} @endif @endfor <br /><span>{{ \Carbon\Carbon::parse($timeslot->slot)->format('l d/m/Y') }}</span> <br /><span> {{\Carbon\Carbon::parse($startingHour)->format('H:i')}}</span></h1></div></foreignObject></svg>');
         const targetImg = document.createElement('img');
         body.appendChild(targetImg);
 
@@ -126,7 +126,14 @@
 
             $("[data-toggle=popover]").popover();
 
+            $('#smsSubmitForm').submit(function(){
+                $(this).find('button[type=submit]').prop('disabled', true);
+                return false; // return false stops the from from actually submitting.. this is only for demo purposes
+            });
+
         });
+
+
 
 
 

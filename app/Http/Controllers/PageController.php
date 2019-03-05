@@ -312,4 +312,16 @@ class PageController extends Controller
         }
 
     }
+
+    public function TicketsId(){
+        if (Auth::check() && Auth::user()->role=='admin' ) {
+
+            $dailyAppoinments = DailyAppointment::with('appointment.option')->where('date', '>', Carbon::now())->where('free_slots', '>', 0)->get();
+
+
+            return view('pages.admin.TicketsId')->with('dailyAppoinments',$dailyAppoinments);
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
+    }
 }
